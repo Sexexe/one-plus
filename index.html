@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1735,12 +1736,165 @@ function toggleAll(state) {
 </div>
 
 <div class="controls">
-  <button onclick="toggleAll(true)" id="expandAll">📂 Развернуть всё</button>
-  <button onclick="toggleAll(false)" id="collapseAll">📁 Свернуть всё</button>
+<button onclick="toggleAll(true)" id="expandAll">📂 Развернуть всё</button>
+<button onclick="toggleAll(false)" id="collapseAll">📁 Свернуть всё</button>
 </div>
 
 <script>
+// === НАЧАЛО КОДА VK BRIDGE И РЕКЛАМЫ ===
+if (window.vkBridge) {
+    vkBridge.send('VKWebAppInit');
+}
+
+const AD_INTERVAL_MS = 20 * 60 * 1000; // 20 минут
+
+function showInterstitialAd() {
+    if (window.vkBridge) {
+        // Ставим на паузу озвучку, если она играет
+        if (speechSynthesis.speaking) {
+            speechSynthesis.pause();
+        }
+
+        // Показ рекламы
+        vkBridge.send('VKWebAppShowNativeAds', { type: 'interstitial' })
+            .then((data) => {
+                if (data.result) console.log('Реклама показана');
+            })
+            .catch((error) => {
+                console.log('Реклама недоступна', error);
+            })
+            .finally(() => {
+                // Возобновляем озвучку
+                if (speechSynthesis.paused) {
+                    speechSynthesis.resume();
+                }
+            });
+    }
+}
+// Запуск таймера рекламы
+setInterval(showInterstitialAd, AD_INTERVAL_MS);
+// === КОНЕЦ КОДА VK BRIDGE И РЕКЛАМЫ ===
+
+// Твой основной код (ничего не изменилось)
 let currentLang = 'ru';
+let isPlayingAll = false;
+let playAllIndex = 0;
+let allCards = [];
+let currentLocalBtn = null;
+
+const translations = {
+mainTitle: {
+ru: 'Официальная шпаргалка ВНЖ 2026',
+en: 'Official VNZH Guide 2026',
+uz: 'Rasmiy VNZH qo\'llanma 2026',
+tg: 'Дастури расмии ВҲҶ 2026',
+ky: 'Расмий ВНЖ колдонмо 2026'
+},
+subtitle: {
+ru: 'Комплексный экзамен для иностранных граждан',
+en: 'Comprehensive exam for foreign citizens',
+uz: 'Chet el fuqarolari uchun majmuaviy imtihon',
+tg: 'Имтиҳони комплексӣ барои шаҳрвандони хориҷӣ',
+ky: 'Чет элдик жарандар үчүн комплекстүү экзамен'
+},
+playText: { ru: 'ИГРАТЬ ВСЁ', en: 'PLAY ALL', uz: 'HAMMASINI O\'YNATISH', tg: 'ҲАМАШРО ПАХШ КАРДАН', ky: 'БААРЫН ОЙНОО' },
+stopText: { ru: 'СТОП', en: 'STOP', uz: 'TO\'XTATISH', tg: 'БОЗДОШТ', ky: 'ТОКТОТУУ' },
+nav1: { ru: '🟢 Вариант 1', en: '🟢 Variant 1', uz: '🟢 1-variant', tg: '🟢 Варианти 1', ky: '🟢 1-вариант' },
+nav2: { ru: '🔵 Вариант 2', en: '🔵 Variant 2', uz: '🔵 2-variant', tg: '🔵 Варианти 2', ky: '🔵 2-вариант' },
+nav3: { ru: '🟣 Вариант 3', en: '🟣 Variant 3', uz: '🟣 3-variant', tg: '🟣 Варианти 3', ky: '🟣 3-вариант' },
+nav4: { ru: '🔴 Вариант 4', en: '🔴 Variant 4', uz: '🔴 4-variant', tg: '🔴 Варианти 4', ky: '🔴 4-вариант' },
+expandAll: { ru: '📂 Развернуть всё', en: '📂 Expand all', uz: '📂 Hammasini ochish', tg: '📂 Ҳамаашро кушодан', ky: '📂 Баарын ачуу' },
+collapseAll: { ru: '📁 Свернуть всё', en: '📁 Collapse all', uz: '📁 Hammasini yopish', tg: '📁 Ҳамаашро пӯшидан', ky: '📁 Баарын жабуу' }
+};
+
+function switchLang(lang) {
+stopAll();
+currentLang = lang;
+document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+event.target.classList.add('active');
+document.querySelectorAll('[data-ru][data-en][data-uz][data-tg][data-ky]').forEach(el => {
+const text = el.getAttribute(`data-${lang}`);
+if (text) el.innerHTML = text;
+});
+for (let id in translations) {
+const el = document.getElementById(id);
+if (el && translations[id][lang]) el.innerHTML = translations[id][lang];
+}
+}
+function collectAllCards() { allCards = Array.from(document.querySelectorAll('details[data-q-ru]')); }
+function stopAll() {
+speechSynthesis.cancel();
+isPlayingAll = false;
+playAllIndex = 0;
+document.querySelectorAll('details.playing').forEach(d => d.classList.remove('playing'));
+document.querySelectorAll('.audio-btn.playing').forEach(b => b.classList.remove('playing'));
+const btn = document.getElementById('playAllBtn');
+btn.classList.remove('playing');
+document.getElementById('playIcon').textContent = '▶';
+document.getElementById('playText').textContent = translations.playText[currentLang];
+document.getElementById('progress').classList.remove('active');
+document.getElementById('progressText').classList.remove('active');
+currentLocalBtn = null;
+}
+function updateProgress() {
+const total = allCards.length;
+const percent = (playAllIndex / total) * 100;
+document.getElementById('progressBar').style.width = percent + '%';
+document.getElementById('progressText').textContent = `${playAllIndex} / ${total}`;
+}
+function speakCard(card, onComplete) {
+const q = card.getAttribute(`data-q-${currentLang}`);
+const a = card.getAttribute(`data-a-${currentLang}`);
+if (!q || !a) { if (onComplete) onComplete(); return; }
+document.querySelectorAll('details.playing').forEach(d => d.classList.remove('playing'));
+card.classList.add('playing');
+card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+card.open = true;
+const langMap = { ru: 'ru-RU', en: 'en-US', uz: 'uz-UZ', tg: 'tg-TJ', ky: 'ky-KG' };
+const utterQ = new SpeechSynthesisUtterance(q);
+utterQ.lang = langMap[currentLang]; utterQ.rate = 0.95; utterQ.pitch = 1.1;
+const utterA = new SpeechSynthesisUtterance(a);
+utterA.lang = langMap[currentLang]; utterA.rate = 0.9; utterA.pitch = 0.9;
+utterQ.onend = () => setTimeout(() => speechSynthesis.speak(utterA), 500);
+utterA.onend = () => setTimeout(() => { if (onComplete) onComplete(); }, 800);
+utterA.onerror = () => { if (onComplete) onComplete(); };
+speechSynthesis.speak(utterQ);
+}
+function playNextCard() {
+if (!isPlayingAll || playAllIndex >= allCards.length) { stopAll(); return; }
+updateProgress();
+const card = allCards[playAllIndex];
+playAllIndex++;
+speakCard(card, () => { if (isPlayingAll) playNextCard(); });
+}
+function togglePlayAll() {
+if (isPlayingAll) { stopAll(); }
+else {
+collectAllCards();
+if (allCards.length === 0) return;
+isPlayingAll = true; playAllIndex = 0;
+const btn = document.getElementById('playAllBtn');
+btn.classList.add('playing');
+document.getElementById('playIcon').textContent = '⏹';
+document.getElementById('playText').textContent = translations.stopText[currentLang];
+document.getElementById('progress').classList.add('active');
+document.getElementById('progressText').classList.add('active');
+playNextCard();
+}
+}
+function speakLocal(btn) {
+if (currentLocalBtn && currentLocalBtn !== btn) currentLocalBtn.classList.remove('playing');
+if (btn.classList.contains('playing')) { speechSynthesis.cancel(); btn.classList.remove('playing'); currentLocalBtn = null; return; }
+speechSynthesis.cancel();
+const card = btn.closest('details');
+if (!card) return;
+btn.classList.add('playing'); currentLocalBtn = btn;
+speakCard(card, () => { btn.classList.remove('playing'); currentLocalBtn = null; });
+}
+function toggleAll(state) { document.querySelectorAll('details').forEach(d => d.open = state); }
+</script>
+</body>
+</html>
 let isPlayingAll = false;
 let playAllIndex = 0;
 let allCards = [];
