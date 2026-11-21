@@ -3,166 +3,266 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TV BOX — 100 рабочих каналов</title>
+<meta name="theme-color" content="#000000">
+<title>TV BOX — 5000 каналов</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0D1015;--surface:#151A22;--surface2:#1C2330;--border:#293344;--border2:#3A475D;
-  --text:#EDF1F7;--muted:#93A0B4;--dim:#617086;--accent:#4C8DFF;--accent-soft:rgba(76,141,255,.14);
-  --ok:#35C77B;--warn:#E0A33E;--bad:#E05252;--radius:12px;
+  color-scheme:dark;
+  --bg:#000;--surface:#1C1C1E;--surface2:#2C2C2E;--surface3:#3A3A3C;
+  --hair:rgba(255,255,255,.08);--sep:rgba(84,84,88,.6);
+  --text:#F5F5F7;--muted:rgba(235,235,245,.6);--dim:rgba(235,235,245,.3);
+  --fill:rgba(120,120,128,.24);--fill2:rgba(120,120,128,.36);
+  --accent:#0A84FF;--accent-soft:rgba(10,132,255,.18);
+  --ok:#30D158;--warn:#FF9F0A;--bad:#FF453A;--gold:#FFD60A;
+  --r-lg:16px;--r-md:12px;--r-sm:10px;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --glass:rgba(22,22,24,.72);
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scrollbar-width:thin;scrollbar-color:var(--border2) var(--bg)}
-::-webkit-scrollbar{width:9px;height:9px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border2);border:2px solid var(--bg);border-radius:6px}
-::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.5) var(--bg)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(120,120,128,.45);border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:rgba(120,120,128,.7)}
+::selection{background:rgba(10,132,255,.35)}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 button,input,select{font:inherit}
 button{color:inherit}
-button:disabled{opacity:.4;cursor:not-allowed}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button:disabled{opacity:.35;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
 [hidden]{display:none!important}
+.g-chip,.seg-btn,.icon-btn,.primary-btn,.secondary-btn,.foot-btn,.mini-btn,.ctrl-btn,.retry-btn,.g-card,.fav-btn{transition:background .18s var(--ease),color .18s var(--ease),transform .12s var(--ease),opacity .18s var(--ease)}
+.g-chip:active,.seg-btn:active,.icon-btn:active,.primary-btn:active,.secondary-btn:active,.foot-btn:active,.mini-btn:active,.ctrl-btn:active,.retry-btn:active,.g-card:active{transform:scale(.96)}
 
-.top{position:fixed;inset:0 0 auto;z-index:100;height:62px;background:rgba(13,16,21,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-.top-in{max-width:1560px;margin:0 auto;height:100%;padding:0 22px;display:flex;align-items:center;gap:16px}
+/* ===== ШАПКА ===== */
+.top{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--hair)}
+.top-in{max-width:1560px;margin:0 auto;height:62px;padding:0 22px;display:flex;align-items:center;gap:14px}
 .brand{display:flex;align-items:center;gap:11px;flex:none}
-.logo{width:36px;height:36px;border-radius:9px;background:var(--surface2);border:1px solid var(--border2);display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent)}
-.brand-name{font-size:17px;font-weight:800;letter-spacing:.12em}
-.brand-sub{font-size:10px;color:var(--dim);letter-spacing:.06em;margin-top:1px}
-.search-wrap{flex:1;max-width:520px;margin-left:auto;display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 13px;color:var(--dim)}
-.search-wrap:focus-within{border-color:var(--accent)}
-.search-wrap input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font-size:13px}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--accent);display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.04em;color:#fff}
+.brand-name{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.brand-sub{font-size:10px;color:var(--dim);letter-spacing:.05em;margin-top:1px}
+.search-wrap{flex:1;max-width:520px;margin-left:auto;display:flex;align-items:center;gap:9px;background:var(--fill);border-radius:10px;padding:8px 12px;color:var(--dim);transition:background .18s var(--ease)}
+.search-wrap:focus-within{background:var(--fill2)}
+.search-wrap:focus-within kbd{display:none}
+.search-wrap input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font-size:13.5px}
 .search-wrap input::placeholder{color:var(--dim)}
+.search-wrap kbd{font:600 10px/1 inherit;color:var(--dim);background:var(--fill);border-radius:5px;padding:3px 6px}
+#searchClear{width:20px;height:20px;border-radius:50%;background:var(--fill2);border:0;display:grid;place-items:center;color:var(--muted);cursor:pointer;flex:none}
+#searchClear:hover{color:var(--text)}
 .top-actions{display:flex;align-items:center;gap:8px;flex:none}
-.counter{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--ok);background:rgba(53,199,123,.1);border:1px solid rgba(53,199,123,.28);border-radius:8px;padding:7px 11px;white-space:nowrap}
+.counter{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ok);background:rgba(48,209,88,.15);border-radius:999px;padding:7px 12px;white-space:nowrap}
 .counter i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
 .clock{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-.icon-btn{width:38px;height:38px;border-radius:9px;background:var(--surface);border:1px solid var(--border);display:grid;place-items:center;cursor:pointer;transition:.15s}
-.icon-btn:hover:not(:disabled){border-color:var(--accent);background:var(--surface2)}
-.icon-btn.active{border-color:var(--accent);color:var(--accent)}
+.icon-btn{width:38px;height:38px;border-radius:10px;background:var(--fill);border:0;display:grid;place-items:center;cursor:pointer;flex:none;color:var(--text)}
+.icon-btn:hover:not(:disabled){background:var(--fill2)}
+.icon-btn.active{background:var(--accent-soft);color:var(--accent)}
+.icon-btn.on{color:var(--gold)}
+.icon-btn.on svg path{fill:currentColor}
+.genre-btn{width:auto;padding:0 14px;display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600}
 
-.layout{max-width:1560px;margin:0 auto;padding:82px 22px 24px;display:grid;grid-template-columns:minmax(0,1fr) 354px;gap:20px;align-items:start}
+/* ===== ЖАНРЫ ===== */
+.genre-wrap{max-width:1560px;margin:0 auto;position:relative;border-top:1px solid var(--hair)}
+.genre-wrap::before,.genre-wrap::after{content:'';position:absolute;top:0;bottom:0;width:44px;z-index:1;pointer-events:none;opacity:0;transition:.2s}
+.genre-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.genre-wrap::after{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
+.genre-wrap.has-overflow::before,.genre-wrap.has-overflow::after{opacity:1}
+.genre-bar{display:flex;gap:8px;align-items:center;height:48px;overflow-x:auto;padding:0 22px;scrollbar-width:none}
+.genre-bar::-webkit-scrollbar{display:none}
+.g-chip{flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;border:0;background:var(--fill);font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
+.g-chip:hover{background:var(--fill2);color:var(--text)}
+.g-chip.active{background:var(--accent);color:#fff}
+.g-count{font-size:10.5px;font-weight:600;opacity:.65;font-variant-numeric:tabular-nums}
+.g-chip.more{background:var(--accent-soft);color:var(--accent)}
+.g-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:28px;height:28px;border-radius:50%;background:rgba(44,44,46,.92);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--muted);box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.g-arrow:hover{color:var(--text)}
+.g-arrow.left{left:6px}
+.g-arrow.right{right:6px}
+@media(pointer:coarse){.g-arrow{display:none}}
+
+/* ===== РАСКЛАДКА ===== */
+.layout{max-width:1560px;margin:0 auto;padding:20px 22px 24px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
 .main-col{min-width:0;display:flex;flex-direction:column;gap:16px}
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-lg)}
 
-.player{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+/* ===== ПЛЕЕР ===== */
+.player{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--hair);border-radius:var(--r-lg);overflow:hidden;scroll-margin-top:126px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
-.ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:rgba(13,16,21,.84);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;opacity:0;transform:translateY(-6px);transition:.22s;pointer-events:none}
+.ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--hair);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:600;opacity:0;transform:translateY(-6px);transition:.22s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
 .ch-badge.show{opacity:1;transform:none}
 .ch-badge b{color:var(--accent);font-variant-numeric:tabular-nums}
-.controls{position:absolute;inset:auto 0 0;z-index:5;display:flex;align-items:center;gap:8px;padding:28px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.84));transition:opacity .2s}
+.ch-badge span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.live{font-size:9px;font-weight:800;letter-spacing:.08em;padding:2px 7px;border-radius:6px;background:rgba(255,69,58,.2);color:#FF6961;flex:none}
+.live.vod{background:rgba(255,159,10,.18);color:var(--warn)}
+.num-osd{position:absolute;top:14px;right:14px;z-index:7;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--hair);border-radius:12px;padding:8px 18px;font-size:30px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.1em}
+.controls{position:absolute;inset:auto 0 0;z-index:5;display:flex;align-items:center;gap:8px;padding:30px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.8));transition:opacity .2s}
 .controls.hide{opacity:0;pointer-events:none}
-.ctrl-btn{width:36px;height:36px;border-radius:8px;flex:none;background:rgba(21,26,34,.88);border:1px solid rgba(255,255,255,.13);display:grid;place-items:center;cursor:pointer}
-.ctrl-btn:hover:not(:disabled){border-color:var(--accent)}
+.ctrl-btn{width:38px;height:38px;border-radius:50%;flex:none;background:rgba(28,28,30,.72);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--text)}
+.ctrl-btn:hover:not(:disabled){background:rgba(60,60,67,.85)}
 .vol-range{width:112px;accent-color:var(--accent);cursor:pointer}
 .ctrl-fs{margin-left:auto}
-.overlay{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;background:rgba(8,10,14,.8)}
-.overlay.boot{z-index:10;background:rgba(8,10,14,.92)}
-.boot-title{font-size:clamp(26px,4vw,42px);font-weight:800;letter-spacing:.16em}
-.boot-sub{font-size:13px;color:var(--muted);max-width:470px;line-height:1.65}
-.primary-btn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer}
-.primary-btn:hover{filter:brightness(1.08)}
-.secondary-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer}
-.secondary-btn:hover{border-color:var(--accent)}
-.overlay.error h2{font-size:20px;font-weight:800}
+.overlay{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;background:rgba(0,0,0,.78)}
+.overlay.boot{z-index:10;background:rgba(0,0,0,.92)}
+.boot-title{font-size:clamp(26px,4vw,42px);font-weight:700;letter-spacing:.06em}
+.boot-sub{font-size:13px;color:var(--muted);max-width:480px;line-height:1.65}
+.primary-btn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer}
+.primary-btn:hover{filter:brightness(1.1)}
+.secondary-btn{background:var(--fill);border:0;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text)}
+.secondary-btn:hover{background:var(--fill2)}
+.overlay.error h2{font-size:20px;font-weight:700;letter-spacing:-.01em}
 .overlay.error p{font-size:13px;color:var(--muted);max-width:470px;line-height:1.6}
 .overlay-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.spinner{width:42px;height:42px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:var(--accent);animation:spin .8s linear infinite}
+.spinner{width:42px;height:42px;border-radius:50%;border:3px solid rgba(255,255,255,.14);border-top-color:var(--accent);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .gesture-btn{width:72px;height:72px;border-radius:50%;border:0;cursor:pointer;background:var(--accent);color:#fff;display:grid;place-items:center}
 .overlay.gesture p{font-size:13px;color:var(--muted)}
 .player:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;aspect-ratio:auto}
 
+/* ===== КАРТОЧКА КАНАЛА ===== */
 .info{padding:20px}
 .info-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
-.channel-logo{width:52px;height:52px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);object-fit:contain;padding:5px;flex:none}
-.info-num{font-size:26px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px}
+.channel-logo{width:56px;height:56px;border-radius:12px;background:var(--surface2);object-fit:contain;padding:5px;flex:none}
+.info-num{font-size:28px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px;letter-spacing:-.02em}
 .info-titles{flex:1;min-width:200px}
-.info-titles h1{font-size:20px;font-weight:800;letter-spacing:.02em;line-height:1.25}
-.info-tags{display:flex;gap:7px;margin-top:7px;flex-wrap:wrap}
-.tag{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
-.tag.ok{color:var(--ok);border-color:rgba(53,199,123,.35)}
-.tag.vod{color:var(--warn);border-color:rgba(224,163,62,.35)}
+.info-titles h1{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+.info-tags{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--fill);border:0;color:var(--muted)}
+.tag.ok{color:var(--ok);background:rgba(48,209,88,.15)}
+.tag.vod{color:var(--warn);background:rgba(255,159,10,.15)}
+button.tag{cursor:pointer}
+button.tag:hover{background:var(--accent-soft);color:var(--accent)}
 .desc{margin-top:15px;font-size:13.5px;line-height:1.65;color:var(--muted);max-width:920px}
-.program{margin-top:20px;padding-top:18px;border-top:1px solid var(--border)}
+.program{margin-top:20px;padding-top:18px;border-top:1px solid var(--hair)}
 .program-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.program-head h3{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.program-head h3{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim)}
 .program-note{margin-left:auto;font-size:11px;color:var(--dim)}
 .program-cards{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:10px}
-.prog-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;min-width:0}
-.prog-card.now{border-color:rgba(76,141,255,.5)}
-.prog-card em{display:block;font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.prog-card{background:var(--surface2);border-radius:var(--r-md);padding:12px 14px;min-width:0}
+.prog-card.now{background:var(--accent-soft)}
+.prog-card em{display:block;font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
 .prog-card.next em{color:var(--dim)}
-.prog-card strong{display:block;font-size:13px;font-weight:700;line-height:1.4}
+.prog-card strong{display:block;font-size:13px;font-weight:600;line-height:1.4}
 .prog-card span{display:block;font-size:11px;color:var(--dim);margin-top:5px;line-height:1.5}
 .timeline{display:flex;gap:3px;height:28px;margin-top:12px}
-.tl-seg{position:relative;border:1px solid var(--border);border-radius:6px;background:var(--surface2);cursor:pointer;overflow:hidden;min-width:8px;padding:0}
-.tl-seg.cur{border-color:var(--accent)}
-.tl-seg i{position:absolute;inset:0;width:0;background:var(--accent-soft)}
-.tl-seg b{position:relative;z-index:1;display:block;padding:0 7px;font-size:9px;font-weight:700;line-height:26px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
-.tl-seg:hover{border-color:var(--accent)}
-.signal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.tl-seg{position:relative;border:0;border-radius:7px;background:var(--surface2);cursor:pointer;overflow:hidden;min-width:8px;padding:0}
+.tl-seg.cur{background:var(--accent-soft)}
+.tl-seg i{position:absolute;inset:0;width:0;background:rgba(10,132,255,.35)}
+.tl-seg b{position:relative;z-index:1;display:block;padding:0 7px;font-size:9px;font-weight:600;line-height:28px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.tl-seg:hover{background:var(--surface3)}
+.signal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:1px solid var(--hair);font-size:12px;color:var(--muted)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:none}
 .dot.ok{background:var(--ok)}
 .dot.playing{background:var(--ok);animation:pulse 1.5s infinite}
-.dot.checking{background:var(--warn);animation:pulse 1.1s infinite}
 .dot.bad{background:var(--bad)}
 @keyframes pulse{50%{opacity:.35}}
-.signal-row select{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:5px 8px;font-size:11.5px;cursor:pointer}
-.retry-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer}
-.retry-btn:hover{border-color:var(--accent)}
+.signal-row select{background:var(--fill);border:0;color:var(--text);border-radius:8px;padding:5px 8px;font-size:11.5px;cursor:pointer}
+.retry-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--fill);border:0;border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.retry-btn:hover{background:var(--fill2)}
 
-.sidebar{position:sticky;top:78px;max-height:calc(100vh - 100px);display:flex;flex-direction:column;padding:16px 12px 12px 16px}
-.side-head{display:flex;align-items:center;gap:10px;padding-right:4px;margin-bottom:12px}
-.side-head h2{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.side-head span{margin-left:auto;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:99px}
-.scan-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 12px;margin:0 4px 12px 0}
-.scan-line{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px}
-.scan-line b{color:var(--text);font-variant-numeric:tabular-nums}
-.scan-line span:last-child{margin-left:auto;color:var(--dim);font-weight:500}
-.scan-bar{height:5px;border-radius:3px;background:var(--bg);overflow:hidden}
-.scan-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:3px;transition:width .25s}
-.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding-right:4px;max-height:92px;overflow-y:auto}
-.filter{border:1px solid var(--border);background:var(--surface2);border-radius:7px;padding:6px 10px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer}
-.filter:hover{border-color:var(--border2);color:var(--text)}
-.filter.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-.list-tools{display:flex;align-items:center;gap:8px;padding:0 4px 11px}
-.list-tools label{font-size:11px;color:var(--dim);font-weight:600}
-.list-tools select{margin-left:auto;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:5px 8px;font-size:11px;cursor:pointer}
-.ch-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:3px;padding-right:5px;min-height:150px}
-.ch-item{display:grid;grid-template-columns:34px minmax(0,1fr) 10px;gap:10px;align-items:center;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:8px;padding:9px 10px;cursor:pointer}
-.ch-item:hover{background:var(--surface2)}
-.ch-item.active{background:var(--accent-soft);border-color:rgba(76,141,255,.4)}
-.ch-num{font-size:11px;font-weight:700;color:var(--dim);font-variant-numeric:tabular-nums}
+/* ===== САЙДБАР ===== */
+.sidebar{position:sticky;top:126px;max-height:calc(100vh - 142px);display:flex;flex-direction:column;padding:14px 12px 12px 14px;scroll-margin-top:126px}
+.side-head,.scan-box,.list-tools,.legend,.side-foot{flex:none}
+.side-head{display:flex;align-items:center;gap:8px;padding-right:4px;margin-bottom:11px}
+.side-head h2{flex:1;min-width:0;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side-head>span{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:999px;font-variant-numeric:tabular-nums}
+.reset-chip{border:0;background:rgba(255,69,58,.15);color:var(--bad);border-radius:999px;font-size:10px;font-weight:600;padding:3px 9px;cursor:pointer;white-space:nowrap}
+.reset-chip:hover{background:rgba(255,69,58,.25)}
+.scan-box{background:var(--surface2);border-radius:var(--r-md);padding:10px 12px;margin:0 4px 11px 0}
+.scan-line{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:7px}
+.scan-line b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
+.scan-line span:last-child{margin-left:auto;color:var(--dim)}
+.scan-bar{height:4px;border-radius:2px;background:rgba(120,120,128,.24);overflow:hidden}
+.scan-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:2px;transition:width .25s var(--ease)}
+.list-tools{display:flex;align-items:center;gap:8px;padding:0 4px 10px}
+.seg{flex:1;display:flex;gap:2px;background:var(--fill);border-radius:9px;padding:2px}
+.seg-btn{flex:1;border:0;background:transparent;border-radius:7px;padding:5px 8px;font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
+.seg-btn.active{background:#636366;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.mini-btn{width:30px;height:30px;border-radius:8px;background:var(--fill);border:0;display:grid;place-items:center;cursor:pointer;color:var(--muted);flex:none}
+.mini-btn:hover{background:var(--accent-soft);color:var(--accent)}
+.ch-list{flex:1;overflow-y:auto;padding-right:5px;min-height:200px;overscroll-behavior:contain}
+.ch-spacer{position:relative;width:100%}
+.ch-item{position:absolute;left:0;right:0;height:52px;display:grid;grid-template-columns:34px 36px minmax(0,1fr) 26px;gap:10px;align-items:center;text-align:left;background:transparent;border:0;border-radius:12px;padding:0 8px 0 10px;cursor:pointer;transition:background .14s var(--ease)}
+.ch-item:hover{background:rgba(120,120,128,.14)}
+.ch-item.active{background:var(--accent-soft)}
+.ch-num{font-size:11px;font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums}
 .ch-item.active .ch-num{color:var(--accent)}
-.ch-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.side-foot{display:flex;gap:8px;padding:12px 4px 2px;margin-top:10px;border-top:1px solid var(--border)}
-.foot-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:11.5px;font-weight:600;cursor:pointer}
-.foot-btn:hover:not(:disabled){border-color:var(--accent)}
-.legend{padding:10px 4px 0;font-size:9.5px;color:var(--dim);line-height:1.6}
+.ch-thumb{position:relative;width:36px;height:36px;border-radius:9px;background:var(--surface2);display:grid;place-items:center;overflow:hidden}
+.ch-thumb i{font-style:normal;font-size:13px;font-weight:700;color:var(--dim)}
+.ch-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:3px;background:var(--surface2)}
+.ch-text{min-width:0;display:flex;flex-direction:column;gap:2px}
+.ch-name{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.ch-meta{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eq{display:inline-flex;gap:2px;align-items:flex-end;height:10px;flex:none}
+.eq i{width:2.5px;background:var(--accent);border-radius:1px;transform-origin:bottom;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(1){height:60%}
+.eq i:nth-child(2){height:100%;animation-delay:.2s}
+.eq i:nth-child(3){height:40%;animation-delay:.4s}
+@keyframes eq{50%{transform:scaleY(.35)}}
+.fav-btn{width:26px;height:26px;border-radius:6px;background:transparent;border:0;display:grid;place-items:center;color:var(--dim);cursor:pointer}
+.fav-btn:hover{color:var(--text);background:var(--fill)}
+.fav-btn.on{color:var(--gold)}
+.fav-btn.on svg path{fill:currentColor}
+.ch-empty{padding:26px 12px;text-align:center;color:var(--dim);font-size:12px;line-height:1.6;display:flex;flex-direction:column;gap:12px;align-items:center}
+.side-foot{display:flex;gap:8px;padding:11px 4px 2px;margin-top:9px;border-top:1px solid var(--hair)}
+.foot-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--fill);border:0;border-radius:10px;padding:8px 10px;font-size:11.5px;font-weight:600;cursor:pointer}
+.foot-btn:hover:not(:disabled){background:var(--fill2)}
+.legend{padding:9px 4px 0;font-size:10px;color:var(--dim);line-height:1.6}
+
+/* ===== ЖАНРЫ: ШИТ ===== */
+.modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:grid;place-items:center;padding:20px}
+.modal{width:min(760px,100%);max-height:min(80vh,640px);display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.6);animation:pop .22s var(--ease)}
+@keyframes pop{from{opacity:0;transform:scale(.97)}}
+.grabber{display:none;width:36px;height:4px;border-radius:2px;background:var(--fill2);margin:8px auto 0;flex:none}
+.modal-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--hair)}
+.modal-head h3{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.modal-sub{font-size:11px;color:var(--dim);margin-left:auto}
+.modal-head .icon-btn{width:32px;height:32px;border-radius:50%}
+.modal-grid{overflow-y:auto;padding:14px 16px 18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.g-card{display:flex;align-items:center;gap:10px;padding:12px 14px;border:0;border-radius:10px;background:var(--surface2);cursor:pointer;text-align:left;min-width:0}
+.g-card:hover{background:var(--surface3)}
+.g-card.active{background:var(--accent-soft)}
+.g-card b{flex:1;min-width:0;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.g-card .gc{font-size:12px;font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums;flex:none}
+.g-card .g-chev{color:var(--dim);display:grid;place-items:center;flex:none}
+.g-card.active .gc{color:var(--accent)}
+.g-card.active .g-chev{color:var(--accent)}
 
 footer{max-width:1560px;margin:0 auto;padding:0 22px 28px;font-size:10.5px;color:var(--dim);line-height:1.8}
 footer b{color:var(--muted)}
 .toasts{position:fixed;right:18px;bottom:18px;z-index:300;display:flex;flex-direction:column;gap:8px;max-width:min(370px,calc(100vw - 36px))}
-.toast{background:var(--surface2);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:9px;padding:11px 14px;font-size:12px;font-weight:600;line-height:1.5;box-shadow:0 10px 30px rgba(0,0,0,.45);animation:tin .2s ease-out}
-.toast.warn{border-left-color:var(--warn)}
-.toast.bad{border-left-color:var(--bad)}
-.toast.ok{border-left-color:var(--ok)}
+.toast{display:flex;align-items:flex-start;gap:9px;background:rgba(28,28,30,.85);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--hair);border-radius:14px;padding:11px 14px;font-size:12.5px;font-weight:500;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:tin .22s var(--ease)}
+.t-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none;margin-top:4px}
+.toast.warn .t-dot{background:var(--warn)}
+.toast.bad .t-dot{background:var(--bad)}
+.toast.ok .t-dot{background:var(--ok)}
 @keyframes tin{from{opacity:0;transform:translateY(8px)}}
 
-@media(max-width:1120px){.layout{grid-template-columns:minmax(0,1fr) 312px}.program-cards{grid-template-columns:1fr 1fr}}
-@media(max-width:940px){.layout{grid-template-columns:1fr}.sidebar{position:static;max-height:none}.ch-list{max-height:430px}}
+@media(max-width:1120px){.layout{grid-template-columns:minmax(0,1fr) 320px}.program-cards{grid-template-columns:1fr 1fr}}
+@media(max-width:940px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;max-height:none}
+  .ch-list{max-height:440px}
+  .player,#sidebar{scroll-margin-top:170px}
+}
 @media(max-width:640px){
-  .top{height:auto}.top-in{padding:10px 14px;flex-wrap:wrap;gap:10px}
+  .top-in{height:auto;padding:10px 14px;flex-wrap:wrap;gap:10px}
   .search-wrap{order:3;flex-basis:100%;max-width:none;margin-left:0}
-  .clock{display:none}.counter{font-size:11px;padding:6px 9px}
-  .layout{padding:118px 12px 20px}.brand-sub{display:none}
+  .search-wrap kbd{display:none}
+  .clock{display:none}.counter{font-size:11px;padding:6px 10px}
+  .genre-btn span{display:none}.genre-btn{width:38px;padding:0;justify-content:center}
+  .brand-sub{display:none}
+  .genre-bar{padding:0 14px;height:46px}
+  .layout{padding:14px 12px 20px}
   .info{padding:16px}.program-cards{grid-template-columns:1fr}
   .vol-range{width:80px}.controls{padding:24px 10px 10px;gap:6px}.ctrl-btn{width:34px;height:34px}
-  .info-titles h1{font-size:17px}.info-num{font-size:22px}.channel-logo{width:44px;height:44px}
+  .info-titles h1{font-size:18px}.info-num{font-size:24px}.channel-logo{width:44px;height:44px}
+  .modal-backdrop{place-items:end center;padding:0}
+  .modal{width:100%;max-height:84vh;border-radius:16px 16px 0 0;animation:sheet .3s var(--ease)}
+  @keyframes sheet{from{transform:translateY(40px);opacity:.6}}
+  .grabber{display:block}
+  .modal-grid{grid-template-columns:1fr;padding-bottom:max(18px,env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -175,13 +275,24 @@ footer b{color:var(--muted)}
       <div class="logo">TV</div>
       <div><div class="brand-name">TV BOX</div><div class="brand-sub">АВТОПРОВЕРКА • БЕЗ VPN</div></div>
     </div>
-    <label class="search-wrap"><span id="searchIcon"></span><input id="search" type="search" placeholder="Поиск канала…" autocomplete="off"></label>
+    <div class="search-wrap">
+      <span id="searchIcon"></span>
+      <input id="search" type="text" placeholder="Поиск" autocomplete="off" enterkeyhint="search" aria-label="Поиск канала">
+      <button id="searchClear" hidden aria-label="Очистить поиск"></button>
+      <kbd>/</kbd>
+    </div>
     <div class="top-actions">
-      <div class="counter"><i></i><span id="topCounter">0/100</span></div>
+      <div class="counter"><i></i><span id="topCounter">0/5000</span></div>
       <span class="clock" id="clock">--:-- МСК</span>
+      <button class="icon-btn genre-btn" id="genreBtn" title="Все жанры (G)"><span id="genreBtnIcon"></span><span>Жанры</span></button>
       <button class="icon-btn" id="topMute" title="Звук (M)" aria-label="Звук"></button>
       <button class="icon-btn" id="topFs" title="Полный экран (F)" aria-label="Полный экран"></button>
     </div>
+  </div>
+  <div class="genre-wrap" id="genreWrap">
+    <button class="g-arrow left" id="genrePrev" hidden aria-label="Жанры влево"></button>
+    <div class="genre-bar" id="genreBar" role="tablist" aria-label="Жанры"></div>
+    <button class="g-arrow right" id="genreNext" hidden aria-label="Жанры вправо"></button>
   </div>
 </header>
 
@@ -189,7 +300,8 @@ footer b{color:var(--muted)}
   <section class="main-col">
     <div class="player" id="player">
       <video id="video" playsinline preload="metadata"></video>
-      <div class="ch-badge" id="chBadge"><b id="badgeNum">01</b><span id="badgeName">—</span></div>
+      <div class="ch-badge" id="chBadge"><b id="badgeNum">01</b><span class="live" id="badgeLive">LIVE</span><span id="badgeName">—</span></div>
+      <div class="num-osd" id="numOsd" hidden></div>
 
       <div class="controls" id="controls">
         <button class="ctrl-btn" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
@@ -202,7 +314,7 @@ footer b{color:var(--muted)}
 
       <div class="overlay boot" id="boot">
         <div class="boot-title">TV BOX</div>
-        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети. В списке остаются только каналы, которые реально отвечают из России без VPN. Цель — 100 рабочих каналов.</p>
+        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают из России без VPN. Цель — 5000 рабочих каналов. Жанры — на панели под шапкой.</p>
         <button class="primary-btn" id="bootBtn">▶&nbsp; Включить эфир</button>
       </div>
 
@@ -220,8 +332,13 @@ footer b{color:var(--muted)}
         <img class="channel-logo" id="channelLogo" alt="" hidden>
         <div class="info-titles">
           <h1 id="infoName">—</h1>
-          <div class="info-tags"><span class="tag" id="infoCat">—</span><span class="tag" id="infoCountry">—</span><span class="tag ok" id="infoStatus">Проверен</span></div>
+          <div class="info-tags">
+            <button class="tag" id="infoCat" title="Показать все каналы этого жанра">—</button>
+            <span class="tag" id="infoCountry">—</span>
+            <span class="tag ok" id="infoStatus">Проверен</span>
+          </div>
         </div>
+        <button class="icon-btn" id="infoFav" title="В избранное (S)" aria-label="Избранное"></button>
       </div>
       <p class="desc" id="infoDesc"></p>
 
@@ -239,17 +356,27 @@ footer b{color:var(--muted)}
     </div>
   </section>
 
-  <aside class="sidebar panel">
-    <div class="side-head"><h2>Рабочие каналы</h2><span id="chCount">0</span></div>
-    <div class="scan-box">
-      <div class="scan-line"><span>Найдено</span><b id="scanFound">0/100</b><span id="scanChecked">проверено 0</span></div>
-      <div class="scan-bar"><i id="scanFill"></i></div>
-      <div class="scan-line" style="margin:8px 0 0"><span id="scanSource">Подготовка…</span></div>
+  <aside class="sidebar panel" id="sidebar">
+    <div class="side-head">
+      <h2 id="sideTitle">Все каналы</h2>
+      <button class="reset-chip" id="filterReset" hidden>Сбросить</button>
+      <span id="chCount">0</span>
     </div>
-    <div class="filters" id="filters"></div>
-    <div class="list-tools"><label for="sortSel">Сортировка</label><select id="sortSel"><option value="number">По номеру</option><option value="name">По названию</option><option value="category">По категории</option></select></div>
-    <div class="ch-list" id="chList" role="list"></div>
-    <div class="legend">В списке только проверенные источники. Если канал перестаёт отвечать при просмотре, он автоматически удаляется, а поиск продолжает искать замену до 100.</div>
+    <div class="scan-box">
+      <div class="scan-line"><span>Найдено</span><b id="scanFound">0/5000</b><span id="scanChecked">проверено 0</span></div>
+      <div class="scan-bar"><i id="scanFill"></i></div>
+      <div class="scan-line" style="margin:7px 0 0"><span id="scanSource">Подготовка…</span></div>
+    </div>
+    <div class="list-tools">
+      <div class="seg" id="sortSeg" role="tablist" aria-label="Сортировка">
+        <button class="seg-btn" data-sort="number" title="По номеру">№</button>
+        <button class="seg-btn" data-sort="name" title="По названию">А–Я</button>
+        <button class="seg-btn" data-sort="category" title="По жанру">Жанр</button>
+      </div>
+      <button class="mini-btn" id="shuffleBtn" title="Случайный канал (R)" aria-label="Случайный канал"></button>
+    </div>
+    <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
+    <div class="legend">Только проверенные источники. Звёздочка — избранное (S). Жанры появляются по мере нахождения каналов. Потерявший сигнал канал удаляется, поиск ищет замену до 5000.</div>
     <div class="side-foot">
       <button class="foot-btn" id="refreshScan"><span id="refreshIcon2"></span> Обновить</button>
       <button class="foot-btn" id="exportBtn"><span id="exportIcon"></span> Экспорт M3U</button>
@@ -258,9 +385,17 @@ footer b{color:var(--muted)}
 </main>
 
 <footer>
-  <b>Как это работает:</b> список собирается из открытых IPTV-источников и проверяется запросами из вашего браузера. Канал попадает в список только после успешной проверки HLS-манифеста. Нерабочие источники не показываются. VPN не используется.<br>
-  <b>Управление:</b> 0–9 — номер канала • ↑↓ — переключение • ←→ — громкость • Пробел — пауза • M — звук • F — полный экран • двойной клик по видео — полный экран.
+  <b>Как это работает:</b> список собирается из открытых IPTV-источников (включая полный мировой каталог iptv-org) и проверяется запросами из вашего браузера. Канал попадает в список только после успешной проверки HLS-манифеста. Нерабочие источники не показываются. VPN не используется. Итоговое число зависит от доступности источников в вашей сети.<br>
+  <b>Управление:</b> 0–9 — номер канала (до 4 цифр, Enter — сразу) • ↑↓ — переключение • ←→ — громкость • Пробел — пауза • M — звук • F — полный экран • G — жанры • S — избранное • R — случайный канал • / — поиск • двойной клик по видео — полный экран.
 </footer>
+
+<div class="modal-backdrop" id="genreModal" hidden>
+  <div class="modal panel" role="dialog" aria-modal="true" aria-label="Жанры">
+    <div class="grabber"></div>
+    <div class="modal-head"><h3>Жанры</h3><span class="modal-sub" id="genreModalSub"></span><button class="icon-btn" id="genreClose" aria-label="Закрыть"></button></div>
+    <div class="modal-grid" id="genreGrid"></div>
+  </div>
+</div>
 
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
@@ -269,7 +404,7 @@ footer b{color:var(--muted)}
 'use strict';
 
 /* ================== ЦЕЛЬ И ИСТОЧНИКИ ================== */
-const TARGET=100, CONCURRENCY=14, PROBE_TIMEOUT=5200, PLAY_TIMEOUT=16000;
+const TARGET=5000, CONCURRENCY=20, PROBE_TIMEOUT=5200, PLAY_TIMEOUT=16000;
 const BASE='https://iptv-org.github.io/iptv/';
 const RAW='https://raw.githubusercontent.com/iptv-org/iptv/master/streams/';
 const countrySrc=(code,label)=>({label,country:code,urls:[BASE+'countries/'+code+'.m3u',RAW+code+'.m3u']});
@@ -288,7 +423,8 @@ const SOURCES=[
   categorySrc('culture','Культура'),categorySrc('education','Образование'),categorySrc('family','Семейные'),
   categorySrc('lifestyle','Стиль жизни'),categorySrc('auto','Авто'),categorySrc('business','Бизнес'),
   categorySrc('classic','Классика'),categorySrc('cooking','Кулинария'),categorySrc('relax','Релакс'),
-  categorySrc('religious','Религия'),categorySrc('weather','Погода')
+  categorySrc('religious','Религия'),categorySrc('weather','Погода'),
+  {label:'Мировой каталог (все страны)',urls:[BASE+'index.m3u']}
 ];
 
 const GROUP_RU={
@@ -346,9 +482,16 @@ const IC={
   fs:'<path d="M8 3H3v5M16 3h5v5M8 21H3v-5M21 16v5h-5"/>',
   refresh:'<path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>',
   search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
-  export:'<path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 17v3h16v-3"/>'
+  export:'<path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 17v3h16v-3"/>',
+  star:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  shuffle:'<path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="m15 15 6 6"/><path d="M4 4l5 5"/>',
+  close:'<path d="M18 6 6 18M6 6l12 12"/>',
+  chevL:'<path d="m15 18-6-6 6-6"/>',
+  chevR:'<path d="m9 18 6-6-6-6"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>'
 };
-const icon=(n,s=18)=>'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';
+const icon=(n,s=18)=>'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';
 
 /* ================== СОСТОЯНИЕ ================== */
 const $=id=>document.getElementById(id);
@@ -365,16 +508,33 @@ const durCache={},quarantine={};
 let idCounter=0;
 
 const scan={running:false,sourceIdx:0,queue:[],seenUrls:new Set(),verifiedNames:new Set(),blockedUrls:new Set(),blockedNames:new Set(),checked:0,exhausted:false,abort:false};
-const DEF={vol:70,muted:false,cat:'all',sort:'number',lastUrl:''};
+const DEF={vol:70,muted:false,cat:'all',sort:'number',lastUrl:'',favs:{}};
 let S=Object.assign({},DEF);
 try{const raw=localStorage.getItem('tv-box-v3');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+if(!S.favs||typeof S.favs!=='object')S.favs={};
 let saveT=null;
 function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('tv-box-v3',JSON.stringify(S));}catch(e){}},200);}
+
+const favKey=ch=>ch.type==='vod'?ch.id:ch.url;
+const isFav=ch=>!!S.favs[favKey(ch)];
+function toggleFav(ch){
+  const k=favKey(ch);
+  if(S.favs[k])delete S.favs[k];else S.favs[k]=1;
+  save();renderGenres();renderInfo();
+  if(S.cat==='fav')renderList();else renderWindow();
+  toast(isFav(ch)?'«'+ch.name+'» — в избранном':'«'+ch.name+'» убран из избранного','info',2200);
+}
+
+let renderT=null;
+function scheduleRender(){if(renderT)return;renderT=setTimeout(()=>{renderT=null;renderAll();},350);}
 
 /* ================== ТОСТЫ ================== */
 function toast(msg,type='info',ms=3800){
   const box=$('toasts');while(box.children.length>=4)box.firstChild.remove();
-  const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;
+  const el=document.createElement('div');el.className='toast '+type;
+  const d=document.createElement('span');d.className='t-dot';
+  const t=document.createElement('span');t.textContent=msg;
+  el.append(d,t);
   box.appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(8px)';setTimeout(()=>el.remove(),220);},ms);
 }
 
@@ -451,7 +611,7 @@ function updateScanUI(sourceLabel){
   $('scanFill').style.width=Math.min(100,found/TARGET*100)+'%';
   if(sourceLabel)$('scanSource').textContent=sourceLabel;
   else if(scan.running)$('scanSource').textContent='Проверка источников…';
-  else if(found>=TARGET)$('scanSource').textContent='Готово: 100 рабочих каналов';
+  else if(found>=TARGET)$('scanSource').textContent='Готово: '+TARGET+' рабочих каналов';
   else if(scan.exhausted)$('scanSource').textContent='Все источники проверены. Найдено '+found+'.';
   else $('scanSource').textContent='Готово к поиску';
 }
@@ -461,13 +621,13 @@ async function loadNextSource(){
     updateScanUI('Загрузка: '+src.label);
     let text='';
     for(const url of src.urls){
-      try{text=await fetchText(url,12000);if(text)break;}catch(e){}
+      try{text=await fetchText(url,20000);if(text)break;}catch(e){}
     }
     if(!text)continue;
     const parsed=parseM3U(text,src.country);
     const fresh=parsed.filter(c=>!scan.seenUrls.has(c.url)&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedUrls.has(c.url)&&!scan.blockedNames.has(nameKey(c.name)));
     fresh.forEach(c=>scan.seenUrls.add(c.url));
-    scan.queue.push(...fresh);
+    scan.queue=scan.queue.concat(fresh);
     if(scan.queue.length)return true;
   }
   return false;
@@ -508,7 +668,7 @@ async function startScan(force=false){
     }
   }finally{
     scan.running=false;updateScanUI();renderAll();restoreLast();
-    if(channels.length>=TARGET)toast('Найдено 100 рабочих каналов. Поиск остановлен.','ok',5000);
+    if(channels.length>=TARGET)toast('Найдено '+TARGET+' рабочих каналов. Поиск остановлен.','ok',5000);
     else toast('Проверка завершена: найдено '+channels.length+' рабочих каналов.','warn',5000);
   }
 }
@@ -520,7 +680,7 @@ function addChannel(c){
     desc:'Прямой эфир • '+c.group+' • '+country+'. Источник успешно прошёл проверку в вашей сети.',
     verifiedAt:Date.now()
   };
-  channels.push(ch);renumber();renderAll();updateScanUI();
+  channels.push(ch);scheduleRender();updateScanUI();
 }
 function renumber(){channels.forEach((c,i)=>c.n=i+1);}
 function removeChannel(ch,reason){
@@ -578,12 +738,13 @@ function destroyPlayer(){
   video.removeAttribute('src');try{video.load();}catch(e){}
   $('loading').hidden=true;$('error').hidden=true;$('gesture').hidden=true;$('quality').hidden=true;
 }
-function tune(ch){
+function tune(ch,user){
   if(!ch)return;
   destroyPlayer();const ses=session;
   current=ch;S.lastUrl=ch.type==='vod'?ch.id:ch.url;save();
   started=true;$('boot').hidden=true;
-  renderAll();showBadge();
+  renderAll();showBadge();revealCurrent();
+  if(user&&matchMedia('(max-width:940px)').matches)player.scrollIntoView({behavior:'smooth',block:'start'});
   $('loading').hidden=false;
   signalText='подключение…';updateSignal();
   if(ch.type==='vod'){mode='vod';startVod(ch,ses);}
@@ -629,11 +790,6 @@ function buildQuality(){
   sel.value=String(hls.currentLevel);sel.hidden=false;
 }
 $('quality').addEventListener('change',e=>{if(hls){hls.currentLevel=parseInt(e.target.value,10);toast('Качество: '+e.target.options[e.target.selectedIndex].text,'info',2200);}});
-function fail(reason){
-  $('loading').hidden=true;$('gesture').hidden=true;
-  signalText='нет сигнала';updateSignal();
-  $('errorText').textContent=reason;$('error').hidden=false;
-}
 
 /* ================== КИНОЗАЛЫ ================== */
 function activeItems(ch){const q=quarantine[ch.id]||new Set();return ch.items.filter(it=>!q.has(it.url));}
@@ -698,46 +854,171 @@ video.addEventListener('pause',()=>{syncPlay();pokeControls();});
 let tuT=0;
 video.addEventListener('timeupdate',()=>{const n=Date.now();if(n-tuT>900){tuT=n;renderProgram();}});
 
-/* ================== UI ================== */
-function renderAll(){renderFilters();renderList();renderInfo();updateScanUI();}
-function renderFilters(){
-  const box=$('filters');box.innerHTML='';
-  const groups={};channels.forEach(c=>{groups[c.group]=(groups[c.group]||0)+1;});
-  if(S.cat!=='all'&&!groups[S.cat])S.cat='all';
-  const mk=(key,label,count)=>{const b=document.createElement('button');b.className='filter'+(S.cat===key?' active':'');b.textContent=label+(count!=null?' '+count:'');b.addEventListener('click',()=>{S.cat=key;save();renderFilters();renderList();});box.appendChild(b);};
-  mk('all','Все',channels.length);
-  Object.keys(groups).sort((a,b)=>a.localeCompare(b,'ru')).forEach(k=>mk(k,k,groups[k]));
+/* ================== ЖАНРЫ ================== */
+function genreCounts(){const g={};channels.forEach(c=>{g[c.group]=(g[c.group]||0)+1;});return g;}
+function favCount(){let n=0;channels.forEach(c=>{if(isFav(c))n++;});return n;}
+function sortedGenres(groups){return Object.keys(groups).sort((a,b)=>groups[b]-groups[a]||a.localeCompare(b,'ru'));}
+function setCat(key){
+  S.cat=key;save();
+  $('chList').scrollTop=0;
+  renderGenres();renderList();updateSideHead();
+  if(matchMedia('(max-width:940px)').matches)$('sidebar').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function renderList(){
-  const list=$('chList'),scroll=list.scrollTop;list.innerHTML='';
+function renderGenres(){
+  const bar=$('genreBar'),sl=bar.scrollLeft;
+  const groups=genreCounts();
+  if(S.cat!=='all'&&S.cat!=='fav'&&!groups[S.cat])S.cat='all';
+  const frag=document.createDocumentFragment();
+  const mk=(key,label,count)=>{
+    const b=document.createElement('button');
+    b.className='g-chip'+(S.cat===key?' active':'');
+    b.setAttribute('role','tab');b.setAttribute('aria-selected',S.cat===key?'true':'false');
+    const t=document.createElement('span');t.textContent=label;
+    const c=document.createElement('span');c.className='g-count';c.textContent=count;
+    b.append(t,c);
+    b.addEventListener('click',()=>setCat(key));
+    frag.appendChild(b);
+  };
+  mk('all','Все',channels.length);
+  mk('fav','Избранное',favCount());
+  sortedGenres(groups).forEach(k=>mk(k,k,groups[k]));
+  const more=document.createElement('button');more.className='g-chip more';more.textContent='Все жанры';
+  more.addEventListener('click',openGenres);frag.appendChild(more);
+  bar.replaceChildren(frag);bar.scrollLeft=sl;updateGenreArrows();
+}
+function updateGenreArrows(){
+  const bar=$('genreBar'),wrap=$('genreWrap');
+  const over=bar.scrollWidth>bar.clientWidth+4;
+  wrap.classList.toggle('has-overflow',over);
+  $('genrePrev').hidden=!over||bar.scrollLeft<=4;
+  $('genreNext').hidden=!over||bar.scrollLeft+bar.clientWidth>=bar.scrollWidth-4;
+}
+$('genreBar').addEventListener('scroll',updateGenreArrows,{passive:true});
+addEventListener('resize',updateGenreArrows);
+$('genrePrev').addEventListener('click',()=>$('genreBar').scrollBy({left:-300,behavior:'smooth'}));
+$('genreNext').addEventListener('click',()=>$('genreBar').scrollBy({left:300,behavior:'smooth'}));
+
+function renderGenreModal(){
+  const grid=$('genreGrid');grid.innerHTML='';
+  const groups=genreCounts();
+  $('genreModalSub').textContent=channels.length+' каналов • '+Object.keys(groups).length+' жанров';
+  const mk=(key,label,count)=>{
+    const active=S.cat===key;
+    const b=document.createElement('button');b.className='g-card'+(active?' active':'');
+    const t=document.createElement('b');t.textContent=label;
+    const c=document.createElement('span');c.className='gc';c.textContent=count;
+    const s=document.createElement('span');s.className='g-chev';s.innerHTML=icon(active?'check':'chevR',14);
+    b.append(t,c,s);
+    b.addEventListener('click',()=>{setCat(key);closeGenres();});
+    grid.appendChild(b);
+  };
+  mk('all','Все каналы',channels.length);
+  mk('fav','Избранное',favCount());
+  sortedGenres(groups).forEach(k=>mk(k,k,groups[k]));
+}
+function openGenres(){renderGenreModal();$('genreModal').hidden=false;$('genreClose').focus();}
+function closeGenres(){$('genreModal').hidden=true;$('genreBtn').focus();}
+$('genreModal').addEventListener('click',e=>{if(e.target===$('genreModal'))closeGenres();});
+
+/* ================== СПИСОК (виртуальный) ================== */
+const ROW_H=56;
+let shownCache=[];
+function computeShown(){
   const q=$('search').value.trim().toLowerCase();
-  let shown=channels.filter(ch=>{
-    const catOk=S.cat==='all'||ch.group===S.cat;
+  const arr=channels.filter(ch=>{
+    const catOk=S.cat==='all'||(S.cat==='fav'?isFav(ch):ch.group===S.cat);
     const hay=(ch.name+' '+ch.group+' '+ch.country).toLowerCase();
     return catOk&&(!q||hay.includes(q)||String(ch.n).includes(q));
   });
-  if(S.sort==='name')shown=[...shown].sort((a,b)=>a.name.localeCompare(b.name,'ru'));
-  else if(S.sort==='category')shown=[...shown].sort((a,b)=>a.group.localeCompare(b.group,'ru')||a.name.localeCompare(b.name,'ru'));
-  else shown=[...shown].sort((a,b)=>a.n-b.n);
-  $('chCount').textContent=String(shown.length);
-  if(!shown.length){const d=document.createElement('div');d.style.cssText='padding:22px 10px;text-align:center;color:var(--dim);font-size:12px;line-height:1.6';d.textContent='Каналы не найдены. Измените запрос или категорию.';list.appendChild(d);list.scrollTop=scroll;return;}
-  shown.forEach(ch=>{
-    const b=document.createElement('button');b.className='ch-item'+(current&&ch.id===current.id?' active':'');b.dataset.id=ch.id;b.setAttribute('role','listitem');
-    if(current&&ch.id===current.id)b.setAttribute('aria-current','true');
-    b.innerHTML='<span class="ch-num">'+pad2(ch.n)+'</span><span class="ch-name">'+ch.name+'</span><span class="dot ok"></span>';
-    b.addEventListener('click',()=>tune(ch));
-    list.appendChild(b);
-  });
-  list.scrollTop=scroll;
+  if(S.sort==='name')arr.sort((a,b)=>a.name.localeCompare(b.name,'ru'));
+  else if(S.sort==='category')arr.sort((a,b)=>a.group.localeCompare(b.group,'ru')||a.name.localeCompare(b.name,'ru'));
+  else arr.sort((a,b)=>a.n-b.n);
+  return arr;
 }
+function updateSideHead(){
+  $('sideTitle').textContent=S.cat==='all'?'Все каналы':S.cat==='fav'?'Избранное':S.cat;
+  $('filterReset').hidden=(S.cat==='all'&&!$('search').value.trim());
+}
+function resetFilters(){S.cat='all';$('search').value='';syncSearchClear();save();renderAll();}
+function renderList(){
+  const spacer=$('chSpacer');
+  shownCache=computeShown();
+  $('chCount').textContent=String(shownCache.length);
+  if(!shownCache.length){
+    spacer.style.height='auto';
+    const d=document.createElement('div');d.className='ch-empty';
+    const p=document.createElement('p');
+    p.textContent=S.cat==='fav'?'В избранном пока пусто. Отмечайте каналы звёздочкой — они появятся здесь.':'Ничего не найдено. Измените запрос или выбери другой жанр.';
+    const rb=document.createElement('button');rb.className='secondary-btn';rb.textContent='Сбросить фильтры';
+    rb.addEventListener('click',resetFilters);
+    d.append(p,rb);spacer.replaceChildren(d);return;
+  }
+  spacer.style.height=(shownCache.length*ROW_H)+'px';
+  renderWindow();
+}
+function renderWindow(){
+  if(!shownCache.length)return;
+  const list=$('chList'),spacer=$('chSpacer');
+  const top=list.scrollTop,h=list.clientHeight||420;
+  const from=Math.max(0,Math.floor(top/ROW_H)-4);
+  const to=Math.min(shownCache.length,Math.ceil((top+h)/ROW_H)+4);
+  const frag=document.createDocumentFragment();
+  for(let i=from;i<to;i++){
+    const ch=shownCache[i];
+    const active=current&&ch.id===current.id;
+    const b=document.createElement('div');
+    b.className='ch-item'+(active?' active':'');
+    b.style.top=(i*ROW_H)+'px';
+    b.tabIndex=0;b.setAttribute('role','listitem');
+    if(active)b.setAttribute('aria-current','true');
+    const num=document.createElement('span');num.className='ch-num';num.textContent=pad2(ch.n);
+    const th=document.createElement('span');th.className='ch-thumb';
+    const lt=document.createElement('i');lt.textContent=(ch.name[0]||'?').toUpperCase();th.appendChild(lt);
+    if(ch.logo&&/^https:/i.test(ch.logo)){
+      const im=new Image();im.loading='lazy';im.decoding='async';im.referrerPolicy='no-referrer';im.alt='';
+      im.src=ch.logo;im.onerror=()=>im.remove();th.appendChild(im);
+    }
+    const tx=document.createElement('span');tx.className='ch-text';
+    const nm=document.createElement('span');nm.className='ch-name';nm.textContent=ch.name;nm.title=ch.name;
+    const mt=document.createElement('span');mt.className='ch-meta';
+    if(active){const eq=document.createElement('span');eq.className='eq';eq.innerHTML='<i></i><i></i><i></i>';mt.appendChild(eq);}
+    mt.appendChild(document.createTextNode(ch.group+' • '+ch.country));
+    tx.append(nm,mt);
+    const st=document.createElement('button');st.className='fav-btn'+(isFav(ch)?' on':'');
+    st.innerHTML=icon('star',14);st.title=isFav(ch)?'Убрать из избранного':'В избранное';
+    st.setAttribute('aria-label','Избранное');
+    st.addEventListener('click',e=>{e.stopPropagation();toggleFav(ch);});
+    b.append(num,th,tx,st);
+    b.addEventListener('click',()=>tune(ch,true));
+    b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();tune(ch,true);}});
+    frag.appendChild(b);
+  }
+  spacer.replaceChildren(frag);
+}
+function revealCurrent(){
+  if(!current)return;
+  const i=shownCache.findIndex(c=>c.id===current.id);
+  if(i<0)return;
+  const list=$('chList'),h=list.clientHeight||420,y=i*ROW_H;
+  if(y<list.scrollTop||y+ROW_H>list.scrollTop+h)list.scrollTop=Math.max(0,y-h/2+ROW_H/2);
+}
+let winRaf=0;
+$('chList').addEventListener('scroll',()=>{if(winRaf)return;winRaf=requestAnimationFrame(()=>{winRaf=0;renderWindow();});},{passive:true});
+addEventListener('resize',()=>{if(shownCache.length)renderWindow();});
+
+/* ================== КАРТОЧКА / ПРОГРАММА ================== */
+function renderAll(){renderGenres();renderList();renderInfo();updateSideHead();updateScanUI();}
 function renderInfo(){
   if(!current)return;
   $('infoNum').textContent=pad2(current.n);$('infoName').textContent=current.name;
   $('infoDesc').textContent=current.desc;
   $('infoCat').textContent=current.group;$('infoCountry').textContent=current.country;
   const st=$('infoStatus');st.className='tag '+(current.type==='vod'?'vod':'ok');st.textContent=current.type==='vod'?'Кинозал':'Проверен';
+  const fv=$('infoFav');fv.classList.toggle('on',isFav(current));
+  fv.title=isFav(current)?'Убрать из избранного (S)':'В избранное (S)';
   const logo=$('channelLogo');
-  if(current.logo){logo.src=current.logo;logo.hidden=false;logo.onerror=()=>{logo.hidden=true;};}else{logo.hidden=true;logo.removeAttribute('src');}
+  if(current.logo&&/^https:/i.test(current.logo)){logo.referrerPolicy='no-referrer';logo.src=current.logo;logo.hidden=false;logo.onerror=()=>{logo.hidden=true;};}
+  else{logo.hidden=true;logo.removeAttribute('src');}
   $('programNote').textContent=current.type==='vod'?'Расписание построено по реальной длине фрагментов':'Точная сетка — у вещателя';
   updateSignal();renderProgram();
 }
@@ -762,7 +1043,7 @@ function renderProgram(){
     b.addEventListener('click',()=>{if(!started||current.id!==ch.id)tune(ch);loadSeg(ch,i,0,session);toast('Включаю: «'+it.title+'»','info',2200);});
     tl.appendChild(b);
   });
-  const elapsed=started&&current.id===ch.n?(video.currentTime||0):0;
+  const elapsed=(started&&mode==='vod')?(video.currentTime||0):0;
   let acc=-elapsed;
   for(let k=0;k<3;k++){
     const idx=(ci+k)%items.length,it=items[idx];const start=k===0?-elapsed:acc;if(k>0)acc+=durs[(ci+k-1)%items.length];
@@ -771,7 +1052,11 @@ function renderProgram(){
     cards.appendChild(c);
   }
 }
-function showBadge(){$('badgeNum').textContent=pad2(current.n);$('badgeName').textContent=current.name;const b=$('chBadge');b.classList.add('show');clearTimeout(showBadge.t);showBadge.t=setTimeout(()=>b.classList.remove('show'),2800);}
+function showBadge(){
+  $('badgeNum').textContent=pad2(current.n);$('badgeName').textContent=current.name;
+  const lv=$('badgeLive');lv.textContent=current.type==='vod'?'КИНО':'LIVE';lv.classList.toggle('vod',current.type==='vod');
+  const b=$('chBadge');b.classList.add('show');clearTimeout(showBadge.t);showBadge.t=setTimeout(()=>b.classList.remove('show'),2800);
+}
 const fmt=s=>{s=Math.max(0,Math.floor(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':':'')+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0');};
 
 /* ================== ТРАНСПОРТ ================== */
@@ -779,8 +1064,9 @@ function syncPlay(){$('playBtn').innerHTML=icon(video.paused?'play':'pause');}
 function syncMute(){const ic=icon(S.muted?'mute':'vol');$('muteBtn').innerHTML=ic;$('topMute').innerHTML=ic;$('topMute').classList.toggle('active',!S.muted);}
 function setMuted(m){S.muted=m;video.muted=m;save();syncMute();}
 function setVol(v,fromSlider){S.vol=Math.max(0,Math.min(100,Math.round(v)));video.volume=S.vol/100;if(S.vol>0&&S.muted)setMuted(false);if(!fromSlider)$('volRange').value=String(S.vol);save();}
-function stepChannel(dir){if(!channels.length)return;const i=current?channels.findIndex(c=>c.id===current.id):-1;tune(channels[(i+dir+channels.length)%channels.length]);}
-function togglePlay(){if(!started){tune(current||channels[0]);return;}if(video.paused)video.play().catch(()=>$('gesture').hidden=false);else video.pause();}
+function stepChannel(dir){if(!channels.length)return;const i=current?channels.findIndex(c=>c.id===current.id):-1;tune(channels[(i+dir+channels.length)%channels.length],true);}
+function shuffleChannel(){if(channels.length<2)return;let ch;do{ch=channels[Math.floor(Math.random()*channels.length)];}while(current&&ch.id===current.id);tune(ch,true);}
+function togglePlay(){if(!started){tune(current||channels[0],true);return;}if(video.paused)video.play().catch(()=>$('gesture').hidden=false);else video.pause();}
 function toggleFs(){if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else player.requestFullscreen().catch(()=>toast('Полный экран недоступен в этом браузере.','warn'));}
 player.addEventListener('dblclick',toggleFs);
 document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);pokeControls();});
@@ -791,10 +1077,30 @@ player.addEventListener('touchstart',pokeControls,{passive:true});
 
 /* ================== КЛАВИАТУРА ================== */
 let padBuf='',padT=null;
-function padPress(d){padBuf=(padBuf+d).slice(-2);clearTimeout(padT);if(padBuf.length>=2)padCommit();else padT=setTimeout(padCommit,1300);}
-function padCommit(){clearTimeout(padT);if(!padBuf)return;const n=parseInt(padBuf,10);padBuf='';const ch=channels.find(c=>c.n===n);if(ch)tune(ch);else toast('Канала с номером '+n+' пока нет.','warn');}
+function padPress(d){
+  padBuf=(padBuf+d).slice(-4);clearTimeout(padT);
+  const osd=$('numOsd');osd.textContent=padBuf;osd.hidden=false;
+  const n=parseInt(padBuf,10);
+  if(padBuf.length>=4||n*10>channels.length){padCommit();return;}
+  padT=setTimeout(padCommit,1200);
+}
+function padCommit(){
+  clearTimeout(padT);$('numOsd').hidden=true;
+  if(!padBuf)return;
+  const n=parseInt(padBuf,10);padBuf='';
+  const ch=channels.find(c=>c.n===n);
+  if(ch)tune(ch,true);else toast('Канала с номером '+n+' пока нет.','warn');
+}
 document.addEventListener('keydown',e=>{
-  if(e.target.matches('input,select,textarea'))return;
+  if(!$('genreModal').hidden){if(e.key==='Escape'){closeGenres();e.preventDefault();}return;}
+  if(e.target.matches('input,select,textarea')){
+    if(e.key==='Escape'){
+      if(e.target.id==='search'&&e.target.value){e.target.value='';syncSearchClear();renderList();updateSideHead();}
+      else e.target.blur();
+    }
+    return;
+  }
+  if(e.key==='/'){e.preventDefault();$('search').focus();return;}
   if(/^[0-9]$/.test(e.key)){padPress(e.key);e.preventDefault();return;}
   switch(e.key){
     case 'ArrowUp':stepChannel(-1);e.preventDefault();break;
@@ -802,8 +1108,11 @@ document.addEventListener('keydown',e=>{
     case 'ArrowRight':setVol(S.vol+5);e.preventDefault();break;
     case 'ArrowLeft':setVol(S.vol-5);e.preventDefault();break;
     case ' ':togglePlay();e.preventDefault();break;
-    case 'm':case 'M':case 'ь':setMuted(!S.muted);break;
-    case 'f':case 'F':case 'а':toggleFs();break;
+    case 'm':case 'M':case 'ь':case 'Ь':setMuted(!S.muted);break;
+    case 'f':case 'F':case 'а':case 'А':toggleFs();break;
+    case 'g':case 'G':case 'п':case 'П':openGenres();break;
+    case 'r':case 'R':case 'к':case 'К':shuffleChannel();break;
+    case 's':case 'S':case 'ы':case 'Ы':if(current)toggleFav(current);break;
     case 'Enter':if(padBuf)padCommit();break;
   }
 });
@@ -829,14 +1138,35 @@ setInterval(()=>{if(started)renderProgram();},30000);
 addEventListener('offline',()=>toast('Нет интернета. Поиск и эфиры временно недоступны.','bad',6000));
 addEventListener('online',()=>{toast('Сеть восстановлена.','ok');startScan();if(started&&current)tune(current);});
 
+/* ================== ПОИСК / СОРТИРОВКА ================== */
+function syncSearchClear(){$('searchClear').hidden=!$('search').value;}
+$('search').addEventListener('input',()=>{syncSearchClear();renderList();updateSideHead();});
+$('searchClear').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();updateSideHead();$('search').focus();});
+function syncSort(){
+  document.querySelectorAll('#sortSeg .seg-btn').forEach(b=>{
+    const on=b.dataset.sort===S.sort;
+    b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false');
+  });
+}
+$('sortSeg').addEventListener('click',e=>{
+  const b=e.target.closest('.seg-btn');if(!b)return;
+  S.sort=b.dataset.sort;save();syncSort();renderList();
+});
+
 /* ================== ПРИВЯЗКА ================== */
-$('searchIcon').innerHTML=icon('search',16);
+$('searchIcon').innerHTML=icon('search',15);
+$('searchClear').innerHTML=icon('close',11);
 $('topFs').innerHTML=icon('fs');$('fsBtn').innerHTML=icon('fs');
 $('prevBtn').innerHTML=icon('prev');$('nextBtn').innerHTML=icon('next');
 $('refreshIcon').innerHTML=icon('refresh',14);$('refreshIcon2').innerHTML=icon('refresh',14);
 $('exportIcon').innerHTML=icon('export',14);$('gestureBtn').innerHTML=icon('play',28);
+$('genreBtnIcon').innerHTML=icon('grid',16);
+$('genreClose').innerHTML=icon('close',15);
+$('genrePrev').innerHTML=icon('chevL',15);$('genreNext').innerHTML=icon('chevR',15);
+$('shuffleBtn').innerHTML=icon('shuffle',15);
+$('infoFav').innerHTML=icon('star',18);
 syncPlay();syncMute();
-$('bootBtn').addEventListener('click',()=>tune(current||channels[0]));
+$('bootBtn').addEventListener('click',()=>tune(current||channels[0],true));
 $('gestureBtn').addEventListener('click',()=>{video.play().then(()=>{$('gesture').hidden=true;}).catch(()=>toast('Браузер не дал запустить видео.','bad'));});
 $('playBtn').addEventListener('click',togglePlay);
 $('prevBtn').addEventListener('click',()=>stepChannel(-1));
@@ -845,16 +1175,21 @@ $('muteBtn').addEventListener('click',()=>setMuted(!S.muted));
 $('topMute').addEventListener('click',()=>setMuted(!S.muted));
 $('volRange').addEventListener('input',e=>setVol(+e.target.value,true));
 $('fsBtn').addEventListener('click',toggleFs);$('topFs').addEventListener('click',toggleFs);
-$('retryBtn').addEventListener('click',()=>{if(current)tune(current);});
-$('sigRetry').addEventListener('click',()=>{if(current)tune(current);});
+$('retryBtn').addEventListener('click',()=>{if(current)tune(current,true);});
+$('sigRetry').addEventListener('click',()=>{if(current)tune(current,true);});
 $('nextFromError').addEventListener('click',()=>stepChannel(1));
-$('search').addEventListener('input',renderList);
-$('sortSel').addEventListener('change',e=>{S.sort=e.target.value;save();renderList();});
 $('refreshScan').addEventListener('click',()=>{if(!scan.running)startScan(true);});
 $('exportBtn').addEventListener('click',exportM3U);
+$('genreBtn').addEventListener('click',openGenres);
+$('genreClose').addEventListener('click',closeGenres);
+$('shuffleBtn').addEventListener('click',shuffleChannel);
+$('filterReset').addEventListener('click',resetFilters);
+$('infoFav').addEventListener('click',()=>{if(current)toggleFav(current);});
+$('infoCat').addEventListener('click',()=>{if(current)setCat(current.group);});
 
 /* ================== СТАРТ ================== */
-video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);$('sortSel').value=S.sort;
+video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);
+syncSort();syncSearchClear();
 renderAll();ensureHls();startScan();
 })();
 </script>
