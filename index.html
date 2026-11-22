@@ -26,7 +26,7 @@
 :root{
   color-scheme:dark;
   --app-h:100%;
-  --shell-h:calc(100% - 106px);
+  --shell-h:calc(100% - 62px);
   --font-ui:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro','Helvetica Neue','Segoe UI',system-ui,Roboto,sans-serif;
   --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue','Segoe UI',system-ui,sans-serif;
   --w-reg:400;--w-med:500;--w-sem:600;
@@ -88,29 +88,6 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .icon-btn.active{background:var(--blue-soft);color:var(--blue)}
 .icon-btn.on{color:var(--yellow)}
 .icon-btn.on svg path{fill:currentColor}
-.nav-btn{width:auto;padding:0 13px;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:var(--w-med)}
-
-/* ================= GENRE STRIP ================= */
-.genre-wrap{position:relative;max-width:1560px;margin:0 auto;display:flex;align-items:center;border-top:.5px solid var(--hair)}
-.genre-wrap::before,.genre-wrap::after{content:'';position:absolute;top:0;bottom:0;width:46px;z-index:1;pointer-events:none;opacity:0;transition:.2s}
-.genre-wrap::before{left:72px;background:linear-gradient(90deg,#000,transparent)}
-.genre-wrap::after{right:0;background:linear-gradient(270deg,#000,transparent)}
-.genre-wrap.has-overflow::before,.genre-wrap.has-overflow::after{opacity:1}
-.strip-label{flex:none;width:72px;padding-left:22px;font-size:10px;font-weight:var(--w-med);letter-spacing:.08em;text-transform:uppercase;color:var(--label3)}
-.genre-bar{flex:1;min-width:0;display:flex;gap:8px;align-items:center;height:44px;overflow-x:auto;padding:0 22px 0 4px;scrollbar-width:none}
-.genre-bar::-webkit-scrollbar{display:none}
-.g-chip{flex:none;display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;border:0;background:var(--fill);font-size:13px;font-weight:var(--w-reg);color:var(--label2);cursor:pointer;white-space:nowrap}
-.g-chip:hover{background:var(--fill2);color:var(--label)}
-.g-chip.active{background:var(--fill);color:var(--blue);font-weight:var(--w-sem)}
-.g-chip.more{background:var(--blue-soft);color:var(--blue)}
-.g-count{font-size:12px;font-weight:var(--w-reg);color:var(--label3);font-variant-numeric:tabular-nums}
-.g-chip:hover .g-count{color:var(--label2)}
-.g-chip.active .g-count{color:var(--blue);opacity:1}
-.g-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:26px;height:26px;border-radius:50%;background:rgba(58,58,60,.94);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label2);box-shadow:0 4px 14px rgba(0,0,0,.6)}
-.g-arrow:hover{color:var(--label)}
-.g-arrow.left{left:76px}
-.g-arrow.right{right:6px}
-@media(pointer:coarse){.g-arrow{display:none}}
 
 /* ================= LAYOUT (app-shell) ================= */
 .layout{position:relative;z-index:1;max-width:1560px;margin:0 auto;height:var(--shell-h);
@@ -166,45 +143,49 @@ button:disabled{opacity:.32;cursor:not-allowed}
 
 /* ================= SIDEBAR ================= */
 .sidebar{position:static;display:flex;flex-direction:column;min-height:0;padding:16px 12px 12px 14px}
-.side-head,.country-picker,.legend,.side-foot{flex:none}
+.side-head,.country-picker,.genre-picker,.legend,.side-foot{flex:none}
 .side-head{display:flex;align-items:center;gap:8px;padding:0 4px 10px}
 .side-head h2{flex:1;min-width:0;font-size:12px;font-weight:var(--w-med);letter-spacing:.06em;text-transform:uppercase;color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .reset-chip{border:0;background:rgba(255,69,58,.15);color:var(--red);border-radius:999px;font-size:10.5px;font-weight:var(--w-med);padding:4px 10px;cursor:pointer;white-space:nowrap}
 .reset-chip:hover{background:rgba(255,69,58,.26)}
-.country-picker{width:100%;display:flex;align-items:center;gap:10px;height:46px;padding:0 13px;margin:0 4px 12px 0;border:0;border-radius:var(--r-group);background:var(--card2);cursor:pointer;color:var(--label);text-align:left}
-.country-picker:hover{background:var(--card3)}
-.country-picker .cp-ic{color:var(--teal);display:grid;place-items:center;flex:none}
-.country-picker b{flex:1;min-width:0;font-size:15px;font-weight:var(--w-med);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.country-picker .cp-chev{color:var(--label3);display:grid;place-items:center;flex:none}
+.country-picker,.genre-picker{width:100%;display:flex;align-items:center;gap:10px;height:46px;padding:0 13px;margin:0 4px 10px 0;border:0;border-radius:var(--r-group);background:var(--card2);cursor:pointer;color:var(--label);text-align:left}
+.country-picker:hover,.genre-picker:hover{background:var(--card3)}
+.country-picker .pk-ic{color:var(--teal);display:grid;place-items:center;flex:none}
+.genre-picker .pk-ic{color:var(--blue);display:grid;place-items:center;flex:none}
+.country-picker b,.genre-picker b{flex:1;min-width:0;font-size:15px;font-weight:var(--w-med);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.country-picker .pk-chev,.genre-picker .pk-chev{color:var(--label3);display:grid;place-items:center;flex:none}
 .country-picker.filtered{background:var(--teal-soft)}
 .country-picker.filtered b{color:var(--teal)}
-.country-picker.filtered .cp-chev{color:var(--teal)}
+.country-picker.filtered .pk-chev{color:var(--teal)}
+.genre-picker.filtered{background:var(--blue-soft)}
+.genre-picker.filtered b{color:var(--blue)}
+.genre-picker.filtered .pk-chev{color:var(--blue)}
 .ch-list{flex:1;min-height:0;overflow-y:auto;padding-right:6px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent}
 .ch-list::-webkit-scrollbar{width:9px;display:block}
 .ch-list::-webkit-scrollbar-track{background:transparent}
 .ch-list::-webkit-scrollbar-thumb{background:rgba(120,120,128,.55);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
 .ch-list::-webkit-scrollbar-thumb:hover{background:var(--blue);background-clip:padding-box}
 .ch-spacer{position:relative;width:100%;background:var(--card2);border-radius:var(--r-group);overflow:hidden}
-.ch-item{position:absolute;left:0;right:0;height:60px;display:grid;grid-template-columns:38px minmax(0,1fr) 28px;gap:12px;align-items:center;text-align:left;background:transparent;border:0;padding:0 12px;cursor:pointer;transition:background .14s var(--ease)}
-.ch-item::before{content:'';position:absolute;left:62px;right:0;top:0;height:.5px;background:var(--sep)}
+.ch-item{position:absolute;left:0;right:0;height:40px;display:grid;grid-template-columns:26px minmax(0,1fr) 22px;gap:10px;align-items:center;text-align:left;background:transparent;border:0;padding:0 10px;cursor:pointer;transition:background .14s var(--ease)}
+.ch-item::before{content:'';position:absolute;left:44px;right:0;top:0;height:.5px;background:var(--sep)}
 .ch-item.first::before{display:none}
 .ch-item:hover{background:var(--fill3)}
 .ch-item.active{background:var(--blue-soft)}
-.ch-thumb{position:relative;width:38px;height:38px;border-radius:9px;background:var(--card3);display:grid;place-items:center;overflow:hidden}
-.ch-thumb i{font-style:normal;font-size:14px;font-weight:var(--w-med);color:var(--label3)}
-.ch-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:3px;background:var(--card3)}
-.ch-text{min-width:0;display:flex;flex-direction:column;gap:3px}
-.ch-name{font-size:15px;font-weight:var(--w-reg);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-thumb{position:relative;width:26px;height:26px;border-radius:7px;background:var(--card3);display:grid;place-items:center;overflow:hidden}
+.ch-thumb i{font-style:normal;font-size:11px;font-weight:var(--w-med);color:var(--label3)}
+.ch-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:2px;background:var(--card3)}
+.ch-text{min-width:0;display:flex;flex-direction:column;gap:1px}
+.ch-name{font-size:12.5px;font-weight:var(--w-reg);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ch-item.active .ch-name{font-weight:var(--w-med)}
-.ch-sub{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:var(--w-reg);color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-sub{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:var(--w-reg);color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ch-item.active .ch-sub{color:var(--label2)}
-.eq{display:inline-flex;gap:2px;align-items:flex-end;height:10px;flex:none}
-.eq i{width:2.5px;background:var(--blue);border-radius:1px;transform-origin:bottom;animation:eq 1s ease-in-out infinite}
+.eq{display:inline-flex;gap:2px;align-items:flex-end;height:8px;flex:none}
+.eq i{width:2px;background:var(--blue);border-radius:1px;transform-origin:bottom;animation:eq 1s ease-in-out infinite}
 .eq i:nth-child(1){height:60%}
 .eq i:nth-child(2){height:100%;animation-delay:.2s}
 .eq i:nth-child(3){height:40%;animation-delay:.4s}
 @keyframes eq{50%{transform:scaleY(.35)}}
-.fav-btn{width:28px;height:28px;border-radius:7px;background:transparent;border:0;display:grid;place-items:center;color:var(--label4);cursor:pointer}
+.fav-btn{width:22px;height:22px;border-radius:6px;background:transparent;border:0;display:grid;place-items:center;color:var(--label4);cursor:pointer}
 .fav-btn:hover{color:var(--label2);background:var(--fill)}
 .fav-btn.on{color:var(--yellow)}
 .fav-btn.on svg path{fill:currentColor}
@@ -318,7 +299,7 @@ footer{display:none}
 .t-action{border:0;background:none;color:var(--blue);font-size:13px;font-weight:var(--w-med);cursor:pointer;flex:none;padding:2px 0 2px 4px}
 @keyframes tin{from{opacity:0;transform:translateY(10px)}}
 
-@media(max-width:1180px){.layout{grid-template-columns:minmax(0,1fr) 330px}.program-cards{grid-template-columns:1fr 1fr}.nav-btn .lbl{display:none}.nav-btn{width:36px;padding:0;justify-content:center}}
+@media(max-width:1180px){.layout{grid-template-columns:minmax(0,1fr) 330px}.program-cards{grid-template-columns:1fr 1fr}}
 @media(max-width:940px){
   .layout{display:flex;flex-direction:column;padding:12px 12px 12px}
   .main-col{flex:none}
@@ -329,10 +310,6 @@ footer{display:none}
   .search-wrap{order:3;flex-basis:100%;max-width:none;margin-left:0}
   .clock{display:none}.counter{font-size:11.5px;padding:6px 11px}
   .brand-sub{display:none}
-  .strip-label{width:60px;padding-left:14px;font-size:9px}
-  .genre-bar{padding:0 14px 0 2px;height:42px}
-  .genre-wrap::before{left:60px}
-  .g-arrow.left{left:64px}
   .vol-range{width:64px}.controls{padding:24px 10px 10px;gap:5px}.ctrl-btn{width:34px;height:34px}
   .info-titles h1{font-size:19px}.info-num{font-size:24px}.channel-logo{width:46px;height:46px}
   .program-cards{grid-template-columns:1fr}
@@ -369,16 +346,9 @@ footer{display:none}
     <div class="top-actions">
       <div class="counter" title="Найдено рабочих каналов"><i></i><span id="topCounter">0/5000</span></div>
       <span class="clock" id="clock">--:-- МСК</span>
-      <button class="icon-btn nav-btn press" id="genreBtn" title="Все жанры (G)"><span id="genreBtnIcon"></span><span class="lbl">Жанры</span></button>
       <button class="icon-btn press" id="topMute" title="Звук (M)" aria-label="Звук"></button>
       <button class="icon-btn press" id="topFs" title="Полный экран (F)" aria-label="Полный экран"></button>
     </div>
-  </div>
-  <div class="genre-wrap" id="genreWrap">
-    <span class="strip-label">Жанр</span>
-    <button class="g-arrow left press" id="genrePrev" hidden aria-label="Жанры влево"></button>
-    <div class="genre-bar" id="genreBar" role="tablist" aria-label="Жанры"></div>
-    <button class="g-arrow right press" id="genreNext" hidden aria-label="Жанры вправо"></button>
   </div>
 </header>
 
@@ -436,9 +406,15 @@ footer{display:none}
     </div>
 
     <button class="country-picker press" id="countryBtn" title="Выбрать страну (C)" aria-haspopup="dialog">
-      <span class="cp-ic" id="countryBtnIcon"></span>
+      <span class="pk-ic" id="countryBtnIcon"></span>
       <b id="countryBtnLabel">Все страны</b>
-      <span class="cp-chev" id="countryBtnChev"></span>
+      <span class="pk-chev" id="countryBtnChev"></span>
+    </button>
+
+    <button class="genre-picker press" id="genreBtn" title="Выбрать жанр (G)" aria-haspopup="dialog">
+      <span class="pk-ic" id="genreBtnIcon"></span>
+      <b id="genreBtnLabel">Все жанры</b>
+      <span class="pk-chev" id="genreBtnChev"></span>
     </button>
 
     <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
@@ -541,7 +517,7 @@ footer{display:none}
 function measureShell(){
   const h=(window.visualViewport?window.visualViewport.height:window.innerHeight)||document.documentElement.clientHeight;
   const hdr=document.querySelector('.top');
-  const hdrH=hdr?hdr.offsetHeight:106;
+  const hdrH=hdr?hdr.offsetHeight:60;
   const root=document.documentElement;
   root.style.setProperty('--app-h',h+'px');
   root.style.setProperty('--shell-h',Math.max(200,Math.round(h-hdrH))+'px');
@@ -1171,28 +1147,11 @@ function setCat(key){
   renderGenres();renderList();updateSideHead();
 }
 function renderGenres(){
-  const bar=$('genreBar'),sl=bar.scrollLeft;
   const groups=genreCounts();
   if(S.cat!=='all'&&S.cat!=='fav'&&!groups[S.cat])S.cat='all';
-  const frag=document.createDocumentFragment();
-  const mk=(key,label,count)=>{
-    const b=document.createElement('button');
-    b.className='g-chip press'+(S.cat===key?' active':'');
-    b.setAttribute('role','tab');b.setAttribute('aria-selected',S.cat===key?'true':'false');
-    b.setAttribute('aria-label',label+': '+count+' станций');
-    b.title=label+' — найдено '+count;
-    const t=document.createElement('span');t.textContent=label;
-    const c=document.createElement('span');c.className='g-count';c.textContent=count;
-    b.append(t,c);
-    b.addEventListener('click',()=>setCat(key));
-    frag.appendChild(b);
-  };
-  mk('all','Все жанры',channels.length);
-  mk('fav','Избранное',favCount());
-  sortedGenres(groups).forEach(k=>mk(k,k,groups[k]));
-  const more=document.createElement('button');more.className='g-chip more press';more.textContent='Список жанров';
-  more.addEventListener('click',openGenres);frag.appendChild(more);
-  bar.replaceChildren(frag);bar.scrollLeft=sl;updateGenreArrows();
+  const label=S.cat==='all'?'Все жанры':S.cat==='fav'?'Избранное':S.cat;
+  $('genreBtnLabel').textContent=label;
+  $('genreBtn').classList.toggle('filtered',S.cat!=='all');
 }
 function iosRow(label,active,onClick,opts){
   opts=opts||{};
@@ -1277,20 +1236,8 @@ $('countrySearch').addEventListener('keydown',e=>{
   if(e.key==='Enter'){const first=$('countryBody').querySelector('.ios-row:not(:disabled)');if(first)first.click();}
 });
 
-/* ================== СТРЕЛКИ ЖАНРОВ ================== */
-function updateGenreArrows(){
-  const bar=$('genreBar'),wrap=$('genreWrap');
-  const over=bar.scrollWidth>bar.clientWidth+4;
-  wrap.classList.toggle('has-overflow',over);
-  $('genrePrev').hidden=!over||bar.scrollLeft<=4;
-  $('genreNext').hidden=!over||bar.scrollLeft+bar.clientWidth>=bar.scrollWidth-4;
-}
-$('genreBar').addEventListener('scroll',updateGenreArrows,{passive:true});
-$('genrePrev').addEventListener('click',()=>$('genreBar').scrollBy({left:-320,behavior:'smooth'}));
-$('genreNext').addEventListener('click',()=>$('genreBar').scrollBy({left:320,behavior:'smooth'}));
-
 /* ================== СПИСОК ================== */
-const ROW_H=60;
+const ROW_H=40;
 let shownCache=[];
 function countryQueryCodes(q){
   const hits=new Set();
@@ -1364,7 +1311,7 @@ function renderWindow(){
     sb.appendChild(document.createTextNode(ch.country));
     tx.append(nm,sb);
     const st=document.createElement('button');st.className='fav-btn press'+(isFav(ch)?' on':'');
-    st.innerHTML=icon('star',15);st.title=isFav(ch)?'Убрать из избранного':'В избранное';
+    st.innerHTML=icon('star',12);st.title=isFav(ch)?'Убрать из избранного':'В избранное';
     st.setAttribute('aria-label','Избранное');
     st.addEventListener('click',e=>{e.stopPropagation();toggleFav(ch);});
     b.append(th,tx,st);
@@ -1382,7 +1329,7 @@ function revealCurrent(){
 }
 let winRaf=0;
 $('chList').addEventListener('scroll',()=>{if(winRaf)return;winRaf=requestAnimationFrame(()=>{winRaf=0;renderWindow();});},{passive:true});
-addEventListener('resize',()=>{updateGenreArrows();if(shownCache.length)renderWindow();});
+addEventListener('resize',()=>{if(shownCache.length)renderWindow();});
 
 /* ================== КАРТОЧКА ================== */
 function renderAll(){
@@ -1402,7 +1349,6 @@ function renderInfo(){
   if(current.logo&&/^https:/i.test(current.logo)){logo.referrerPolicy='no-referrer';logo.src=current.logo;logo.hidden=false;logo.onerror=()=>{logo.hidden=true;};}
   else{logo.hidden=true;logo.removeAttribute('src');}
   $('programNote').textContent=current.type==='vod'?'Расписание построено по реальной длине фрагментов':'Точная сетка — у вещателя';
-  /* строка «сейчас в эфире» под плеером */
   $('nowNum').textContent=pad2(current.n);
   $('nowName').textContent=current.name;
   $('nowMeta').textContent=current.group+' • '+current.country;
@@ -1620,12 +1566,12 @@ $('prevBtn').innerHTML=icon('prev');$('nextBtn').innerHTML=icon('next');
 $('shuffleBtn').innerHTML=icon('shuffle',16);
 $('refreshIcon').innerHTML=icon('refresh',14);$('refreshIcon2').innerHTML=icon('refresh',14);
 $('exportIcon').innerHTML=icon('export',14);$('gestureBtn').innerHTML=icon('play',28);
-$('genreBtnIcon').innerHTML=icon('grid',16);
 $('countryBtnIcon').innerHTML=icon('globe',19);
 $('countryBtnChev').innerHTML=icon('chevD',15);
+$('genreBtnIcon').innerHTML=icon('grid',19);
+$('genreBtnChev').innerHTML=icon('chevD',15);
 $('genreClose').innerHTML=icon('close',14);
 $('countryClose').innerHTML=icon('close',14);
-$('genrePrev').innerHTML=icon('chevL',14);$('genreNext').innerHTML=icon('chevR',14);
 $('infoFav').innerHTML=icon('star',18);
 $('nowFav').innerHTML=icon('star',18);
 $('infoIcon').innerHTML=icon('info',15);
