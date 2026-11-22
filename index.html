@@ -103,8 +103,8 @@ button:disabled{opacity:.32;cursor:not-allowed}
 }
 
 .layout{position:relative;z-index:1;flex:1;min-height:0;width:100%;max-width:1560px;margin:0 auto;
-  padding:10px 18px 8px;display:grid;grid-template-columns:minmax(0,1fr) 190px;
-  grid-template-rows:1fr auto;gap:0 14px;align-content:start;overflow:hidden;}
+  padding:14px 22px 12px;display:grid;grid-template-columns:minmax(0,1fr) 190px;
+  grid-template-rows:1fr auto;gap:12px 14px;align-items:stretch;overflow:hidden;}
 .panel{background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:inset 0 .5px 0 rgba(255,255,255,.05)}
 
 .player{grid-column:1;grid-row:1;position:relative;aspect-ratio:16/9;
@@ -140,7 +140,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .overlay.gesture p{font-size:13px;color:var(--label2)}
 .player:fullscreen{width:100vw;height:100vh;max-height:none;border:0;border-radius:0;aspect-ratio:auto}
 
-.nowbar{grid-column:1;grid-row:2;display:flex;align-items:center;gap:12px;padding:6px 10px}
+.nowbar{grid-column:1;grid-row:2;display:flex;align-items:center;gap:12px;padding:10px 12px}
 .now-info{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
 .now-num{font-family:var(--font-display);font-size:20px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;flex:none}
 .now-titles{min-width:0;display:flex;flex-direction:column;gap:1px}
@@ -151,9 +151,10 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .now-actions .secondary-btn{padding:8px 12px;font-size:12.5px;display:inline-flex;align-items:center;gap:6px}
 .now-actions .icon-btn{width:32px;height:32px}
 
-.sidebar{grid-column:2;grid-row:1/3;
-  position:static;display:flex;flex-direction:column;padding:10px 8px 8px 10px}
-.legend{flex:none;padding:8px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
+.sidebar{grid-column:2;grid-row:1 / 3;
+  position:static;display:flex;flex-direction:column;padding:12px 8px 10px 10px;
+  min-height:0;overflow:hidden}
+.legend{flex:none;padding:10px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
 .ch-list{flex:1;min-height:0;overflow-y:auto;padding-right:5px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent}
 .ch-list::-webkit-scrollbar{width:8px;display:block}
 .ch-list::-webkit-scrollbar-track{background:transparent}
@@ -308,7 +309,7 @@ footer{display:none}
 @media(max-width:940px){
   .layout{display:flex;flex-direction:column;padding:12px 12px 12px}
   .player{order:1}
-  .nowbar{order:2;margin-top:0}
+  .nowbar{order:2}
   .sidebar{order:3;flex:1;min-height:0;height:auto;padding:14px 12px 12px 14px}
 }
 @media(max-width:640px){
@@ -512,12 +513,9 @@ function targetHeight(){
 }
 function fitFrame(){
   var ih=window.innerHeight||document.documentElement.clientHeight;
-  var hdr=document.querySelector('.top');
-  var hdrH=hdr?hdr.offsetHeight:52;
   var want=targetHeight();
   var oversized=ih>want*1.4;
-  var root=document.documentElement;
-  root.style.setProperty('--shell-max',oversized?want+'px':'100%');
+  document.documentElement.style.setProperty('--shell-max',oversized?want+'px':'100%');
   try{
     if(window.vkBridge&&window.vkBridge.send&&want!==lastSentH){
       lastSentH=want;
@@ -572,7 +570,7 @@ BD:'Бангладеш',BE:'Бельгия',BF:'Буркина-Фасо',BG:'Б�
 BM:'Бермудские острова',BN:'Бруней',BO:'Боливия',BQ:'Бонэйр, Синт-Эстатиус и Саба',BR:'Бразилия',BS:'Багамские Острова',
 BT:'Бутан',BV:'Остров Буве',BW:'Ботсвана',BY:'Беларусь',BZ:'Белиз',CA:'Канада',CC:'Кокосовые острова',
 CD:'Демократическая Республика Конго',CF:'Центральноафриканская Республика',CG:'Республика Конго',CH:'Швейцария',
-CI:'Кот-д'Ивуар',CK:'Острова Кука',CL:'Чили',CM:'Камерун',CN:'Китай',CO:'Колумбия',CR:'Коста-Рика',CU:'Куба',
+CI:'Кот-д’Ивуар',CK:'Острова Кука',CL:'Чили',CM:'Камерун',CN:'Китай',CO:'Колумбия',CR:'Коста-Рика',CU:'Куба',
 CV:'Кабо-Верде',CW:'Кюрасао',CX:'Остров Рождества',CY:'Кипр',CZ:'Чехия',DE:'Германия',DJ:'Джибути',DK:'Дания',
 DM:'Доминика',DO:'Доминиканская Республика',DZ:'Алжир',EC:'Эквадор',EE:'Эстония',EG:'Египет',EH:'Западная Сахара',
 ER:'Эритрея',ES:'Испания',ET:'Эфиопия',FI:'Финляндия',FJ:'Фиджи',FK:'Фолклендские острова',FM:'Микронезия',
@@ -1067,14 +1065,14 @@ function mskSec(){
 }
 function mskTime(offset=0){return new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(Date.now()+offset*1000));}
 function startVod(ch,ses){
-  const{items,durs,total}=schedule(ch);
-  if(!items.length){removeChannel(ch,'лента недоступна');return;}
-  let pos=mskSec()%total,i=0;while(i<durs.length-1&&pos>durs[i]){pos-=durs[i];i++;}
+  const sch=schedule(ch);
+  if(!sch.items.length){removeChannel(ch,'лента недоступна');return;}
+  let pos=mskSec()%sch.total,i=0;while(i<sch.durs.length-1&&pos>sch.durs[i]){pos-=sch.durs[i];i++;}
   loadSeg(ch,i,pos,ses);
 }
 function loadSeg(ch,i,off,ses){
   if(ses!==session)return;
-  const{items}=schedule(ch);const it=items[i];if(!it)return;
+  const sch=schedule(ch);const it=sch.items[i];if(!it)return;
   segUrl=it.url;pendingSeek=off||0;
   signalText='кинозал • MP4';updateSignal();
   $('loading').hidden=false;
@@ -1359,13 +1357,13 @@ function renderProgram(){
     const c3=document.createElement('div');c3.className='prog-card next';c3.innerHTML='<em>Источник</em><strong>HLS-поток</strong><span>Проверен '+new Date(ch.verifiedAt||Date.now()).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+'. При потере сигнала канал удалится автоматически.</span>';
     cards.append(c1,c2,c3);return;
   }
-  const sch=schedule(ch),items=sch.items,durs=sch.durs,total=sch.total;
-  if(!items.length){const c=document.createElement('div');c.className='prog-card now';c.style.gridColumn='1/-1';c.innerHTML='<em>Лента</em><strong>Недоступна</strong><span>Канал будет удалён из рабочих.</span>';cards.appendChild(c);return;}
-  let ci=items.findIndex(it=>it.url===segUrl);
-  if(ci<0){let pos=mskSec()%total,i=0;while(i<durs.length-1&&pos>durs[i]){pos-=durs[i];i++;}ci=i;}
+  const sch=schedule(ch);
+  if(!sch.items.length){const c=document.createElement('div');c.className='prog-card now';c.style.gridColumn='1/-1';c.innerHTML='<em>Лента</em><strong>Недоступна</strong><span>Канал будет удалён из рабочих.</span>';cards.appendChild(c);return;}
+  let ci=sch.items.findIndex(it=>it.url===segUrl);
+  if(ci<0){let pos=mskSec()%sch.total,i=0;while(i<sch.durs.length-1&&pos>sch.durs[i]){pos-=sch.durs[i];i++;}ci=i;}
   tl.hidden=false;
-  items.forEach((it,i)=>{
-    const b=document.createElement('button');b.className='tl-seg'+(i===ci?' cur':'');b.style.flexGrow=String(Math.max(durs[i],20));b.style.flexBasis='0';b.title=it.title+' • '+fmt(durs[i]);b.innerHTML='<i></i><b>'+it.title+'</b>';
+  sch.items.forEach((it,i)=>{
+    const b=document.createElement('button');b.className='tl-seg'+(i===ci?' cur':'');b.style.flexGrow=String(Math.max(sch.durs[i],20));b.style.flexBasis='0';b.title=it.title+' • '+fmt(sch.durs[i]);b.innerHTML='<i></i><b>'+it.title+'</b>';
     if(i===ci&&video.duration)b.firstChild.style.width=Math.min(100,video.currentTime/video.duration*100)+'%';
     b.addEventListener('click',()=>{if(!started||current.id!==ch.id)tune(ch);loadSeg(ch,i,0,session);toast('Включаю: «'+it.title+'»','info',2000);});
     tl.appendChild(b);
@@ -1373,9 +1371,9 @@ function renderProgram(){
   const elapsed=(started&&mode==='vod')?(video.currentTime||0):0;
   let acc=-elapsed;
   for(let k=0;k<3;k++){
-    const idx=(ci+k)%items.length,it=items[idx];const start=k===0?-elapsed:acc;if(k>0)acc+=durs[(ci+k-1)%items.length];
+    const idx=(ci+k)%sch.items.length,it=sch.items[idx];const start=k===0?-elapsed:acc;if(k>0)acc+=sch.durs[(ci+k-1)%sch.items.length];
     const c=document.createElement('div');c.className='prog-card '+(k===0?'now':'next');
-    c.innerHTML='<em>'+(k===0?'Сейчас':'Далее')+' • '+mskTime(start)+'–'+mskTime(start+durs[idx])+' МСК</em><strong>'+it.title+'</strong><span>'+it.meta+'</span>';
+    c.innerHTML='<em>'+(k===0?'Сейчас':'Далее')+' • '+mskTime(start)+'–'+mskTime(start+sch.durs[idx])+' МСК</em><strong>'+it.title+'</strong><span>'+it.meta+'</span>';
     cards.appendChild(c);
   }
 }
