@@ -108,7 +108,8 @@ button:disabled{opacity:.32;cursor:not-allowed}
 
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;overflow:hidden}
 
-.player{position:relative;flex:1;min-height:0;aspect-ratio:16/9;
+/* плеер БЕЗ aspect-ratio: высоту задаёт JS-фит, чтобы nowbar всегда влезал при любом масштабе */
+.player{position:relative;flex:1 1 auto;min-height:0;max-width:100%;
   background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 .ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
@@ -139,7 +140,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 @keyframes spin{to{transform:rotate(360deg)}}
 .gesture-btn{width:72px;height:72px;border-radius:50%;border:0;cursor:pointer;background:var(--blue);color:#fff;display:grid;place-items:center;box-shadow:0 10px 34px rgba(10,132,255,.4)}
 .overlay.gesture p{font-size:13px;color:var(--label2)}
-.player:fullscreen{width:100vw;height:100vh;max-height:none;border:0;border-radius:0;aspect-ratio:auto}
+.player:fullscreen{width:100vw;height:100vh;max-height:none;border:0;border-radius:0;aspect-ratio:auto;flex:none}
 
 .nowbar{flex:none;display:flex;align-items:center;gap:12px;padding:10px 12px}
 .now-info{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
@@ -152,7 +153,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .now-actions .secondary-btn{padding:8px 12px;font-size:12.5px;display:inline-flex;align-items:center;gap:6px}
 .now-actions .icon-btn{width:32px;height:32px}
 
-.sidebar{width:190px;flex-shrink:0;
+.sidebar{width:190px;flex-shrink:0;min-width:0;
   position:static;display:flex;flex-direction:column;padding:12px 8px 10px 10px;
   min-height:0;overflow:hidden}
 .legend{flex:none;padding:10px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
@@ -391,7 +392,7 @@ footer{display:none}
       </div>
       <div class="overlay boot" id="boot">
         <div class="boot-title">TV BOX</div>
-        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
+        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит проверку манифеста и первого сегмента, прежде чем попасть в список.</p>
         <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
       </div>
       <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--label2)">Подключение к источнику…</p></div>
@@ -507,11 +508,33 @@ footer{display:none}
 (function(){
 'use strict';
 
+/* ================== РАЗМЕР РАМКИ (VK) + АКТИВНЫЙ ФИТ ПЛЕЕРА ================== */
 var lastSentH=0;
 function targetHeight(){
   var s=window.screen||{};
   var base=s.availHeight||s.height||800;
   return Math.max(600,Math.min(4050,Math.round(base-280)));
+}
+function isDesktopFit(){
+  return matchMedia('(min-width:941px)').matches && !document.fullscreenElement;
+}
+/* Главная фикса вертикали: плеер получает ЯВНУЮ высоту в px = колонка − nowbar − gap.
+   Не зависит от округления aspect-ratio, поэтому nowbar влезает при любом масштабе/zoom. */
+function fitPlayer(){
+  var pl=document.getElementById('player');
+  if(!pl)return;
+  if(!isDesktopFit()){pl.style.height='';pl.style.flex='';return;}
+  var main=document.querySelector('.main-col');
+  var nb=document.querySelector('.nowbar');
+  if(!main)return;
+  var avail=main.clientHeight;
+  if(!avail)return;                       /* ещё не разложен — ResizeObserver догонит */
+  var nbH=nb?nb.getBoundingClientRect().height:0;
+  var gap=12;                             /* = gap в .main-col */
+  var h=Math.floor(avail-nbH-gap);
+  if(h<140)h=140;
+  pl.style.flex='0 0 '+h+'px';
+  pl.style.height=h+'px';
 }
 function fitFrame(){
   var ih=window.innerHeight||document.documentElement.clientHeight;
@@ -524,15 +547,23 @@ function fitFrame(){
       window.vkBridge.send('VKWebAppResize',{height:want});
     }
   }catch(e){}
+  fitPlayer();
 }
 var fitT=null;
-function fitSoon(){clearTimeout(fitT);fitT=setTimeout(fitFrame,120);}
+function fitSoon(){clearTimeout(fitT);fitT=setTimeout(function(){fitFrame();fitPlayer();},90);}
 addEventListener('resize',fitSoon);
 addEventListener('orientationchange',fitSoon);
-addEventListener('load',fitFrame);
+addEventListener('load',function(){fitFrame();fitPlayer();});
+try{
+  var ro=new ResizeObserver(function(){fitPlayer();});
+  var _m=document.querySelector('.main-col'),_n=document.querySelector('.nowbar');
+  if(_m)ro.observe(_m); if(_n)ro.observe(_n);
+}catch(e){}
 fitFrame();setTimeout(fitFrame,400);setTimeout(fitFrame,1500);setTimeout(fitFrame,3000);
 
-const TARGET=5000, CONCURRENCY=20, MANIFEST_TIMEOUT=4500, SEG_TIMEOUT=4500, PLAY_TIMEOUT=16000;
+/* ================== ЦЕЛЬ И ИСТОЧНИКИ (ускорено) ================== */
+const TARGET=5000, CONCURRENCY=48, MANIFEST_TIMEOUT=2600, SEG_TIMEOUT=2200, PLAY_TIMEOUT=12000;
+const BLOCK_TTL=12*3600*1000; /* URL-бан устаревает через 12 ч — ожившие каналы возвращаются */
 const BASE='https://iptv-org.github.io/iptv/';
 const RAW='https://raw.githubusercontent.com/iptv-org/iptv/master/streams/';
 const countrySrc=(code,label)=>({label,country:code,urls:[BASE+'countries/'+code+'.m3u',RAW+code+'.m3u']});
@@ -713,23 +744,32 @@ const durCache={},quarantine={};
 let idCounter=0,pendingKey=null;
 
 const scan={running:false,sourceIdx:0,queue:[],seenUrls:new Set(),verifiedNames:new Set(),blockedUrls:new Set(),blockedNames:new Set(),checked:0,exhausted:false,abort:false};
-const DEF={vol:70,muted:false,cat:'all',country:'all',lastUrl:'',favs:{},blockedUrls:[],blockedNames:[]};
+const DEF={vol:70,muted:false,cat:'all',country:'all',lastUrl:'',favs:{},blockedUrls:{}};
 let S=Object.assign({},DEF);
-try{const raw=localStorage.getItem('tv-box-v4');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+try{const raw=localStorage.getItem('tv-box-v5');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
 if(!S.favs||typeof S.favs!=='object')S.favs={};
 if(!S.country)S.country='all';
-if(!Array.isArray(S.blockedUrls))S.blockedUrls=[];
-if(!Array.isArray(S.blockedNames))S.blockedNames=[];
-delete S.sort;
-// Восстанавливаем заблокированные каналы из предыдущих сессий
-S.blockedUrls.forEach(u=>scan.blockedUrls.add(u));
-S.blockedNames.forEach(n=>scan.blockedNames.add(n));
+/* миграция: старый формат (массив или прошлая версия) → сбрасываем накопленный бан одним разом,
+   дальше работает TTL. Это и возвращает каналы, которые «пропали» после прошлых запусков. */
+if(!S.blockedUrls||typeof S.blockedUrls!=='object'||Array.isArray(S.blockedUrls))S.blockedUrls={};
+delete S.sort; delete S.blockedNames;
+(function seedBlocked(){
+  var now=Date.now(),changed=false;
+  Object.keys(S.blockedUrls).forEach(function(u){
+    var ts=S.blockedUrls[u]||0;
+    if(now-ts<BLOCK_TTL)scan.blockedUrls.add(u);
+    else{delete S.blockedUrls[u];changed=true;}
+  });
+  if(changed)save();
+})();
 let saveT=null;
-function save(){clearTimeout(saveT);saveT=setTimeout(()=>{
-  S.blockedUrls=Array.from(scan.blockedUrls);
-  S.blockedNames=Array.from(scan.blockedNames);
-  try{localStorage.setItem('tv-box-v4',JSON.stringify(S));}catch(e){}
-},200);}
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('tv-box-v5',JSON.stringify(S));}catch(e){}},200);}
+function markBlocked(url,name){
+  scan.blockedUrls.add(url);
+  S.blockedUrls[url]=Date.now();
+  scan.blockedNames.add(nameKey(name)); /* имя — только в этой сессии, не永 */
+  save();
+}
 
 const favKey=ch=>ch.type==='vod'?ch.id:ch.url;
 const isFav=ch=>!!S.favs[favKey(ch)];
@@ -922,14 +962,13 @@ async function probeQueue(){
   const workers=Array.from({length:CONCURRENCY},async()=>{
     while(qi<scan.queue.length&&channels.length<TARGET&&!scan.abort){
       const c=scan.queue[qi++];
-      if(scan.verifiedNames.has(nameKey(c.name))||scan.blockedNames.has(nameKey(c.name)))continue;
+      if(scan.verifiedNames.has(nameKey(c.name))||scan.blockedNames.has(nameKey(c.name))||scan.blockedUrls.has(c.url))continue;
       scan.checked++;
       const ok=await probeChannel(c.url);
       if(ok&&channels.length<TARGET&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedNames.has(nameKey(c.name))){
         scan.verifiedNames.add(nameKey(c.name));addChannel(c);
       }else if(!ok){
-        scan.blockedUrls.add(c.url);scan.blockedNames.add(nameKey(c.name));
-        save(); // Сохраняем заблокированные каналы
+        markBlocked(c.url,c.name);
       }
     }
   });
@@ -941,9 +980,10 @@ async function startScan(force=false){
   if(force){
     scan.abort=false;scan.sourceIdx=0;scan.queue=[];scan.checked=0;scan.exhausted=false;
     scan.seenUrls.clear();scan.verifiedNames.clear();
-    // НЕ очищаем blockedUrls/blockedNames — они сохраняются между сессиями
+    scan.blockedUrls.clear();scan.blockedNames.clear();
+    S.blockedUrls={};save();               /* «Обновить» = полный сброс банов, перепроверяем всё */
     channels=cloneCinema();current=channels[0];idCounter=0;
-    renderAll();if(started)tune(current);
+    renderAll();fitPlayer();if(started)tune(current);
   }
   scan.running=true;scan.exhausted=false;updateScanUI();
   try{
@@ -952,9 +992,9 @@ async function startScan(force=false){
       await probeQueue();
     }
   }finally{
-    scan.running=false;updateScanUI();renderAll();restoreLast();
+    scan.running=false;updateScanUI();renderAll();fitPlayer();restoreLast();
     if(channels.length>=TARGET)toast('Цель достигнута: '+TARGET+' рабочих каналов.','ok',5000);
-    else toast('Проверка источников завершена.','warn',4200);
+    else toast('Проверка источников завершена: '+channels.length+' рабочих. Остальные — реально не отвечающие потоки.','warn',5200);
   }
 }
 function addChannel(c){
@@ -968,7 +1008,7 @@ function addChannel(c){
 function renumber(){channels.forEach((c,i)=>c.n=i+1);}
 function removeChannel(ch,reason){
   const idx=channels.findIndex(c=>c.id===ch.id);if(idx<0)return;
-  if(ch.type==='hls'){scan.blockedUrls.add(ch.url);scan.blockedNames.add(nameKey(ch.name));save();}
+  if(ch.type==='hls')markBlocked(ch.url,ch.name);
   channels.splice(idx,1);renumber();
   if(current&&current.id===ch.id){
     current=null;
@@ -981,7 +1021,7 @@ function removeChannel(ch,reason){
 }
 function showEmpty(){
   $('boot').hidden=true;$('loading').hidden=true;$('gesture').hidden=true;
-  $('errorText').textContent='Рабочие каналы не найдены. Подождите — поиск продолжится автоматически, или откройте приложение заново.';
+  $('errorText').textContent='Рабочие каналы не найдены. Подождите — поиск продолжится автоматически, или нажмите «Обновить».';
   $('error').hidden=false;
 }
 function restoreLast(){
@@ -1024,7 +1064,7 @@ function tune(ch,user){
   destroyPlayer();const ses=session;
   current=ch;S.lastUrl=ch.type==='vod'?ch.id:ch.url;save();syncHash(ch);
   started=true;$('boot').hidden=true;
-  renderAll();showBadge();revealCurrent();
+  renderAll();fitPlayer();showBadge();revealCurrent();
   $('loading').hidden=false;
   signalText='подключение…';updateSignal();
   if(ch.type==='vod'){mode='vod';startVod(ch,ses);}else{mode='hls';playHls(ch,ses);}
@@ -1416,7 +1456,7 @@ function shuffleChannel(){
 function togglePlay(){if(!started){tune(current||channels[0],true);return;}if(video.paused)video.play().catch(()=>$('gesture').hidden=false);else video.pause();}
 function toggleFs(){if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else player.requestFullscreen().catch(()=>toast('Полный экран недоступен в этом браузере.','warn'));}
 player.addEventListener('dblclick',toggleFs);
-document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);pokeControls();});
+document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);fitPlayer();pokeControls();});
 let hideT=null;
 function pokeControls(){$('controls').classList.remove('hide');clearTimeout(hideT);if(document.fullscreenElement&&!video.paused)hideT=setTimeout(()=>$('controls').classList.add('hide'),2600);}
 player.addEventListener('mousemove',pokeControls);
@@ -1587,7 +1627,7 @@ $('infoCountry').addEventListener('click',()=>{if(current)setCountry(current.cou
 video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);
 syncSearchClear();
 fitFrame();
-renderAll();ensureHls();
+renderAll();fitPlayer();ensureHls();
 const dl=readHash();if(dl)resolveDeepLink(dl);
 startScan();
 })();
@@ -1636,21 +1676,5 @@ startScan();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })({"version":"1.0.0","provider":"vk","adFormat":"interstitial","appId":"","intervalMs":300000,"cooldownMs":600000,"onLeave":true,"onReturn":true,"onLaunch":false,"debug":false,"cdn":"https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"});</script>
 <!-- TVBOX_VK_ADS_PATCH_END -->
-<!--TVBOX-PATCHER:START-->
-<style id="tvbox-patcher">
-/* Плеер не наезжает при 100% масштабе */
-.player{aspect-ratio:auto !important;flex:1 1 auto !important;min-height:0 !important;max-width:100% !important;overflow:hidden !important}
-.player:fullscreen{aspect-ratio:auto !important}
-.main-col{min-width:0 !important;overflow:hidden !important}
-.sidebar{min-width:0 !important}
-.layout{overflow:hidden !important}
-
-/* Гарант флекс-раскладки */
-.layout{display:flex !important;flex-direction:row !important;align-items:stretch !important;gap:14px !important}
-.main-col{display:flex !important;flex-direction:column !important;flex:1 1 auto !important;min-width:0 !important;gap:12px !important}
-.sidebar{flex:0 0 190px !important;width:190px !important}
-@media(max-width:940px){.layout{flex-direction:column !important}.sidebar{flex:1 1 auto !important;width:auto !important}}
-</style>
-<!--TVBOX-PATCHER:END-->
 </body>
 </html>
