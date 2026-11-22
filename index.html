@@ -37,6 +37,7 @@
   --ease:cubic-bezier(.2,.8,.2,1);
   --glass:rgba(18,18,20,.72);
   --r-panel:18px;--r-group:12px;--r-btn:11px;
+  --col-h:600px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{height:100%;overflow:hidden;scrollbar-width:none}
@@ -98,17 +99,18 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .icon-btn.on{color:var(--yellow)}
 .icon-btn.on svg path{fill:currentColor}
 @media(min-width:941px){
-  .top-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}
+  .top-center{position:absolute;left:calc(50% - 113px);top:50%;transform:translate(-50%,-50%);margin:0}
   .top-right{margin-left:auto}
 }
 
 .layout{position:relative;z-index:1;flex:1;min-height:0;width:100%;max-width:1560px;margin:0 auto;
-  padding:14px 22px 12px;display:grid;grid-template-columns:minmax(0,1fr) 190px;grid-template-rows:minmax(0,1fr);
-  gap:14px;align-items:stretch;overflow:hidden;}
-.main-col{min-width:0;min-height:0;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+  padding:14px 22px 12px;display:grid;grid-template-columns:minmax(0,1fr) 190px;
+  grid-template-rows:minmax(0,auto) auto;gap:12px 14px;align-content:start;overflow:hidden;}
 .panel{background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:inset 0 .5px 0 rgba(255,255,255,.05)}
 
-.player{position:relative;flex:none;aspect-ratio:16/9;max-height:66%;background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.player{grid-column:1;grid-row:1;position:relative;aspect-ratio:16/9;
+  max-height:calc(var(--col-h) - 64px);
+  background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 .ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
 .ch-badge.show{opacity:1;transform:none}
@@ -140,7 +142,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .overlay.gesture p{font-size:13px;color:var(--label2)}
 .player:fullscreen{width:100vw;height:100vh;max-height:none;border:0;border-radius:0;aspect-ratio:auto}
 
-.nowbar{flex:none;display:flex;align-items:center;gap:12px;padding:10px 12px}
+.nowbar{grid-column:1;grid-row:2;display:flex;align-items:center;gap:12px;padding:10px 12px}
 .now-info{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
 .now-num{font-family:var(--font-display);font-size:20px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;flex:none}
 .now-titles{min-width:0;display:flex;flex-direction:column;gap:1px}
@@ -151,7 +153,8 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .now-actions .secondary-btn{padding:8px 12px;font-size:12.5px;display:inline-flex;align-items:center;gap:6px}
 .now-actions .icon-btn{width:32px;height:32px}
 
-.sidebar{position:static;display:flex;flex-direction:column;min-height:0;padding:12px 8px 10px 10px}
+.sidebar{grid-column:2;grid-row:1;height:0;min-height:100%;
+  position:static;display:flex;flex-direction:column;padding:12px 8px 10px 10px}
 .legend{flex:none;padding:10px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
 .ch-list{flex:1;min-height:0;overflow-y:auto;padding-right:5px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent}
 .ch-list::-webkit-scrollbar{width:8px;display:block}
@@ -185,7 +188,6 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .fav-btn.on svg path{fill:currentColor}
 .ch-empty{padding:30px 16px;text-align:center;color:var(--label3);font-size:12.5px;line-height:1.6;display:flex;flex-direction:column;gap:14px;align-items:center;background:transparent}
 
-/* ===== Плотный список на десктопе: строка и кегль ×1.2 от прежних плотных ===== */
 @media(min-width:941px){
   .legend{display:none}
   .ch-sub{display:none}
@@ -307,8 +309,9 @@ footer{display:none}
 @media(max-width:1180px){.layout{grid-template-columns:minmax(0,1fr) 180px}.program-cards{grid-template-columns:1fr 1fr}}
 @media(max-width:940px){
   .layout{display:flex;flex-direction:column;padding:12px 12px 12px}
-  .main-col{flex:none}
-  .sidebar{flex:1;min-height:0;padding:14px 12px 12px 14px}
+  .player{order:1}
+  .nowbar{order:2}
+  .sidebar{order:3;flex:1;min-height:0;height:auto;padding:14px 12px 12px 14px}
 }
 @media(max-width:640px){
   .top-in{height:auto;padding:10px 14px;flex-wrap:wrap;gap:8px}
@@ -373,48 +376,46 @@ footer{display:none}
 </header>
 
 <main class="layout">
-  <section class="main-col">
-    <div class="player" id="player">
-      <video id="video" playsinline preload="metadata"></video>
-      <div class="ch-badge" id="chBadge"><b id="badgeNum">01</b><span class="live" id="badgeLive">LIVE</span><span id="badgeName">—</span></div>
-      <div class="num-osd" id="numOsd" hidden></div>
-      <div class="controls" id="controls">
-        <button class="ctrl-btn press" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
-        <button class="ctrl-btn press" id="playBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
-        <button class="ctrl-btn press" id="nextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
-        <button class="ctrl-btn press" id="shuffleBtn" title="Случайный канал (R)" aria-label="Случайный канал"></button>
-        <button class="ctrl-btn press" id="muteBtn" title="Звук (M)" aria-label="Звук"></button>
-        <input class="vol-range" id="volRange" type="range" min="0" max="100" value="70" title="Громкость" aria-label="Громкость">
-        <button class="ctrl-btn press ctrl-fs" id="fsBtn" title="Полный экран (F)" aria-label="Полный экран"></button>
-      </div>
-      <div class="overlay boot" id="boot">
-        <div class="boot-title">TV BOX</div>
-        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
-        <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
-      </div>
-      <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--label2)">Подключение к источнику…</p></div>
-      <div class="overlay gesture" id="gesture" hidden><button class="gesture-btn press" id="gestureBtn" aria-label="Запустить"></button><p>Нажмите, чтобы запустить воспроизведение</p></div>
-      <div class="overlay error" id="error" hidden>
-        <h2>Канал недоступен</h2><p id="errorText"></p>
-        <div class="overlay-actions"><button class="primary-btn press" id="retryBtn">Повторить</button><button class="secondary-btn press" id="nextFromError">Следующий канал</button></div>
-      </div>
+  <div class="player" id="player">
+    <video id="video" playsinline preload="metadata"></video>
+    <div class="ch-badge" id="chBadge"><b id="badgeNum">01</b><span class="live" id="badgeLive">LIVE</span><span id="badgeName">—</span></div>
+    <div class="num-osd" id="numOsd" hidden></div>
+    <div class="controls" id="controls">
+      <button class="ctrl-btn press" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
+      <button class="ctrl-btn press" id="playBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
+      <button class="ctrl-btn press" id="nextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
+      <button class="ctrl-btn press" id="shuffleBtn" title="Случайный канал (R)" aria-label="Случайный канал"></button>
+      <button class="ctrl-btn press" id="muteBtn" title="Звук (M)" aria-label="Звук"></button>
+      <input class="vol-range" id="volRange" type="range" min="0" max="100" value="70" title="Громкость" aria-label="Громкость">
+      <button class="ctrl-btn press ctrl-fs" id="fsBtn" title="Полный экран (F)" aria-label="Полный экран"></button>
     </div>
+    <div class="overlay boot" id="boot">
+      <div class="boot-title">TV BOX</div>
+      <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
+      <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
+    </div>
+    <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--label2)">Подключение к источнику…</p></div>
+    <div class="overlay gesture" id="gesture" hidden><button class="gesture-btn press" id="gestureBtn" aria-label="Запустить"></button><p>Нажмите, чтобы запустить воспроизведение</p></div>
+    <div class="overlay error" id="error" hidden>
+      <h2>Канал недоступен</h2><p id="errorText"></p>
+      <div class="overlay-actions"><button class="primary-btn press" id="retryBtn">Повторить</button><button class="secondary-btn press" id="nextFromError">Следующий канал</button></div>
+    </div>
+  </div>
 
-    <div class="nowbar panel">
-      <div class="now-info">
-        <span class="now-num" id="nowNum">01</span>
-        <div class="now-titles">
-          <b id="nowName">—</b>
-          <span id="nowMeta">—</span>
-        </div>
-      </div>
-      <div class="now-actions">
-        <button class="icon-btn press" id="nowFav" title="В избранное (S)" aria-label="Избранное"></button>
-        <button class="secondary-btn press" id="infoBtn"><span class="ic" id="infoIcon"></span> Подробнее</button>
-        <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
+  <div class="nowbar panel">
+    <div class="now-info">
+      <span class="now-num" id="nowNum">01</span>
+      <div class="now-titles">
+        <b id="nowName">—</b>
+        <span id="nowMeta">—</span>
       </div>
     </div>
-  </section>
+    <div class="now-actions">
+      <button class="icon-btn press" id="nowFav" title="В избранное (S)" aria-label="Избранное"></button>
+      <button class="secondary-btn press" id="infoBtn"><span class="ic" id="infoIcon"></span> Подробнее</button>
+      <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
+    </div>
+  </div>
 
   <aside class="sidebar panel" id="sidebar">
     <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
@@ -505,6 +506,7 @@ footer{display:none}
 (function(){
 'use strict';
 
+/* ================== РАЗМЕР РАМКИ (VK) И ВЫСОТА КОЛОНКИ ================== */
 var lastSentH=0;
 function targetHeight(){
   var s=window.screen||{};
@@ -513,9 +515,13 @@ function targetHeight(){
 }
 function fitFrame(){
   var ih=window.innerHeight||document.documentElement.clientHeight;
+  var hdr=document.querySelector('.top');
+  var hdrH=hdr?hdr.offsetHeight:52;
   var want=targetHeight();
   var oversized=ih>want*1.4;
-  document.documentElement.style.setProperty('--shell-max',oversized?want+'px':'100%');
+  var root=document.documentElement;
+  root.style.setProperty('--shell-max',oversized?want+'px':'100%');
+  root.style.setProperty('--col-h',Math.max(240,Math.round(ih-hdrH-26))+'px');
   try{
     if(window.vkBridge&&window.vkBridge.send&&want!==lastSentH){
       lastSentH=want;
@@ -530,6 +536,7 @@ addEventListener('orientationchange',fitSoon);
 addEventListener('load',fitFrame);
 fitFrame();setTimeout(fitFrame,400);setTimeout(fitFrame,1500);setTimeout(fitFrame,3000);
 
+/* ================== ЦЕЛЬ И ИСТОЧНИКИ ================== */
 const TARGET=5000, CONCURRENCY=20, MANIFEST_TIMEOUT=4500, SEG_TIMEOUT=4500, PLAY_TIMEOUT=16000;
 const BASE='https://iptv-org.github.io/iptv/';
 const RAW='https://raw.githubusercontent.com/iptv-org/iptv/master/streams/';
@@ -562,6 +569,7 @@ const GROUP_RU={
   Undefined:'Разное',Legislative:'Общество',Shop:'Магазины'
 };
 
+/* ================== ПОЛНЫЕ НАЗВАНИЯ СТРАН ================== */
 const COUNTRY_RU={
 AD:'Андорра',AE:'Объединённые Арабские Эмираты',AF:'Афганистан',AG:'Антигуа и Барбуда',AI:'Ангилья',
 AL:'Албания',AM:'Армения',AO:'Ангола',AQ:'Антарктида',AR:'Аргентина',AS:'Американское Самоа',AT:'Австрия',
@@ -646,6 +654,7 @@ const norm=s=>String(s||'').toLowerCase().replace(/ё/g,'е').replace(/[^0-9a-z�
 const countryHay=code=>norm(countryName(code)+' '+(COUNTRY_EN[code]||'')+' '+code);
 const ALL_COUNTRIES=Object.keys(COUNTRY_RU).sort((a,b)=>COUNTRY_RU[a].localeCompare(COUNTRY_RU[b],'ru'));
 
+/* ================== КИНОЗАЛЫ ================== */
 const GB='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/';
 const CINEMA=[
   {id:'cinema-1',name:'СМЕХОРАМА',group:'Комедии',country:'Россия',countryCode:'RU',type:'vod',desc:'Комедийный кинозал: «Большой кролик» (Blender Foundation, CC-BY) и немая комедия Чаплина из общественного достояния.',items:[
@@ -669,6 +678,7 @@ const CINEMA=[
   ]}
 ];
 
+/* ================== ИКОНКИ ================== */
 const IC={
   play:'<path d="m8 5 11 7-11 7z" fill="currentColor" stroke="none"/>',
   pause:'<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/>',
@@ -697,6 +707,7 @@ const IC={
 };
 const icon=(n,s=18)=>'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';
 
+/* ================== СОСТОЯНИЕ ================== */
 const $=id=>document.getElementById(id);
 const video=$('video'),player=$('player');
 const pad2=n=>String(n).padStart(2,'0');
@@ -734,6 +745,7 @@ function toggleFav(ch){
 let renderT=null;
 function scheduleRender(){if(renderT)return;renderT=setTimeout(()=>{renderT=null;renderAll();},350);}
 
+/* ================== ТОСТЫ ================== */
 function toast(msg,type='info',ms=3800,action){
   const box=$('toasts');while(box.children.length>=3)box.firstChild.remove();
   const el=document.createElement('div');el.className='toast '+type;
@@ -750,6 +762,7 @@ function toast(msg,type='info',ms=3800,action){
   timer=setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(10px)';setTimeout(()=>el.remove(),240);},ms);
 }
 
+/* ================== ССЫЛКИ НА КАНАЛ ================== */
 function channelKey(ch){return ch.type==='vod'?ch.id:ch.url;}
 function appBase(){
   try{const qs=new URLSearchParams(location.search);const vk=qs.get('vk_app_id');if(vk)return 'https://vk.com/app'+vk;}catch(e){}
@@ -801,6 +814,7 @@ async function copyText(t){
   }catch(e){return false;}
 }
 
+/* ================== ПАРСЕР M3U ================== */
 function cleanName(s){return String(s||'').replace(/\s*\[[^\]]*\]/g,'').replace(/\s*\(\d{3,4}p\)/gi,'').replace(/\s+/g,' ').trim();}
 function countryFromId(id){const m=String(id||'').match(/\.([a-z]{2})(?:@|$)/i);return m?m[1].toUpperCase():'';}
 function translateGroup(g){const first=String(g||'').split(';')[0].trim();return GROUP_RU[first]||first||'Разное';}
@@ -830,6 +844,7 @@ function parseM3U(text,sourceCountry){
   return out;
 }
 
+/* ================== ТЩАТЕЛЬНАЯ ПРОВЕРКА ИСТОЧНИКОВ ================== */
 async function fetchText(url,timeout){
   const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),timeout);
   try{const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});if(!r.ok)throw new Error('HTTP '+r.status);return await r.text();}
@@ -889,9 +904,9 @@ async function probeChannel(url){
   return false;
 }
 
+/* ================== СКАНЕР ================== */
 function updateScanUI(){
-  const found=channels.length;
-  $('topCounter').textContent=found+'/'+TARGET;
+  $('topCounter').textContent=channels.length+'/'+TARGET;
 }
 async function loadNextSource(){
   while(scan.sourceIdx<SOURCES.length&&channels.length<TARGET){
@@ -978,6 +993,7 @@ function restoreLast(){
   if(ch){current=ch;renderAll();}
 }
 
+/* ================== HLS ================== */
 function ensureHls(){
   if(window.Hls)return Promise.resolve(window.Hls);
   if(hlsPromise)return hlsPromise;
@@ -1000,6 +1016,7 @@ function ensureHls(){
   return hlsPromise;
 }
 
+/* ================== ПЛЕЕР ================== */
 function destroyPlayer(){
   session++;mode='idle';
   if(hls){try{hls.destroy();}catch(e){}hls=null;}
@@ -1058,6 +1075,7 @@ function buildQuality(){
 }
 $('quality').addEventListener('change',e=>{if(hls){hls.currentLevel=parseInt(e.target.value,10);toast('Качество: '+e.target.options[e.target.selectedIndex].text,'info',2000);}});
 
+/* ================== КИНОЗАЛЫ ================== */
 function activeItems(ch){const q=quarantine[ch.id]||new Set();return ch.items.filter(it=>!q.has(it.url));}
 function schedule(ch){const items=activeItems(ch);const durs=items.map(it=>durCache[it.url]||it.dur);return{items,durs,total:durs.reduce((a,b)=>a+b,0)||1};}
 function mskSec(){
@@ -1119,6 +1137,7 @@ video.addEventListener('pause',()=>{syncPlay();pokeControls();});
 let tuT=0;
 video.addEventListener('timeupdate',()=>{const n=Date.now();if(n-tuT>900){tuT=n;renderProgram();}});
 
+/* ================== ЖАНРЫ ================== */
 function genreCounts(){const g={};channels.forEach(c=>{g[c.group]=(g[c.group]||0)+1;});return g;}
 function favCount(){let n=0;channels.forEach(c=>{if(isFav(c))n++;});return n;}
 function sortedGenres(groups){return Object.keys(groups).sort((a,b)=>groups[b]-groups[a]||a.localeCompare(b,'ru'));}
@@ -1154,15 +1173,16 @@ function renderGenreSheet(){
   body.innerHTML='';
   const h=document.createElement('div');h.className='ios-header';h.textContent='Найдено станций по жанрам';
   const g=document.createElement('div');g.className='ios-group';
-  g.appendChild(iosRow('Все жанры',S.cat==='all',()=>{setCat('all');closeGenres();},{count:channels.length}));
-  g.appendChild(iosRow('Избранное',S.cat==='fav',()=>{setCat('fav');closeGenres();},{count:favCount()}));
-  sortedGenres(groups).forEach(k=>g.appendChild(iosRow(k,S.cat===k,()=>{setCat(k);closeGenres();},{count:groups[k]})));
+  g.appendChild(iosRow('Все жанры',S.cat==='all',function(){setCat('all');closeGenres();},{count:channels.length}));
+  g.appendChild(iosRow('Избранное',S.cat==='fav',function(){setCat('fav');closeGenres();},{count:favCount()}));
+  sortedGenres(groups).forEach(function(k){g.appendChild(iosRow(k,S.cat===k,function(){setCat(k);closeGenres();},{count:groups[k]}));});
   body.append(h,g);body.scrollTop=scroll;
 }
 function openGenres(){renderGenreSheet();$('genreModal').hidden=false;$('genreClose').focus();}
 function closeGenres(){$('genreModal').hidden=true;$('genreBtn').focus();}
 $('genreModal').addEventListener('click',e=>{if(e.target===$('genreModal'))closeGenres();});
 
+/* ================== СТРАНЫ ================== */
 function countryCounts(){const m={};channels.forEach(c=>{const k=c.countryCode||'INTL';m[k]=(m[k]||0)+1;});return m;}
 function setCountry(code){
   S.country=code;save();$('chList').scrollTop=0;
@@ -1189,15 +1209,15 @@ function renderCountrySheet(){
   if(showAll||showIntl||availMatched.length){
     const h=document.createElement('div');h.className='ios-header';h.textContent='Сейчас в эфире';
     const g=document.createElement('div');g.className='ios-group';
-    if(showAll){g.appendChild(iosRow('Все страны',S.country==='all',()=>{setCountry('all');closeCountries();},{ctry:true}));any=true;}
-    if(showIntl){g.appendChild(iosRow('Международный',S.country==='INTL',()=>{setCountry('INTL');closeCountries();},{ctry:true}));any=true;}
-    availMatched.forEach(c=>{any=true;g.appendChild(iosRow(COUNTRY_RU[c]||c,S.country===c,()=>{setCountry(c);closeCountries();},{ctry:true}));});
+    if(showAll){g.appendChild(iosRow('Все страны',S.country==='all',function(){setCountry('all');closeCountries();},{ctry:true}));any=true;}
+    if(showIntl){g.appendChild(iosRow('Международный',S.country==='INTL',function(){setCountry('INTL');closeCountries();},{ctry:true}));any=true;}
+    availMatched.forEach(function(c){any=true;g.appendChild(iosRow(COUNTRY_RU[c]||c,S.country===c,function(){setCountry(c);closeCountries();},{ctry:true}));});
     body.append(h,g);
   }
   if(restMatched.length){
     const h=document.createElement('div');h.className='ios-header';h.textContent='Все страны мира';
     const g=document.createElement('div');g.className='ios-group';
-    restMatched.forEach(c=>{any=true;g.appendChild(iosRow(COUNTRY_RU[c],false,null,{ctry:true,disabled:true,note:'пока нет'}));});
+    restMatched.forEach(function(c){any=true;g.appendChild(iosRow(COUNTRY_RU[c],false,null,{ctry:true,disabled:true,note:'пока нет'}));});
     body.append(h,g);
   }
   if(!any){
@@ -1207,7 +1227,7 @@ function renderCountrySheet(){
   }
   body.scrollTop=scroll;
 }
-function openCountries(){renderCountrySheet();$('countryModal').hidden=false;setTimeout(()=>$('countrySearch').focus(),60);}
+function openCountries(){renderCountrySheet();$('countryModal').hidden=false;setTimeout(()=>{$('countrySearch').focus();},60);}
 function closeCountries(){$('countryModal').hidden=true;$('countryBtn').focus();}
 $('countryModal').addEventListener('click',e=>{if(e.target===$('countryModal'))closeCountries();});
 $('countrySearch').addEventListener('input',renderCountrySheet);
@@ -1215,6 +1235,7 @@ $('countrySearch').addEventListener('keydown',e=>{
   if(e.key==='Enter'){const first=$('countryBody').querySelector('.ios-row:not(:disabled)');if(first)first.click();}
 });
 
+/* ================== СПИСОК КАНАЛОВ ================== */
 let ROW_H=rowH();
 function rowH(){return matchMedia('(min-width:941px)').matches?32:40;}
 let shownCache=[];
@@ -1275,7 +1296,7 @@ function renderWindow(){
     const lt=document.createElement('i');lt.textContent=(ch.name[0]||'?').toUpperCase();th.appendChild(lt);
     if(ch.logo&&/^https:/i.test(ch.logo)){
       const im=new Image();im.loading='lazy';im.decoding='async';im.referrerPolicy='no-referrer';im.alt='';
-      im.src=ch.logo;im.onerror=()=>im.remove();th.appendChild(im);
+      im.src=ch.logo;im.onerror=function(){im.remove();};th.appendChild(im);
     }
     const tx=document.createElement('span');tx.className='ch-text';
     const line=document.createElement('span');line.className='ch-line';
@@ -1293,8 +1314,7 @@ function renderWindow(){
   }
   spacer.replaceChildren(frag);
 }
-/* Делегирование: клики живут на контейнере, поэтому срабатывают с первого раза
-   даже когда строки перерисовываются виртуализацией. */
+/* Делегирование: обработчики на контейнере, клик срабатывает с первого раза */
 $('chList').addEventListener('click',e=>{
   const row=e.target.closest('.ch-item');
   if(!row)return;
@@ -1325,6 +1345,7 @@ addEventListener('resize',()=>{
   else if(shownCache.length)renderWindow();
 });
 
+/* ================== РЕНДЕР ================== */
 function renderAll(){
   renderGenres();renderCountries();renderList();renderInfo();updateScanUI();
   if(!$('genreModal').hidden)renderGenreSheet();
@@ -1339,7 +1360,7 @@ function renderInfo(){
   const fv=$('infoFav');fv.classList.toggle('on',isFav(current));
   fv.title=isFav(current)?'Убрать из избранного (S)':'В избранное (S)';
   const logo=$('channelLogo');
-  if(current.logo&&/^https:/i.test(current.logo)){logo.referrerPolicy='no-referrer';logo.src=current.logo;logo.hidden=false;logo.onerror=()=>{logo.hidden=true;};}
+  if(current.logo&&/^https:/i.test(current.logo)){logo.referrerPolicy='no-referrer';logo.src=current.logo;logo.hidden=false;logo.onerror=function(){logo.hidden=true;};}
   else{logo.hidden=true;logo.removeAttribute('src');}
   $('programNote').textContent=current.type==='vod'?'Расписание построено по реальной длине фрагментов':'Точная сетка — у вещателя';
   $('nowNum').textContent=pad2(current.n);
@@ -1360,7 +1381,7 @@ function renderProgram(){
     const c3=document.createElement('div');c3.className='prog-card next';c3.innerHTML='<em>Источник</em><strong>HLS-поток</strong><span>Проверен '+new Date(ch.verifiedAt||Date.now()).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+'. При потере сигнала канал удалится автоматически.</span>';
     cards.append(c1,c2,c3);return;
   }
-  const{items,durs,total}=schedule(ch);
+  const sch=schedule(ch),items=sch.items,durs=sch.durs,total=sch.total;
   if(!items.length){const c=document.createElement('div');c.className='prog-card now';c.style.gridColumn='1/-1';c.innerHTML='<em>Лента</em><strong>Недоступна</strong><span>Канал будет удалён из рабочих.</span>';cards.appendChild(c);return;}
   let ci=items.findIndex(it=>it.url===segUrl);
   if(ci<0){let pos=mskSec()%total,i=0;while(i<durs.length-1&&pos>durs[i]){pos-=durs[i];i++;}ci=i;}
@@ -1387,6 +1408,7 @@ function showBadge(){
 }
 const fmt=s=>{s=Math.max(0,Math.floor(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':':'')+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0');};
 
+/* ================== ТРАНСПОРТ ================== */
 function syncPlay(){$('playBtn').innerHTML=icon(video.paused?'play':'pause');}
 function syncMute(){const ic=icon(S.muted?'mute':'vol');$('muteBtn').innerHTML=ic;$('topMute').innerHTML=ic;$('topMute').classList.toggle('active',!S.muted);}
 function setMuted(m){S.muted=m;video.muted=m;save();syncMute();}
@@ -1412,6 +1434,7 @@ function pokeControls(){$('controls').classList.remove('hide');clearTimeout(hide
 player.addEventListener('mousemove',pokeControls);
 player.addEventListener('touchstart',pokeControls,{passive:true});
 
+/* ================== КЛАВИАТУРА ================== */
 let padBuf='',padT=null;
 function padPress(d){
   padBuf=(padBuf+d).slice(-4);clearTimeout(padT);
@@ -1462,6 +1485,7 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+/* ================== О КАНАЛЕ ================== */
 function openInfo(){
   if(!current)return;
   renderInfo();
@@ -1475,6 +1499,7 @@ $('infoClose').addEventListener('click',closeInfo);
 $('infoModal').addEventListener('click',e=>{if(e.target===$('infoModal'))closeInfo();});
 $('nowFav').addEventListener('click',()=>{if(current)toggleFav(current);});
 
+/* ================== ПОДЕЛИТЬСЯ ================== */
 function openShare(){
   if(!current)return;
   const s=buildShare();
@@ -1514,9 +1539,11 @@ $('shareVk').addEventListener('click',()=>{const s=buildShare();intent('https://
 $('shareWa').addEventListener('click',()=>{const s=buildShare();intent('https://wa.me/?text='+encodeURIComponent(s.text+' '+s.url));});
 $('shareX').addEventListener('click',()=>{const s=buildShare();intent('https://twitter.com/intent/tweet?text='+encodeURIComponent(s.text)+'&url='+encodeURIComponent(s.url));});
 
+/* ================== СЕТЬ ================== */
 addEventListener('offline',()=>toast('Нет интернета. Поиск и эфиры временно недоступны.','bad',6000));
 addEventListener('online',()=>{toast('Сеть восстановлена.','ok');startScan();if(started&&current)tune(current);});
 
+/* ================== ПОИСК ================== */
 function syncSearchClear(){
   const v=$('search').value;
   $('searchClear').hidden=!v;
@@ -1526,6 +1553,7 @@ $('search').addEventListener('input',()=>{syncSearchClear();renderList();});
 $('searchClear').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();$('search').focus();});
 $('searchCancel').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();$('search').blur();});
 
+/* ================== ПРИВЯЗКА ================== */
 $('searchIcon').innerHTML=icon('search',14);
 $('countrySearchIcon').innerHTML=icon('search',15);
 $('searchClear').innerHTML=icon('close',9);
@@ -1574,6 +1602,7 @@ $('infoFav').addEventListener('click',()=>{if(current)toggleFav(current);});
 $('infoCat').addEventListener('click',()=>{if(current)setCat(current.group);});
 $('infoCountry').addEventListener('click',()=>{if(current)setCountry(current.countryCode||'INTL');});
 
+/* ================== СТАРТ ================== */
 video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);
 syncSearchClear();
 fitFrame();
