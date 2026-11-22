@@ -103,11 +103,12 @@ button:disabled{opacity:.32;cursor:not-allowed}
 }
 
 .layout{position:relative;z-index:1;flex:1;min-height:0;width:100%;max-width:1560px;margin:0 auto;
-  padding:14px 22px 12px;display:grid;grid-template-columns:minmax(0,1fr) 190px;
-  grid-template-rows:1fr auto;gap:12px 14px;align-items:stretch;overflow:hidden;}
+  padding:14px 22px 12px;display:flex;gap:14px;overflow:hidden;}
 .panel{background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:inset 0 .5px 0 rgba(255,255,255,.05)}
 
-.player{grid-column:1;grid-row:1;position:relative;aspect-ratio:16/9;
+.main-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+
+.player{position:relative;flex:1;min-height:0;aspect-ratio:16/9;
   background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 .ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
@@ -140,7 +141,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .overlay.gesture p{font-size:13px;color:var(--label2)}
 .player:fullscreen{width:100vw;height:100vh;max-height:none;border:0;border-radius:0;aspect-ratio:auto}
 
-.nowbar{grid-column:1;grid-row:2;display:flex;align-items:center;gap:12px;padding:10px 12px}
+.nowbar{flex:none;display:flex;align-items:center;gap:12px;padding:10px 12px}
 .now-info{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
 .now-num{font-family:var(--font-display);font-size:20px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;flex:none}
 .now-titles{min-width:0;display:flex;flex-direction:column;gap:1px}
@@ -151,7 +152,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .now-actions .secondary-btn{padding:8px 12px;font-size:12.5px;display:inline-flex;align-items:center;gap:6px}
 .now-actions .icon-btn{width:32px;height:32px}
 
-.sidebar{grid-column:2;grid-row:1 / 3;
+.sidebar{width:190px;flex-shrink:0;
   position:static;display:flex;flex-direction:column;padding:12px 8px 10px 10px;
   min-height:0;overflow:hidden}
 .legend{flex:none;padding:10px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
@@ -305,12 +306,11 @@ footer{display:none}
 .t-action{border:0;background:none;color:var(--blue);font-size:13px;font-weight:var(--w-med);cursor:pointer;flex:none;padding:2px 0 2px 4px}
 @keyframes tin{from{opacity:0;transform:translateY(10px)}}
 
-@media(max-width:1180px){.layout{grid-template-columns:minmax(0,1fr) 180px}.program-cards{grid-template-columns:1fr 1fr}}
+@media(max-width:1180px){.sidebar{width:180px}.program-cards{grid-template-columns:1fr 1fr}}
 @media(max-width:940px){
-  .layout{display:flex;flex-direction:column;padding:12px 12px 12px}
-  .player{order:1}
-  .nowbar{order:2}
-  .sidebar{order:3;flex:1;min-height:0;height:auto;padding:14px 12px 12px 14px}
+  .layout{flex-direction:column;padding:12px 12px 12px}
+  .main-col{flex:none}
+  .sidebar{width:100%;flex:1;min-height:0;height:auto;padding:14px 12px 12px 14px}
 }
 @media(max-width:640px){
   .top-in{height:auto;padding:10px 14px;flex-wrap:wrap;gap:8px}
@@ -375,44 +375,46 @@ footer{display:none}
 </header>
 
 <main class="layout">
-  <div class="player" id="player">
-    <video id="video" playsinline preload="metadata"></video>
-    <div class="ch-badge" id="chBadge"><b id="badgeNum">01</b><span class="live" id="badgeLive">LIVE</span><span id="badgeName">—</span></div>
-    <div class="num-osd" id="numOsd" hidden></div>
-    <div class="controls" id="controls">
-      <button class="ctrl-btn press" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
-      <button class="ctrl-btn press" id="playBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
-      <button class="ctrl-btn press" id="nextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
-      <button class="ctrl-btn press" id="shuffleBtn" title="Случайный канал (R)" aria-label="Случайный канал"></button>
-      <button class="ctrl-btn press" id="muteBtn" title="Звук (M)" aria-label="Звук"></button>
-      <input class="vol-range" id="volRange" type="range" min="0" max="100" value="70" title="Громкость" aria-label="Громкость">
-      <button class="ctrl-btn press ctrl-fs" id="fsBtn" title="Полный экран (F)" aria-label="Полный экран"></button>
-    </div>
-    <div class="overlay boot" id="boot">
-      <div class="boot-title">TV BOX</div>
-      <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
-      <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
-    </div>
-    <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--label2)">Подключение к источнику…</p></div>
-    <div class="overlay gesture" id="gesture" hidden><button class="gesture-btn press" id="gestureBtn" aria-label="Запустить"></button><p>Нажмите, чтобы запустить воспроизведение</p></div>
-    <div class="overlay error" id="error" hidden>
-      <h2>Канал недоступен</h2><p id="errorText"></p>
-      <div class="overlay-actions"><button class="primary-btn press" id="retryBtn">Повторить</button><button class="secondary-btn press" id="nextFromError">Следующий канал</button></div>
-    </div>
-  </div>
-
-  <div class="nowbar panel">
-    <div class="now-info">
-      <span class="now-num" id="nowNum">01</span>
-      <div class="now-titles">
-        <b id="nowName">—</b>
-        <span id="nowMeta">—</span>
+  <div class="main-col">
+    <div class="player" id="player">
+      <video id="video" playsinline preload="metadata"></video>
+      <div class="ch-badge" id="chBadge"><b id="badgeNum">01</b><span class="live" id="badgeLive">LIVE</span><span id="badgeName">—</span></div>
+      <div class="num-osd" id="numOsd" hidden></div>
+      <div class="controls" id="controls">
+        <button class="ctrl-btn press" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
+        <button class="ctrl-btn press" id="playBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
+        <button class="ctrl-btn press" id="nextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
+        <button class="ctrl-btn press" id="shuffleBtn" title="Случайный канал (R)" aria-label="Случайный канал"></button>
+        <button class="ctrl-btn press" id="muteBtn" title="Звук (M)" aria-label="Звук"></button>
+        <input class="vol-range" id="volRange" type="range" min="0" max="100" value="70" title="Громкость" aria-label="Громкость">
+        <button class="ctrl-btn press ctrl-fs" id="fsBtn" title="Полный экран (F)" aria-label="Полный экран"></button>
+      </div>
+      <div class="overlay boot" id="boot">
+        <div class="boot-title">TV BOX</div>
+        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
+        <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
+      </div>
+      <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--label2)">Подключение к источнику…</p></div>
+      <div class="overlay gesture" id="gesture" hidden><button class="gesture-btn press" id="gestureBtn" aria-label="Запустить"></button><p>Нажмите, чтобы запустить воспроизведение</p></div>
+      <div class="overlay error" id="error" hidden>
+        <h2>Канал недоступен</h2><p id="errorText"></p>
+        <div class="overlay-actions"><button class="primary-btn press" id="retryBtn">Повторить</button><button class="secondary-btn press" id="nextFromError">Следующий канал</button></div>
       </div>
     </div>
-    <div class="now-actions">
-      <button class="icon-btn press" id="nowFav" title="В избранное (S)" aria-label="Избранное"></button>
-      <button class="secondary-btn press" id="infoBtn"><span class="ic" id="infoIcon"></span> Подробнее</button>
-      <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
+
+    <div class="nowbar panel">
+      <div class="now-info">
+        <span class="now-num" id="nowNum">01</span>
+        <div class="now-titles">
+          <b id="nowName">—</b>
+          <span id="nowMeta">—</span>
+        </div>
+      </div>
+      <div class="now-actions">
+        <button class="icon-btn press" id="nowFav" title="В избранное (S)" aria-label="Избранное"></button>
+        <button class="secondary-btn press" id="infoBtn"><span class="ic" id="infoIcon"></span> Подробнее</button>
+        <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
+      </div>
     </div>
   </div>
 
@@ -711,14 +713,23 @@ const durCache={},quarantine={};
 let idCounter=0,pendingKey=null;
 
 const scan={running:false,sourceIdx:0,queue:[],seenUrls:new Set(),verifiedNames:new Set(),blockedUrls:new Set(),blockedNames:new Set(),checked:0,exhausted:false,abort:false};
-const DEF={vol:70,muted:false,cat:'all',country:'all',lastUrl:'',favs:{}};
+const DEF={vol:70,muted:false,cat:'all',country:'all',lastUrl:'',favs:{},blockedUrls:[],blockedNames:[]};
 let S=Object.assign({},DEF);
 try{const raw=localStorage.getItem('tv-box-v4');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
 if(!S.favs||typeof S.favs!=='object')S.favs={};
 if(!S.country)S.country='all';
+if(!Array.isArray(S.blockedUrls))S.blockedUrls=[];
+if(!Array.isArray(S.blockedNames))S.blockedNames=[];
 delete S.sort;
+// Восстанавливаем заблокированные каналы из предыдущих сессий
+S.blockedUrls.forEach(u=>scan.blockedUrls.add(u));
+S.blockedNames.forEach(n=>scan.blockedNames.add(n));
 let saveT=null;
-function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('tv-box-v4',JSON.stringify(S));}catch(e){}},200);}
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{
+  S.blockedUrls=Array.from(scan.blockedUrls);
+  S.blockedNames=Array.from(scan.blockedNames);
+  try{localStorage.setItem('tv-box-v4',JSON.stringify(S));}catch(e){}
+},200);}
 
 const favKey=ch=>ch.type==='vod'?ch.id:ch.url;
 const isFav=ch=>!!S.favs[favKey(ch)];
@@ -918,6 +929,7 @@ async function probeQueue(){
         scan.verifiedNames.add(nameKey(c.name));addChannel(c);
       }else if(!ok){
         scan.blockedUrls.add(c.url);scan.blockedNames.add(nameKey(c.name));
+        save(); // Сохраняем заблокированные каналы
       }
     }
   });
@@ -928,7 +940,8 @@ async function startScan(force=false){
   if(scan.running)return;
   if(force){
     scan.abort=false;scan.sourceIdx=0;scan.queue=[];scan.checked=0;scan.exhausted=false;
-    scan.seenUrls.clear();scan.verifiedNames.clear();scan.blockedUrls.clear();scan.blockedNames.clear();
+    scan.seenUrls.clear();scan.verifiedNames.clear();
+    // НЕ очищаем blockedUrls/blockedNames — они сохраняются между сессиями
     channels=cloneCinema();current=channels[0];idCounter=0;
     renderAll();if(started)tune(current);
   }
@@ -955,7 +968,7 @@ function addChannel(c){
 function renumber(){channels.forEach((c,i)=>c.n=i+1);}
 function removeChannel(ch,reason){
   const idx=channels.findIndex(c=>c.id===ch.id);if(idx<0)return;
-  if(ch.type==='hls'){scan.blockedUrls.add(ch.url);scan.blockedNames.add(nameKey(ch.name));}
+  if(ch.type==='hls'){scan.blockedUrls.add(ch.url);scan.blockedNames.add(nameKey(ch.name));save();}
   channels.splice(idx,1);renumber();
   if(current&&current.id===ch.id){
     current=null;
