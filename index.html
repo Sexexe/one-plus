@@ -101,11 +101,11 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .genre-bar::-webkit-scrollbar{display:none}
 .g-chip{flex:none;display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;border:0;background:var(--fill);font-size:13px;font-weight:var(--w-reg);color:var(--label2);cursor:pointer;white-space:nowrap}
 .g-chip:hover{background:var(--fill2);color:var(--label)}
-.g-chip.active{background:var(--blue);color:#fff;font-weight:var(--w-med)}
+.g-chip.active{background:var(--fill);color:var(--blue);font-weight:var(--w-sem)}
 .g-chip.more{background:var(--blue-soft);color:var(--blue)}
 .g-count{font-size:12px;font-weight:var(--w-reg);color:var(--label3);font-variant-numeric:tabular-nums}
 .g-chip:hover .g-count{color:var(--label2)}
-.g-chip.active .g-count{color:rgba(255,255,255,.75)}
+.g-chip.active .g-count{color:var(--blue);opacity:1}
 .g-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:26px;height:26px;border-radius:50%;background:rgba(58,58,60,.94);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label2);box-shadow:0 4px 14px rgba(0,0,0,.6)}
 .g-arrow:hover{color:var(--label)}
 .g-arrow.left{left:76px}
@@ -152,11 +152,17 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .overlay.gesture p{font-size:13px;color:var(--label2)}
 .player:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;aspect-ratio:auto}
 
-.action-bar{flex:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.action-bar .primary-btn{padding:10px 18px;font-size:13.5px}
-.action-bar .secondary-btn{display:inline-flex;align-items:center;gap:8px}
-.action-bar span.ic{display:grid;place-items:center}
-.share-hint{margin-left:auto;font-size:11.5px;color:var(--label3)}
+/* ================= NOW BAR ================= */
+.nowbar{flex:none;display:flex;align-items:center;gap:12px;padding:12px 14px}
+.now-info{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.now-num{font-family:var(--font-display);font-size:22px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;flex:none}
+.now-titles{min-width:0;display:flex;flex-direction:column;gap:2px}
+.now-titles b{font-size:16px;font-weight:var(--w-med);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now-titles span{font-size:12px;color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now-actions{display:flex;align-items:center;gap:8px;flex:none}
+.now-actions .primary-btn{padding:9px 16px;font-size:13px}
+.now-actions .secondary-btn{padding:9px 14px;font-size:13px;display:inline-flex;align-items:center;gap:7px}
+.now-actions .icon-btn{width:36px;height:36px}
 
 /* ================= SIDEBAR ================= */
 .sidebar{position:static;display:flex;flex-direction:column;min-height:0;padding:16px 12px 12px 14px}
@@ -329,8 +335,11 @@ footer{display:none}
   .g-arrow.left{left:64px}
   .vol-range{width:64px}.controls{padding:24px 10px 10px;gap:5px}.ctrl-btn{width:34px;height:34px}
   .info-titles h1{font-size:19px}.info-num{font-size:24px}.channel-logo{width:46px;height:46px}
-  .share-hint{flex-basis:100%;margin-left:0;order:3}
   .program-cards{grid-template-columns:1fr}
+  .nowbar{flex-wrap:wrap}
+  .now-actions{width:100%;justify-content:flex-end}
+  .now-num{font-size:18px}
+  .now-titles b{font-size:14px}
   .modal-backdrop{place-items:end center;padding:0}
   .modal{width:100%;max-height:88vh;border-radius:16px 16px 0 0;animation:sheet .32s var(--ease)}
   @keyframes sheet{from{transform:translateY(48px);opacity:.5}}
@@ -404,11 +413,19 @@ footer{display:none}
       </div>
     </div>
 
-    <div class="action-bar">
-      <button class="secondary-btn press" id="infoBtn"><span class="ic" id="infoIcon"></span> Подробнее</button>
-      <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
-      <button class="secondary-btn press" id="copyLinkBtn"><span class="ic" id="linkIcon"></span> Копировать ссылку</button>
-      <span class="share-hint">Ссылка откроет приложение сразу на этом канале</span>
+    <div class="nowbar panel">
+      <div class="now-info">
+        <span class="now-num" id="nowNum">01</span>
+        <div class="now-titles">
+          <b id="nowName">—</b>
+          <span id="nowMeta">—</span>
+        </div>
+      </div>
+      <div class="now-actions">
+        <button class="icon-btn press" id="nowFav" title="В избранное (S)" aria-label="Избранное"></button>
+        <button class="secondary-btn press" id="infoBtn"><span class="ic" id="infoIcon"></span> Подробнее</button>
+        <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
+      </div>
     </div>
   </section>
 
@@ -912,7 +929,7 @@ async function probeChannel(url){
 }
 
 /* ================== СКАНЕР ================== */
-function updateScanUI(sourceLabel){
+function updateScanUI(){
   const found=channels.length;
   $('topCounter').textContent=found+'/'+TARGET;
 }
@@ -1385,6 +1402,13 @@ function renderInfo(){
   if(current.logo&&/^https:/i.test(current.logo)){logo.referrerPolicy='no-referrer';logo.src=current.logo;logo.hidden=false;logo.onerror=()=>{logo.hidden=true;};}
   else{logo.hidden=true;logo.removeAttribute('src');}
   $('programNote').textContent=current.type==='vod'?'Расписание построено по реальной длине фрагментов':'Точная сетка — у вещателя';
+  /* строка «сейчас в эфире» под плеером */
+  $('nowNum').textContent=pad2(current.n);
+  $('nowName').textContent=current.name;
+  $('nowMeta').textContent=current.group+' • '+current.country;
+  const nf=$('nowFav');
+  nf.classList.toggle('on',isFav(current));
+  nf.title=isFav(current)?'Убрать из избранного (S)':'В избранное (S)';
   updateSignal();renderProgram();
 }
 function updateSignal(){$('sigLabel').textContent=signalText;}
@@ -1513,6 +1537,7 @@ function closeInfo(){$('infoModal').hidden=true;$('infoBtn').focus();}
 $('infoBtn').addEventListener('click',openInfo);
 $('infoClose').addEventListener('click',closeInfo);
 $('infoModal').addEventListener('click',e=>{if(e.target===$('infoModal'))closeInfo();});
+$('nowFav').addEventListener('click',()=>{if(current)toggleFav(current);});
 
 /* ================== ПОДЕЛИТЬСЯ ================== */
 function openShare(){
@@ -1539,7 +1564,6 @@ $('shareModal').addEventListener('click',e=>{if(e.target===$('shareModal'))close
 $('shareLink').addEventListener('focus',e=>e.target.select());
 $('shareCopy').addEventListener('click',doCopy);
 $('shareCopyRow').addEventListener('click',doCopy);
-$('copyLinkBtn').addEventListener('click',doCopy);
 $('shareOpen').addEventListener('click',()=>{if(current)intent(shareUrl(current));});
 $('shareNative').addEventListener('click',async()=>{
   const s=buildShare();
@@ -1603,10 +1627,10 @@ $('genreClose').innerHTML=icon('close',14);
 $('countryClose').innerHTML=icon('close',14);
 $('genrePrev').innerHTML=icon('chevL',14);$('genreNext').innerHTML=icon('chevR',14);
 $('infoFav').innerHTML=icon('star',18);
+$('nowFav').innerHTML=icon('star',18);
 $('infoIcon').innerHTML=icon('info',15);
 $('infoClose').innerHTML=icon('close',14);
 $('shareIcon').innerHTML=icon('share',16);
-$('linkIcon').innerHTML=icon('link',15);
 $('shareCopy').innerHTML=icon('copy',16);
 $('shareClose').innerHTML=icon('close',14);
 $('shareCopyRowIcon').innerHTML=icon('copy',17);
