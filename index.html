@@ -2,29 +2,40 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>TV BOX — 5000 каналов</title>
 <style>
 /* ================== APPLE TYPE ================== */
-@font-face{font-family:'SF Pro Text';font-style:normal;font-weight:400;font-display:swap;
+@font-face{
+  font-family:'SF Pro Text';font-style:normal;font-weight:400;font-display:swap;
   src:local('SF Pro Text Regular'),local('SFProText-Regular'),local('.SFNSText-Regular'),local('SF Pro Text'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Regular.otf') format('opentype');}
-@font-face{font-family:'SF Pro Text';font-style:normal;font-weight:500;font-display:swap;
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Regular.otf') format('opentype');
+}
+@font-face{
+  font-family:'SF Pro Text';font-style:normal;font-weight:500;font-display:swap;
   src:local('SF Pro Text Medium'),local('SFProText-Medium'),local('.SFNSText-Medium'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Medium.otf') format('opentype');}
-@font-face{font-family:'SF Pro Text';font-style:normal;font-weight:600;font-display:swap;
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Medium.otf') format('opentype');
+}
+@font-face{
+  font-family:'SF Pro Text';font-style:normal;font-weight:600;font-display:swap;
   src:local('SF Pro Text Semibold'),local('SFProText-Semibold'),local('.SFNSText-Semibold'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Semibold.otf') format('opentype');}
-@font-face{font-family:'SF Pro Display';font-style:normal;font-weight:500;font-display:swap;
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Semibold.otf') format('opentype');
+}
+@font-face{
+  font-family:'SF Pro Display';font-style:normal;font-weight:500;font-display:swap;
   src:local('SF Pro Display Medium'),local('SFProDisplay-Medium'),local('.SFNSDisplay-Medium'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Display-Medium.otf') format('opentype');}
-@font-face{font-family:'SF Pro Display';font-style:normal;font-weight:600;font-display:swap;
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Display-Medium.otf') format('opentype');
+}
+@font-face{
+  font-family:'SF Pro Display';font-style:normal;font-weight:600;font-display:swap;
   src:local('SF Pro Display Semibold'),local('SFProDisplay-Semibold'),local('.SFNSDisplay-Semibold'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Display-Semibold.otf') format('opentype');}
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Display-Semibold.otf') format('opentype');
+}
 
 :root{
   color-scheme:dark;
+  --hdr:106px;
   --font-ui:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro','Helvetica Neue','Segoe UI',system-ui,Roboto,sans-serif;
   --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue','Segoe UI',system-ui,sans-serif;
   --w-reg:400;--w-med:500;--w-sem:600;
@@ -40,55 +51,50 @@
   --r-panel:18px;--r-group:12px;--r-btn:11px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;scrollbar-width:none}
-html::-webkit-scrollbar{display:none}
+html{scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.55) transparent}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(120,120,128,.45);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(120,120,128,.75);background-clip:padding-box}
+::selection{background:rgba(10,132,255,.35)}
 body{
-  position:fixed;inset:0;overflow:hidden;display:flex;flex-direction:column;overscroll-behavior:none;
   font-family:var(--font-ui);font-weight:var(--w-reg);font-size:14px;line-height:1.4;
   font-synthesis:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  background:var(--bg);color:var(--label);
+  background:var(--bg);color:var(--label);min-height:100vh;overflow-x:hidden;
 }
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1100px 560px at 14% -12%,rgba(10,132,255,.11),transparent 62%),radial-gradient(900px 500px at 102% -6%,rgba(191,90,242,.07),transparent 60%)}
-button,input,select{font:inherit;font-synthesis:none;touch-action:manipulation}
-button{color:inherit;font-weight:var(--w-reg);cursor:pointer;-webkit-user-select:none;user-select:none}
+button,input,select{font:inherit;font-synthesis:none}
+button{color:inherit;font-weight:var(--w-reg)}
 button:disabled{opacity:.32;cursor:not-allowed}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:10px}
 [hidden]{display:none!important}
-.press{transition:background .16s var(--ease),color .16s var(--ease),transform .1s var(--ease),opacity .16s var(--ease)}
-.press:active:not(:disabled){transform:scale(.95)}
-.thin-scroll{scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.55) transparent}
-.thin-scroll::-webkit-scrollbar{width:8px}
-.thin-scroll::-webkit-scrollbar-track{background:transparent}
-.thin-scroll::-webkit-scrollbar-thumb{background:rgba(120,120,128,.45);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
-.thin-scroll::-webkit-scrollbar-thumb:hover{background:rgba(120,120,128,.75);background-clip:padding-box}
-::selection{background:rgba(10,132,255,.35)}
+.press{transition:background .18s var(--ease),color .18s var(--ease),transform .12s var(--ease),opacity .18s var(--ease)}
+.press:active:not(:disabled){transform:scale(.96)}
 
 /* ================= NAV BAR ================= */
-.top{position:relative;z-index:100;flex:none;background:var(--glass);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:.5px solid var(--sep)}
+.top{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:.5px solid var(--sep)}
 .top-in{position:relative;max-width:1560px;margin:0 auto;height:60px;padding:0 22px;display:flex;align-items:center;gap:14px}
 .brand{display:flex;align-items:center;gap:11px;flex:none}
-.logo{width:36px;height:36px;border-radius:9px;background:linear-gradient(160deg,#0A84FF,#0060DF);display:grid;place-items:center;font-size:11px;font-weight:var(--w-sem);letter-spacing:.02em;color:#fff;box-shadow:0 4px 14px rgba(10,132,255,.35)}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(160deg,#0A84FF,#0060DF);display:grid;place-items:center;font-size:11px;font-weight:var(--w-sem);letter-spacing:.02em;color:#fff;box-shadow:0 4px 14px rgba(10,132,255,.35)}
 .brand-name{font-family:var(--font-display);font-size:17px;font-weight:var(--w-sem);letter-spacing:-.02em}
 .brand-sub{font-size:10px;font-weight:var(--w-reg);color:var(--label3);letter-spacing:.04em;margin-top:2px}
-.search-wrap{flex:1;max-width:560px;margin-left:auto;display:flex;align-items:center;gap:9px;background:var(--fill);border-radius:11px;padding:10px 12px;color:var(--label3);transition:background .16s var(--ease)}
+.search-wrap{flex:1;max-width:560px;margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:10px;padding:8px 11px;color:var(--label3);transition:background .18s var(--ease)}
 .search-wrap:focus-within{background:var(--fill2)}
-.search-wrap input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--label);font-size:15px;font-weight:var(--w-reg)}
+.search-wrap input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--label);font-size:14px;font-weight:var(--w-reg)}
 .search-wrap input::placeholder{color:var(--label3)}
-#searchClear{width:24px;height:24px;border-radius:50%;background:var(--label3);border:0;display:grid;place-items:center;color:var(--card);cursor:pointer;flex:none}
-#searchClear:active{background:var(--label2)}
-#searchCancel{display:none;border:0;background:none;color:var(--blue);font-size:15px;font-weight:var(--w-reg);cursor:pointer;flex:none;padding:4px 2px}
+#searchClear{width:18px;height:18px;border-radius:50%;background:var(--label3);border:0;display:grid;place-items:center;color:var(--card);cursor:pointer;flex:none}
+#searchCancel{display:none;border:0;background:none;color:var(--blue);font-size:14px;font-weight:var(--w-reg);cursor:pointer;flex:none;padding:0 2px}
 .search-wrap:focus-within #searchCancel,.search-wrap.filled #searchCancel{display:block}
 .top-actions{display:flex;align-items:center;gap:8px;flex:none}
-.counter{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:var(--w-med);color:var(--green);background:rgba(48,209,88,.14);border-radius:999px;padding:8px 13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.counter{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:var(--w-med);color:var(--green);background:rgba(48,209,88,.14);border-radius:999px;padding:7px 13px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .counter i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(48,209,88,.85)}
 .clock{font-size:12.5px;font-weight:var(--w-reg);color:var(--label2);font-variant-numeric:tabular-nums;white-space:nowrap}
-.icon-btn{width:40px;height:40px;border-radius:11px;background:var(--fill);border:0;display:grid;place-items:center;cursor:pointer;flex:none;color:var(--label)}
+.icon-btn{width:36px;height:36px;border-radius:10px;background:var(--fill);border:0;display:grid;place-items:center;cursor:pointer;flex:none;color:var(--label)}
 .icon-btn:hover:not(:disabled){background:var(--fill2)}
-.icon-btn:active:not(:disabled){background:var(--fill2)}
 .icon-btn.active{background:var(--blue-soft);color:var(--blue)}
 .icon-btn.on{color:var(--yellow)}
 .icon-btn.on svg path{fill:currentColor}
-.nav-btn{width:auto;padding:0 14px;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:var(--w-med)}
+.nav-btn{width:auto;padding:0 13px;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:var(--w-med)}
 
 /* ================= GENRE STRIP ================= */
 .genre-wrap{position:relative;max-width:1560px;margin:0 auto;display:flex;align-items:center;border-top:.5px solid var(--hair)}
@@ -97,30 +103,28 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .genre-wrap::after{right:0;background:linear-gradient(270deg,#000,transparent)}
 .genre-wrap.has-overflow::before,.genre-wrap.has-overflow::after{opacity:1}
 .strip-label{flex:none;width:72px;padding-left:22px;font-size:10px;font-weight:var(--w-med);letter-spacing:.08em;text-transform:uppercase;color:var(--label3)}
-.genre-bar{flex:1;min-width:0;display:flex;gap:8px;align-items:center;height:48px;overflow-x:auto;padding:0 22px 0 4px;scrollbar-width:none;touch-action:pan-x;overscroll-behavior:contain}
+.genre-bar{flex:1;min-width:0;display:flex;gap:8px;align-items:center;height:44px;overflow-x:auto;padding:0 22px 0 4px;scrollbar-width:none}
 .genre-bar::-webkit-scrollbar{display:none}
-.g-chip{flex:none;display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:999px;border:0;background:var(--fill);font-size:13px;font-weight:var(--w-reg);color:var(--label2);cursor:pointer;white-space:nowrap;touch-action:manipulation}
+.g-chip{flex:none;display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;border:0;background:var(--fill);font-size:13px;font-weight:var(--w-reg);color:var(--label2);cursor:pointer;white-space:nowrap}
 .g-chip:hover{background:var(--fill2);color:var(--label)}
-.g-chip:active{background:var(--fill2);color:var(--label)}
 .g-chip.active{background:var(--blue);color:#fff;font-weight:var(--w-med)}
 .g-chip.more{background:var(--blue-soft);color:var(--blue)}
 .g-count{font-size:12px;font-weight:var(--w-reg);color:var(--label3);font-variant-numeric:tabular-nums}
 .g-chip:hover .g-count{color:var(--label2)}
 .g-chip.active .g-count{color:rgba(255,255,255,.75)}
-.g-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:32px;height:32px;border-radius:50%;background:rgba(58,58,60,.94);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label2);box-shadow:0 4px 14px rgba(0,0,0,.6)}
+.g-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:26px;height:26px;border-radius:50%;background:rgba(58,58,60,.94);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label2);box-shadow:0 4px 14px rgba(0,0,0,.6)}
 .g-arrow:hover{color:var(--label)}
-.g-arrow:active{color:var(--label)}
 .g-arrow.left{left:76px}
 .g-arrow.right{right:6px}
 @media(pointer:coarse){.g-arrow{display:none}}
 
-/* ================= APP STAGE ================= */
-.stage{position:relative;z-index:1;flex:1;min-height:0;width:100%;max-width:1560px;margin:0 auto;padding:14px 22px;display:grid;grid-template-columns:minmax(0,1fr) 356px;gap:16px}
-.main-col{min-width:0;min-height:0;display:flex;flex-direction:column;gap:12px}
+/* ================= LAYOUT ================= */
+.layout{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:20px 22px 22px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+.main-col{min-width:0;display:flex;flex-direction:column;gap:14px}
 .panel{background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:inset 0 .5px 0 rgba(255,255,255,.05)}
 
 /* ================= PLAYER ================= */
-.player{position:relative;flex:1;min-height:0;background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.player{position:relative;aspect-ratio:16/9;background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;scroll-margin-top:122px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 .ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
 .ch-badge.show{opacity:1;transform:none}
@@ -129,90 +133,95 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .live{font-size:9px;font-weight:var(--w-sem);letter-spacing:.08em;padding:2px 7px;border-radius:6px;background:rgba(255,69,58,.22);color:#FF6961;flex:none}
 .live.vod{background:rgba(255,159,10,.2);color:var(--orange)}
 .num-osd{position:absolute;top:14px;right:14px;z-index:7;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:13px;padding:8px 18px;font-family:var(--font-display);font-size:30px;font-weight:var(--w-med);color:var(--blue);font-variant-numeric:tabular-nums;letter-spacing:.08em}
-.controls{position:absolute;inset:auto 0 0;z-index:5;display:flex;align-items:center;gap:9px;padding:32px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.82));transition:opacity .2s}
+.controls{position:absolute;inset:auto 0 0;z-index:5;display:flex;align-items:center;gap:8px;padding:32px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.82));transition:opacity .2s}
 .controls.hide{opacity:0;pointer-events:none}
-.ctrl-btn{width:42px;height:42px;border-radius:50%;flex:none;background:rgba(28,28,30,.7);backdrop-filter:blur(12px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label);touch-action:manipulation}
+.ctrl-btn{width:38px;height:38px;border-radius:50%;flex:none;background:rgba(28,28,30,.7);backdrop-filter:blur(12px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label)}
 .ctrl-btn:hover:not(:disabled){background:rgba(72,72,74,.85)}
-.ctrl-btn:active:not(:disabled){background:rgba(96,96,100,.9)}
-.vol-range{width:112px;height:30px;accent-color:var(--blue);cursor:pointer;touch-action:manipulation}
+.vol-range{width:112px;accent-color:var(--blue);cursor:pointer}
 .ctrl-fs{margin-left:auto}
 .overlay{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;background:rgba(0,0,0,.78)}
 .overlay.boot{z-index:10;background:rgba(0,0,0,.93)}
 .boot-title{font-family:var(--font-display);font-size:clamp(26px,4vw,42px);font-weight:var(--w-sem);letter-spacing:.03em}
-.boot-sub{font-size:13px;font-weight:var(--w-reg);color:var(--label2);max-width:490px;line-height:1.65}
-.primary-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:#fff;border:0;border-radius:var(--r-btn);padding:13px 22px;font-size:15px;font-weight:var(--w-med);cursor:pointer}
+.boot-sub{font-size:13px;font-weight:var(--w-reg);color:var(--label2);max-width:470px;line-height:1.65}
+.primary-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:#fff;border:0;border-radius:var(--r-btn);padding:12px 22px;font-size:15px;font-weight:var(--w-med);cursor:pointer}
 .primary-btn:hover{filter:brightness(1.1)}
-.secondary-btn{background:var(--fill);border:0;border-radius:var(--r-btn);padding:12px 16px;font-size:13.5px;font-weight:var(--w-reg);cursor:pointer;color:var(--label)}
+.secondary-btn{background:var(--fill);border:0;border-radius:var(--r-btn);padding:10px 16px;font-size:13.5px;font-weight:var(--w-reg);cursor:pointer;color:var(--label)}
 .secondary-btn:hover{background:var(--fill2)}
-.secondary-btn:active{background:var(--fill2)}
 .overlay.error h2{font-family:var(--font-display);font-size:20px;font-weight:var(--w-med);letter-spacing:-.01em}
 .overlay.error p{font-size:13px;color:var(--label2);max-width:460px;line-height:1.6}
 .overlay-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .spinner{width:40px;height:40px;border-radius:50%;border:3px solid rgba(255,255,255,.14);border-top-color:var(--blue);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.gesture-btn{width:80px;height:80px;border-radius:50%;border:0;cursor:pointer;background:var(--blue);color:#fff;display:grid;place-items:center;box-shadow:0 10px 34px rgba(10,132,255,.4)}
+.gesture-btn{width:72px;height:72px;border-radius:50%;border:0;cursor:pointer;background:var(--blue);color:#fff;display:grid;place-items:center;box-shadow:0 10px 34px rgba(10,132,255,.4)}
 .overlay.gesture p{font-size:13px;color:var(--label2)}
-.player:fullscreen{width:100vw;height:100vh;border:0;border-radius:0}
+.player:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;aspect-ratio:auto}
 
-/* ================= NOW BAR ================= */
-.now-bar{flex:none;display:flex;align-items:center;gap:12px;padding:12px 14px;flex-wrap:wrap}
-.now-logo{width:44px;height:44px;border-radius:10px;background:var(--card2);object-fit:contain;padding:4px;flex:none}
-.now-num{font-family:var(--font-display);font-size:20px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;min-width:32px;letter-spacing:-.02em}
-.now-titles{flex:1;min-width:150px;display:flex;flex-direction:column;gap:6px}
-.now-titles h1{font-size:16px;font-weight:var(--w-med);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.now-tags{display:flex;gap:6px;flex-wrap:wrap}
-.tag{font-size:10px;font-weight:var(--w-med);letter-spacing:.04em;text-transform:uppercase;padding:6px 11px;border-radius:999px;background:var(--fill);border:0;color:var(--label2);touch-action:manipulation}
+.action-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.action-bar .primary-btn{padding:10px 18px;font-size:13.5px}
+.action-bar .secondary-btn{display:inline-flex;align-items:center;gap:8px}
+.action-bar span.ic{display:grid;place-items:center}
+.share-hint{margin-left:auto;font-size:11.5px;color:var(--label3)}
+
+/* ================= CHANNEL CARD ================= */
+.info{padding:20px}
+.info-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.channel-logo{width:56px;height:56px;border-radius:13px;background:var(--card2);object-fit:contain;padding:5px;flex:none}
+.info-num{font-family:var(--font-display);font-size:28px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px;letter-spacing:-.02em}
+.info-titles{flex:1;min-width:200px}
+.info-titles h1{font-family:var(--font-display);font-size:22px;font-weight:var(--w-med);letter-spacing:-.02em;line-height:1.25}
+.info-tags{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:var(--w-med);letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--fill);border:0;color:var(--label2)}
 .tag.ok{color:var(--green);background:rgba(48,209,88,.14)}
 .tag.vod{color:var(--orange);background:rgba(255,159,10,.14)}
 button.tag{cursor:pointer}
 button.tag:hover{background:var(--blue-soft);color:var(--blue)}
-button.tag:active{background:var(--blue-soft);color:var(--blue)}
-button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:var(--teal)}
-.now-signal{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--label2);flex-wrap:wrap}
-.now-signal select{background:var(--fill);border:0;color:var(--label);border-radius:8px;padding:6px 8px;font-size:11.5px;cursor:pointer}
+button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
+.desc{margin-top:15px;font-size:13.5px;line-height:1.65;color:var(--label2);max-width:920px}
+.program{margin-top:20px;padding-top:18px;border-top:.5px solid var(--sep)}
+.program-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.program-head h3{font-size:12px;font-weight:var(--w-med);letter-spacing:.06em;text-transform:uppercase;color:var(--label3)}
+.program-note{margin-left:auto;font-size:11px;color:var(--label3)}
+.program-cards{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:10px}
+.prog-card{background:var(--card2);border-radius:13px;padding:12px 14px;min-width:0}
+.prog-card.now{background:var(--blue-soft)}
+.prog-card em{display:block;font-style:normal;font-size:9.5px;font-weight:var(--w-med);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.prog-card.next em{color:var(--label3)}
+.prog-card strong{display:block;font-size:13px;font-weight:var(--w-med);line-height:1.4}
+.prog-card span{display:block;font-size:11px;color:var(--label3);margin-top:5px;line-height:1.5}
+.timeline{display:flex;gap:3px;height:28px;margin-top:12px}
+.tl-seg{position:relative;border:0;border-radius:7px;background:var(--card2);cursor:pointer;overflow:hidden;min-width:8px;padding:0}
+.tl-seg.cur{background:var(--blue-soft)}
+.tl-seg i{position:absolute;inset:0;width:0;background:rgba(10,132,255,.35)}
+.tl-seg b{position:relative;z-index:1;display:block;padding:0 7px;font-size:9px;font-weight:var(--w-reg);line-height:28px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--label2)}
+.tl-seg:hover{background:var(--card3)}
+.signal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:.5px solid var(--sep);font-size:12.5px;color:var(--label2)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--label3);flex:none}
 .dot.ok{background:var(--green);box-shadow:0 0 8px rgba(48,209,88,.6)}
-.mini-act{width:34px;height:34px;border-radius:9px;background:var(--fill);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label2)}
-.mini-act:hover{background:var(--fill2);color:var(--label)}
-.mini-act:active{background:var(--fill2);color:var(--label)}
-.now-actions{display:flex;align-items:center;gap:8px}
-.pill-btn{display:inline-flex;align-items:center;gap:7px;background:var(--fill);border:0;border-radius:999px;padding:10px 16px;font-size:12.5px;font-weight:var(--w-med);cursor:pointer;color:var(--label);white-space:nowrap;touch-action:manipulation}
-.pill-btn:hover{background:var(--fill2)}
-.pill-btn:active{background:var(--fill2)}
-.pill-btn.accent{background:var(--blue-soft);color:var(--blue)}
-.pill-btn.accent:hover,.pill-btn.accent:active{background:rgba(10,132,255,.28)}
-
-/* ================= STATUS LINE ================= */
-.statusline{flex:none;display:flex;align-items:center;gap:10px;padding:0 4px;font-size:11px;color:var(--label3)}
-.statusline .st-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex:none;box-shadow:0 0 8px rgba(10,132,255,.7)}
-.statusline b{font-weight:var(--w-med);color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:38%}
-.st-bar{flex:1;min-width:40px;height:3px;border-radius:2px;background:var(--fill);overflow:hidden}
-.st-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px;transition:width .3s var(--ease)}
-.st-num{color:var(--label3);font-variant-numeric:tabular-nums;white-space:nowrap}
-.status-keys{color:var(--label4);white-space:nowrap}
+.signal-row select{background:var(--fill);border:0;color:var(--label);border-radius:8px;padding:5px 8px;font-size:11.5px;cursor:pointer}
+.retry-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--fill);border:0;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-med);cursor:pointer}
+.retry-btn:hover{background:var(--fill2)}
 
 /* ================= SIDEBAR ================= */
-.sidebar{min-height:0;display:flex;flex-direction:column;padding:14px 12px 12px 14px}
-.side-head,.country-picker,.side-foot{flex:none}
+.sidebar{position:sticky;top:122px;max-height:calc(100vh - 140px);display:flex;flex-direction:column;padding:16px 12px 12px 14px;scroll-margin-top:122px}
+.side-head,.country-picker,.legend,.side-foot{flex:none}
 .side-head{display:flex;align-items:center;gap:8px;padding:0 4px 10px}
 .side-head h2{flex:1;min-width:0;font-size:12px;font-weight:var(--w-med);letter-spacing:.06em;text-transform:uppercase;color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.reset-chip{border:0;background:rgba(255,69,58,.15);color:var(--red);border-radius:999px;font-size:11px;font-weight:var(--w-med);padding:6px 12px;cursor:pointer;white-space:nowrap}
-.reset-chip:active{background:rgba(255,69,58,.28)}
-.country-picker{width:100%;display:flex;align-items:center;gap:10px;height:48px;padding:0 14px;margin:0 4px 12px 0;border:0;border-radius:var(--r-group);background:var(--card2);cursor:pointer;color:var(--label);text-align:left;touch-action:manipulation}
-.country-picker:active{background:var(--card3)}
+.reset-chip{border:0;background:rgba(255,69,58,.15);color:var(--red);border-radius:999px;font-size:10.5px;font-weight:var(--w-med);padding:4px 10px;cursor:pointer;white-space:nowrap}
+.reset-chip:hover{background:rgba(255,69,58,.26)}
+.country-picker{width:100%;display:flex;align-items:center;gap:10px;height:46px;padding:0 13px;margin:0 4px 12px 0;border:0;border-radius:var(--r-group);background:var(--card2);cursor:pointer;color:var(--label);text-align:left}
+.country-picker:hover{background:var(--card3)}
 .country-picker .cp-ic{color:var(--teal);display:grid;place-items:center;flex:none}
 .country-picker b{flex:1;min-width:0;font-size:15px;font-weight:var(--w-med);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .country-picker .cp-chev{color:var(--label3);display:grid;place-items:center;flex:none}
 .country-picker.filtered{background:var(--teal-soft)}
 .country-picker.filtered b{color:var(--teal)}
 .country-picker.filtered .cp-chev{color:var(--teal)}
-.ch-list{flex:1;min-height:0;overflow-y:auto;padding-right:5px;overscroll-behavior:contain;touch-action:pan-y}
+.ch-list{flex:1;overflow-y:auto;padding-right:5px;min-height:240px;overscroll-behavior:contain}
 .ch-spacer{position:relative;width:100%;background:var(--card2);border-radius:var(--r-group);overflow:hidden}
-.ch-item{position:absolute;left:0;right:0;height:60px;display:grid;grid-template-columns:38px minmax(0,1fr) 40px;gap:12px;align-items:center;text-align:left;background:transparent;border:0;padding:0 10px 0 12px;cursor:pointer;transition:background .12s var(--ease);touch-action:pan-y;-webkit-user-select:none;user-select:none}
+.ch-item{position:absolute;left:0;right:0;height:60px;display:grid;grid-template-columns:38px minmax(0,1fr) 28px;gap:12px;align-items:center;text-align:left;background:transparent;border:0;padding:0 12px;cursor:pointer;transition:background .14s var(--ease)}
 .ch-item::before{content:'';position:absolute;left:62px;right:0;top:0;height:.5px;background:var(--sep)}
 .ch-item.first::before{display:none}
 .ch-item:hover{background:var(--fill3)}
-.ch-item:active{background:var(--fill2)}
 .ch-item.active{background:var(--blue-soft)}
 .ch-thumb{position:relative;width:38px;height:38px;border-radius:9px;background:var(--card3);display:grid;place-items:center;overflow:hidden}
 .ch-thumb i{font-style:normal;font-size:14px;font-weight:var(--w-med);color:var(--label3)}
@@ -228,16 +237,15 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
 .eq i:nth-child(2){height:100%;animation-delay:.2s}
 .eq i:nth-child(3){height:40%;animation-delay:.4s}
 @keyframes eq{50%{transform:scaleY(.35)}}
-.fav-btn{width:40px;height:40px;border-radius:10px;background:transparent;border:0;display:grid;place-items:center;color:var(--label4);cursor:pointer;touch-action:manipulation}
+.fav-btn{width:28px;height:28px;border-radius:7px;background:transparent;border:0;display:grid;place-items:center;color:var(--label4);cursor:pointer}
 .fav-btn:hover{color:var(--label2);background:var(--fill)}
-.fav-btn:active{color:var(--label);background:var(--fill)}
 .fav-btn.on{color:var(--yellow)}
 .fav-btn.on svg path{fill:currentColor}
 .ch-empty{padding:30px 16px;text-align:center;color:var(--label3);font-size:12.5px;line-height:1.6;display:flex;flex-direction:column;gap:14px;align-items:center;background:transparent}
-.side-foot{display:flex;gap:8px;padding:11px 4px 2px;margin-top:10px;border-top:.5px solid var(--sep)}
-.foot-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--fill);border:0;border-radius:10px;padding:11px 10px;font-size:12.5px;font-weight:var(--w-med);cursor:pointer;touch-action:manipulation}
+.legend{padding:10px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
+.side-foot{display:flex;gap:8px;padding:11px 4px 2px;margin-top:9px;border-top:.5px solid var(--sep)}
+.foot-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--fill);border:0;border-radius:10px;padding:9px 10px;font-size:12px;font-weight:var(--w-med);cursor:pointer}
 .foot-btn:hover:not(:disabled){background:var(--fill2)}
-.foot-btn:active:not(:disabled){background:var(--fill2)}
 
 /* ================= SHEETS ================= */
 .modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);display:grid;place-items:center;padding:20px}
@@ -247,17 +255,17 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
 .modal-head{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:.5px solid var(--sep);flex:none}
 .modal-head h3{font-family:var(--font-display);font-size:17px;font-weight:var(--w-sem);letter-spacing:-.02em;flex:none}
 .modal-sub{font-size:12px;font-weight:var(--w-reg);color:var(--label3);margin-left:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.modal-head .icon-btn{width:34px;height:34px;border-radius:50%;background:var(--fill);color:var(--label2)}
-.sheet-search{display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:11px;padding:11px 12px;margin:14px 16px 0;color:var(--label3);flex:none}
+.modal-head .icon-btn{width:30px;height:30px;border-radius:50%;background:var(--fill);color:var(--label2)}
+.sheet-search{display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:10px;padding:9px 12px;margin:14px 16px 0;color:var(--label3);flex:none}
 .sheet-search:focus-within{background:var(--fill2)}
-.sheet-search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--label);font-size:15px;font-weight:var(--w-reg)}
+.sheet-search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--label);font-size:14px;font-weight:var(--w-reg)}
 .sheet-search input::placeholder{color:var(--label3)}
-.modal-body{overflow-y:auto;padding:6px 16px 18px;touch-action:pan-y;overscroll-behavior:contain}
+.modal-body{overflow-y:auto;padding:6px 16px 18px}
 .ios-header{font-size:11.5px;font-weight:var(--w-med);letter-spacing:.06em;text-transform:uppercase;color:var(--label3);padding:16px 4px 7px}
 .ios-group{background:var(--card2);border-radius:var(--r-group);overflow:hidden}
-.ios-row{position:relative;width:100%;display:flex;align-items:center;gap:10px;min-height:52px;padding:12px 14px;border:0;background:transparent;cursor:pointer;text-align:left;color:var(--label);touch-action:manipulation}
+.ios-row{position:relative;width:100%;display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 14px;border:0;background:transparent;cursor:pointer;text-align:left;color:var(--label)}
 .ios-row+.ios-row::before{content:'';position:absolute;left:14px;right:0;top:0;height:.5px;background:var(--sep)}
-.ios-row:active:not(:disabled){background:var(--fill2)}
+.ios-row:hover:not(:disabled){background:var(--fill3)}
 .ios-row b{flex:1;min-width:0;font-size:15px;font-weight:var(--w-reg);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ios-row small{font-size:11.5px;font-weight:var(--w-reg);color:var(--label3);flex:none}
 .ios-row small.cnt{font-size:13px;font-variant-numeric:tabular-nums}
@@ -268,32 +276,16 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
 .ios-row.ctry.active b{color:var(--teal)}
 .ios-row.ctry.active .tail{color:var(--teal)}
 .sheet-empty{padding:30px 12px;text-align:center;color:var(--label3);font-size:13px;line-height:1.6}
-.sheet-desc{font-size:13px;color:var(--label2);line-height:1.65;padding:12px 2px 0}
-.sheet-note{font-size:11px;color:var(--label3);padding:8px 2px 12px}
-.program-cards{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:10px;margin-top:4px}
-.prog-card{background:var(--card2);border-radius:13px;padding:12px 14px;min-width:0}
-.prog-card.now{background:var(--blue-soft)}
-.prog-card em{display:block;font-style:normal;font-size:9.5px;font-weight:var(--w-med);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
-.prog-card.next em{color:var(--label3)}
-.prog-card strong{display:block;font-size:13px;font-weight:var(--w-med);line-height:1.4}
-.prog-card span{display:block;font-size:11px;color:var(--label3);margin-top:5px;line-height:1.5}
-.timeline{display:flex;gap:3px;height:34px;margin-top:12px}
-.tl-seg{position:relative;border:0;border-radius:8px;background:var(--card2);cursor:pointer;overflow:hidden;min-width:8px;padding:0;touch-action:manipulation}
-.tl-seg.cur{background:var(--blue-soft)}
-.tl-seg i{position:absolute;inset:0;width:0;background:rgba(10,132,255,.35)}
-.tl-seg b{position:relative;z-index:1;display:block;padding:0 7px;font-size:9px;font-weight:var(--w-reg);line-height:34px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--label2)}
-.tl-seg:hover{background:var(--card3)}
-.tl-seg:active{background:var(--card3)}
-.share-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;touch-action:pan-y}
+.share-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
 .link-row{display:flex;gap:8px;align-items:center}
-.link-input{flex:1;min-width:0;background:var(--fill);border:0;border-radius:10px;padding:12px;font-size:12px;font-weight:var(--w-reg);color:var(--label2);outline:none}
+.link-input{flex:1;min-width:0;background:var(--fill);border:0;border-radius:10px;padding:11px 12px;font-size:12px;font-weight:var(--w-reg);color:var(--label2);outline:none}
 .link-input:focus{background:var(--fill2);color:var(--label)}
-.share-grid{display:flex;gap:14px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none;touch-action:pan-x}
+.share-grid{display:flex;gap:14px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}
 .share-grid::-webkit-scrollbar{display:none}
 .share-item{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:0;cursor:pointer;color:var(--label2);font-size:10.5px;font-weight:var(--w-reg);width:64px}
-.s-badge{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;color:#fff;font-weight:var(--w-sem);transition:transform .1s var(--ease),filter .15s;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.s-badge{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:var(--w-sem);transition:transform .12s var(--ease),filter .15s;box-shadow:0 6px 18px rgba(0,0,0,.4)}
 .share-item:hover .s-badge{filter:brightness(1.12)}
-.share-item:active .s-badge{transform:scale(.92)}
+.share-item:active .s-badge{transform:scale(.94)}
 .s-badge.native{background:linear-gradient(160deg,#0A84FF,#0060DF)}
 .s-badge.tg{background:linear-gradient(160deg,#2AABEE,#229ED9)}
 .s-badge.vk{background:linear-gradient(160deg,#0077FF,#0058C7);font-size:15px}
@@ -303,10 +295,18 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
 .share-actions .ios-row b{font-size:15px;color:var(--blue);font-weight:var(--w-reg)}
 .share-actions .ios-row .tail{color:var(--blue)}
 .share-note{font-size:11.5px;color:var(--label3);line-height:1.6}
-.sheet-cancel{display:none;width:100%;background:var(--card2);border:0;border-radius:14px;padding:16px;font-size:16px;font-weight:var(--w-sem);color:var(--blue);cursor:pointer;margin-top:2px}
-.sheet-cancel:active{background:var(--card3)}
+.sheet-cancel{display:none;width:100%;background:var(--card2);border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:var(--w-sem);color:var(--blue);cursor:pointer;margin-top:2px}
 
-/* ================= TOASTS ================= */
+/* ================= STATUS + FOOTER ================= */
+.status{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:0 22px}
+.status-in{display:flex;align-items:center;gap:12px;background:var(--card);border:.5px solid var(--hair);border-radius:13px;padding:10px 14px;font-size:11.5px;color:var(--label2)}
+.status-in .st-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);flex:none;box-shadow:0 0 8px rgba(10,132,255,.7)}
+.status-in b{font-weight:var(--w-med);color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-bar{flex:1;min-width:60px;height:3px;border-radius:2px;background:var(--fill);overflow:hidden}
+.st-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px;transition:width .3s var(--ease)}
+.st-num{color:var(--label3);font-variant-numeric:tabular-nums;white-space:nowrap}
+footer{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:14px 22px 30px;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.8}
+footer b{color:var(--label2);font-weight:var(--w-med)}
 .toasts{position:fixed;right:18px;bottom:18px;z-index:300;display:flex;flex-direction:column;gap:8px;max-width:min(380px,calc(100vw - 36px))}
 .toast{display:flex;align-items:center;gap:10px;background:rgba(28,28,30,.86);backdrop-filter:blur(24px) saturate(180%);border:.5px solid var(--hair);border-radius:15px;padding:12px 14px;font-size:13px;font-weight:var(--w-reg);line-height:1.45;box-shadow:0 14px 40px rgba(0,0,0,.6);animation:tin .24s var(--ease)}
 .toast span.msg{flex:1;min-width:0}
@@ -314,32 +314,51 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
 .toast.warn .t-dot{background:var(--orange)}
 .toast.bad .t-dot{background:var(--red)}
 .toast.ok .t-dot{background:var(--green)}
-.t-action{border:0;background:none;color:var(--blue);font-size:13px;font-weight:var(--w-med);cursor:pointer;flex:none;padding:6px 0 6px 8px}
+.t-action{border:0;background:none;color:var(--blue);font-size:13px;font-weight:var(--w-med);cursor:pointer;flex:none;padding:2px 0 2px 4px}
 @keyframes tin{from{opacity:0;transform:translateY(10px)}}
 
-@media(max-width:1180px){.stage{grid-template-columns:minmax(0,1fr) 320px}.nav-btn .lbl{display:none}.nav-btn{width:40px;padding:0;justify-content:center}.program-cards{grid-template-columns:1fr}}
+/* ================= PC APP-SHELL: видео статично, скроллится только список каналов ================= */
+@media (min-width:941px) and (min-height:660px){
+  body{overflow:hidden;}
+  .status,footer{display:none;}
+  .layout{height:calc(100vh - var(--hdr));overflow:hidden;align-items:stretch;padding-bottom:14px;}
+  .main-col{min-height:0;overflow:hidden;}
+  .player{flex:none;}
+  .info{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;}
+  .info::-webkit-scrollbar{display:none;}
+  .sidebar{position:static;max-height:none;scroll-margin-top:0;}
+  .ch-list{flex:1;min-height:0;max-height:none;padding-right:6px;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent;}
+  .ch-list::-webkit-scrollbar{width:9px;display:block;}
+  .ch-list::-webkit-scrollbar-track{background:transparent;}
+  .ch-list::-webkit-scrollbar-thumb{background:rgba(120,120,128,.55);border-radius:8px;border:2px solid transparent;background-clip:padding-box;}
+  .ch-list::-webkit-scrollbar-thumb:hover{background:var(--blue);background-clip:padding-box;}
+}
+
+@media(max-width:1180px){.layout{grid-template-columns:minmax(0,1fr) 330px}.program-cards{grid-template-columns:1fr 1fr}.nav-btn .lbl{display:none}.nav-btn{width:36px;padding:0;justify-content:center}}
 @media(max-width:940px){
-  .stage{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);padding:10px 12px;gap:10px}
-  .main-col{gap:10px}
-  .player{flex:none;aspect-ratio:16/9;width:100%}
-  .sidebar{min-height:0}
-  .status-keys{display:none}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;max-height:none}
+  .ch-list{max-height:460px}
+  .player,#sidebar{scroll-margin-top:168px}
 }
 @media(max-width:640px){
   .top-in{height:auto;padding:10px 14px;flex-wrap:wrap;gap:10px}
   .search-wrap{order:3;flex-basis:100%;max-width:none;margin-left:0}
-  .clock{display:none}.counter{font-size:11.5px;padding:7px 11px}
+  .clock{display:none}.counter{font-size:11.5px;padding:6px 11px}
   .brand-sub{display:none}
   .strip-label{width:60px;padding-left:14px;font-size:9px}
-  .genre-bar{padding:0 14px 0 2px;height:46px}
+  .genre-bar{padding:0 14px 0 2px;height:42px}
   .genre-wrap::before{left:60px}
   .g-arrow.left{left:64px}
-  .now-bar{gap:10px;padding:10px 12px}
-  .now-logo{width:40px;height:40px}
-  .now-num{font-size:17px;min-width:26px}
-  .now-titles h1{font-size:15px}
-  .now-signal{order:4;flex-basis:100%}
-  .vol-range{width:64px}.controls{padding:24px 10px 10px;gap:7px}.ctrl-btn{width:40px;height:40px}
+  .layout{padding:14px 12px 18px;gap:14px}
+  .info{padding:16px}.program-cards{grid-template-columns:1fr}
+  .vol-range{width:64px}.controls{padding:24px 10px 10px;gap:5px}.ctrl-btn{width:34px;height:34px}
+  .info-titles h1{font-size:19px}.info-num{font-size:24px}.channel-logo{width:46px;height:46px}
+  .share-hint{flex-basis:100%;margin-left:0;order:3}
+  .status{padding:0 12px}
+  .status-in{flex-wrap:wrap}
+  .st-bar{order:3;flex-basis:100%}
+  footer{padding:12px 12px 28px}
   .modal-backdrop{place-items:end center;padding:0}
   .modal{width:100%;max-height:88vh;border-radius:16px 16px 0 0;animation:sheet .32s var(--ease)}
   @keyframes sheet{from{transform:translateY(48px);opacity:.5}}
@@ -358,7 +377,7 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
   <div class="top-in">
     <div class="brand">
       <div class="logo">TV</div>
-      <div><div class="brand-name">TV BOX</div><div class="brand-sub">СТРОГАЯ ПРОВЕРКА ПОТОКА • БЕЗ VPN</div></div>
+      <div><div class="brand-name">TV BOX</div><div class="brand-sub">АВТОПРОВЕРКА • БЕЗ VPN</div></div>
     </div>
     <div class="search-wrap" id="searchWrap">
       <span id="searchIcon"></span>
@@ -382,7 +401,7 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
   </div>
 </header>
 
-<main class="stage">
+<main class="layout">
   <section class="main-col">
     <div class="player" id="player">
       <video id="video" playsinline preload="metadata"></video>
@@ -401,7 +420,7 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
 
       <div class="overlay boot" id="boot">
         <div class="boot-title">TV BOX</div>
-        <p class="boot-sub">Каждый источник проверяется строго: манифест, ключи шифрования и реальные сегменты видеопотока скачиваются из вашей сети. Плеер стартует только на проверенном качестве. Цель — 5000 рабочих каналов. Жанры — сверху, страна — справа.</p>
+        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают из России без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
         <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
       </div>
 
@@ -413,36 +432,39 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
       </div>
     </div>
 
-    <div class="now-bar panel">
-      <img class="now-logo" id="nowLogo" alt="" hidden>
-      <div class="now-num" id="nowNum">01</div>
-      <div class="now-titles">
-        <h1 id="nowName">—</h1>
-        <div class="now-tags">
-          <button class="tag press" id="nowCat" title="Показать все каналы этого жанра">—</button>
-          <button class="tag ctry press" id="nowCountry" title="Показать все каналы этой страны">—</button>
-          <span class="tag ok" id="nowStatus">Проверен</span>
-        </div>
-      </div>
-      <div class="now-signal">
-        <span class="dot ok" id="sigDot"></span><span id="sigLabel">источник проверен</span>
-        <select id="quality" hidden title="Качество"></select>
-        <button class="mini-act press" id="sigRetry" title="Повторить подключение"><span id="refreshIcon"></span></button>
-      </div>
-      <div class="now-actions">
-        <button class="icon-btn press" id="nowFav" title="В избранное (S)" aria-label="Избранное"></button>
-        <button class="pill-btn press" id="programBtn" title="Программа канала (P)"><span id="programIcon"></span> Программа</button>
-        <button class="pill-btn accent press" id="shareBtn"><span id="shareIcon"></span> Поделиться</button>
-        <button class="icon-btn press" id="copyLinkBtn" title="Копировать ссылку на канал" aria-label="Копировать ссылку"><span id="linkIcon"></span></button>
-      </div>
+    <div class="action-bar">
+      <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
+      <button class="secondary-btn press" id="copyLinkBtn"><span class="ic" id="linkIcon"></span> Копировать ссылку</button>
+      <span class="share-hint">Ссылка откроет приложение сразу на этом канале</span>
     </div>
 
-    <div class="statusline">
-      <span class="st-dot"></span>
-      <b id="scanSource">Подготовка…</b>
-      <span class="st-bar"><i id="scanFill"></i></span>
-      <span class="st-num" id="scanChecked">проверено 0</span>
-      <span class="status-keys">G — жанры • C — страны • S — избранное • R — случайный • / — поиск</span>
+    <div class="info panel">
+      <div class="info-head">
+        <div class="info-num" id="infoNum">01</div>
+        <img class="channel-logo" id="channelLogo" alt="" hidden>
+        <div class="info-titles">
+          <h1 id="infoName">—</h1>
+          <div class="info-tags">
+            <button class="tag press" id="infoCat" title="Показать все каналы этого жанра">—</button>
+            <button class="tag ctry press" id="infoCountry" title="Показать все каналы этой страны">—</button>
+            <span class="tag ok" id="infoStatus">Проверен</span>
+          </div>
+        </div>
+        <button class="icon-btn press" id="infoFav" title="В избранное (S)" aria-label="Избранное"></button>
+      </div>
+      <p class="desc" id="infoDesc"></p>
+
+      <div class="program">
+        <div class="program-head"><h3>Программа</h3><span class="program-note" id="programNote"></span></div>
+        <div class="program-cards" id="programCards"></div>
+        <div class="timeline" id="timeline" hidden></div>
+      </div>
+
+      <div class="signal-row">
+        <span class="dot ok" id="sigDot"></span><span id="sigLabel">источник проверен</span>
+        <select id="quality" hidden title="Качество"></select>
+        <button class="retry-btn press" id="sigRetry"><span id="refreshIcon"></span> Повторить</button>
+      </div>
     </div>
   </section>
 
@@ -458,8 +480,9 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
       <span class="cp-chev" id="countryBtnChev"></span>
     </button>
 
-    <div class="ch-list thin-scroll" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
+    <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
 
+    <div class="legend">Только проверенные источники: каждый проходит проверку манифеста и первого сегмента. Звёздочка — избранное (S), случайный канал — R.</div>
     <div class="side-foot">
       <button class="foot-btn press" id="refreshScan"><span id="refreshIcon2"></span> Обновить</button>
       <button class="foot-btn press" id="exportBtn"><span id="exportIcon"></span> Экспорт M3U</button>
@@ -467,11 +490,25 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
   </aside>
 </main>
 
+<div class="status">
+  <div class="status-in">
+    <span class="st-dot"></span>
+    <b id="scanSource">Подготовка…</b>
+    <span class="st-bar"><i id="scanFill"></i></span>
+    <span class="st-num" id="scanChecked">проверено 0</span>
+  </div>
+</div>
+
+<footer>
+  <b>Как это работает:</b> список собирается из открытых IPTV-источников и проверяется запросами из вашего браузера. Канал проходит три ступени: манифест → медиаплейлист → ответ первого сегмента. Нерабочие источники не попадают в список и блокируются. Нерабочий при воспроизведении канал удаляется автоматически. VPN не используется.<br>
+  <b>Управление:</b> 0–9 — номер канала (до 4 цифр, Enter — сразу) • ↑↓ — переключение • ←→ — громкость • Пробел — пауза • M — звук • F — полный экран • G — жанры • C — страна • S — избранное • R — случайный канал • / — поиск • двойной клик по видео — полный экран.
+</footer>
+
 <div class="modal-backdrop" id="genreModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Жанры">
     <div class="grabber"></div>
     <div class="modal-head"><h3>Жанры</h3><span class="modal-sub">Найдено станций по жанрам</span><button class="icon-btn press" id="genreClose" aria-label="Закрыть"></button></div>
-    <div class="modal-body thin-scroll" id="genreBody"></div>
+    <div class="modal-body" id="genreBody"></div>
   </div>
 </div>
 
@@ -480,20 +517,7 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
     <div class="grabber"></div>
     <div class="modal-head"><h3>Страна</h3><span class="modal-sub">Полные названия</span><button class="icon-btn press" id="countryClose" aria-label="Закрыть"></button></div>
     <label class="sheet-search"><span id="countrySearchIcon"></span><input id="countrySearch" type="text" placeholder="Россия, Германия, Japan, JP…" autocomplete="off" enterkeyhint="search" aria-label="Поиск страны"></label>
-    <div class="modal-body thin-scroll" id="countryBody"></div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="programModal" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-label="Программа канала">
-    <div class="grabber"></div>
-    <div class="modal-head"><h3>Программа</h3><span class="modal-sub" id="programModalSub"></span><button class="icon-btn press" id="programClose" aria-label="Закрыть"></button></div>
-    <div class="modal-body thin-scroll">
-      <p class="sheet-desc" id="programDesc"></p>
-      <p class="sheet-note" id="programNote"></p>
-      <div class="program-cards" id="programCards"></div>
-      <div class="timeline" id="timeline" hidden></div>
-    </div>
+    <div class="modal-body" id="countryBody"></div>
   </div>
 </div>
 
@@ -529,21 +553,8 @@ button.tag.ctry:hover,button.tag.ctry:active{background:var(--teal-soft);color:v
 (function(){
 'use strict';
 
-/* ================== ФИКС VK WEBVIEW: ПРИЖАТЬ К ВЕРХУ ================== */
-(function pinViewport(){
-  const snap=()=>{try{if(window.scrollX!==0||window.scrollY!==0)window.scrollTo(0,0);}catch(e){}};
-  snap();
-  [80,300,800,1800,3000].forEach(ms=>setTimeout(snap,ms));
-  addEventListener('scroll',()=>requestAnimationFrame(snap),{passive:true});
-  addEventListener('resize',snap);
-  addEventListener('orientationchange',()=>setTimeout(snap,250));
-  const vv=window.visualViewport;
-  if(vv){vv.addEventListener('scroll',snap,{passive:true});vv.addEventListener('resize',snap);}
-  document.addEventListener('focusin',()=>setTimeout(snap,350));
-})();
-
 /* ================== ЦЕЛЬ И ИСТОЧНИКИ ================== */
-const TARGET=5000, CONCURRENCY=12, PROBE_TIMEOUT=6000, PLAY_TIMEOUT=16000;
+const TARGET=5000, CONCURRENCY=20, MANIFEST_TIMEOUT=4500, SEG_TIMEOUT=4500, PLAY_TIMEOUT=16000;
 const BASE='https://iptv-org.github.io/iptv/';
 const RAW='https://raw.githubusercontent.com/iptv-org/iptv/master/streams/';
 const countrySrc=(code,label)=>({label,country:code,urls:[BASE+'countries/'+code+'.m3u',RAW+code+'.m3u']});
@@ -705,7 +716,6 @@ const IC={
   chevR:'<path d="m9 18 6-6-6-6"/>',
   chevD:'<path d="m6 9 6 6 6-6"/>',
   check:'<path d="M20 6 9 17l-5-5"/>',
-  cal:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 11h18"/>',
   share:'<path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/>',
   link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.5-1.5"/>',
   copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
@@ -801,13 +811,13 @@ async function resolveDeepLink(dl){
   if(!/^https:\/\//i.test(dl.key)||!/\.m3u8(\?|$)/i.test(dl.key)){toast('Канал по ссылке сейчас недоступен.','warn');return;}
   pendingKey=dl.key;
   toast('Открываю канал по ссылке…','info',3000);
-  const res=await probeHls(dl.key);
+  const ok=await probeChannel(dl.key);
   if(current&&started&&channelKey(current)===dl.key){pendingKey=null;return;}
   const again=channels.find(c=>c.url===dl.key);
   if(again){pendingKey=null;tune(again,true);return;}
-  if(!res){toast('Канал по ссылке не прошёл строгую проверку и, скорее всего, не играет из вашей сети.','warn',5200);return;}
+  if(!ok){toast('Канал по ссылке пока не отвечает. Включу, как только он найдётся в поиске.','warn',5200);return;}
   pendingKey=null;
-  const meta={name:dl.name||'Канал по ссылке',url:dl.key,logo:'',group:dl.group||'Разное',country:(dl.country||'').toUpperCase(),tvgId:'',probeLevel:res.level};
+  const meta={name:dl.name||'Канал по ссылке',url:dl.key,logo:'',group:dl.group||'Разное',country:(dl.country||'').toUpperCase(),tvgId:''};
   scan.seenUrls.add(meta.url);scan.verifiedNames.add(nameKey(meta.name));
   addChannel(meta);
   const added=channels.find(c=>c.url===dl.key);
@@ -860,132 +870,68 @@ function parseM3U(text,sourceCountry){
   return out;
 }
 
-/* ================== ЗАГРУЗКА ПЛЕЙЛИСТОВ ================== */
+/* ================== ТЩАТЕЛЬНАЯ ПРОВЕРКА ИСТОЧНИКОВ ================== */
 async function fetchText(url,timeout){
   const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),timeout);
   try{const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});if(!r.ok)throw new Error('HTTP '+r.status);return await r.text();}
   finally{clearTimeout(t);}
 }
-
-/* ================== СТРОГАЯ ПРОВЕРКА HLS ================== */
-function resolveUrl(baseUrl,uri){
-  if(!uri)return null;
-  if(/^https?:\/\//i.test(uri))return uri;
-  if(uri.indexOf('//')===0)return 'https:'+uri;
-  try{return new URL(uri,baseUrl).href;}catch(e){return null;}
-}
-function badContentType(ct){
-  ct=String(ct||'').toLowerCase();
-  return ct.includes('text/html')||ct.includes('application/json')||ct.includes('text/plain')||ct.includes('application/xml');
-}
-async function fetchManifest(url){
-  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),PROBE_TIMEOUT);
-  try{
-    const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});
-    if(!r.ok)return null;
-    if(badContentType(r.headers.get('content-type')))return null;
-    const txt=await r.text();
-    if(!txt||txt.length<20||!txt.includes('#EXTM3U'))return null;
-    return txt;
-  }catch(e){return null;}
-  finally{clearTimeout(t);}
-}
-async function probeSegmentBytes(url){
-  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),PROBE_TIMEOUT);
-  try{
-    const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});
-    if(!r.ok)return false;
-    if(badContentType(r.headers.get('content-type')))return false;
-    if(!r.body)return false;
-    const reader=r.body.getReader();let got=0;
-    try{
-      while(got<4096){
-        const {done,value}=await reader.read();
-        if(done)break;
-        got+=value.byteLength;
-      }
-    }finally{try{reader.cancel();}catch(e){}}
-    return got>=1500;
-  }catch(e){return false;}
-  finally{clearTimeout(t);}
-}
-async function probeKeyOk(txt,base){
-  if(/METHOD=SAMPLE-AES/.test(txt))return false;
-  const m=txt.match(/#EXT-X-KEY:[^\n\r]*METHOD=AES-128[^\n\r]*URI="([^"]+)"/)||
-          txt.match(/#EXT-X-KEY:[^\n\r]*URI="([^"]+)"[^\n\r]*METHOD=AES-128/);
-  if(!m)return true;
-  const ku=resolveUrl(base,m[1]);
-  if(!ku)return false;
-  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),PROBE_TIMEOUT);
-  try{
-    const r=await fetch(ku,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});
-    return !!r.ok&&!badContentType(r.headers.get('content-type'));
-  }catch(e){return false;}
-  finally{clearTimeout(t);}
-}
-function parseVariants(txt){
-  const lines=txt.split(/\r?\n/);const out=[];let attrs=null;
+function resolveUrl(u,base){try{return new URL(u,base).toString();}catch(e){return u;}}
+function firstSegment(text,baseUrl){
+  const lines=String(text||'').split(/\r?\n/);
   for(const raw of lines){
     const l=raw.trim();
-    if(l.startsWith('#EXT-X-STREAM-INF')){attrs=l;continue;}
-    if(attrs!==null){
-      if(l&&!l.startsWith('#')){
-        const m=attrs.match(/BANDWIDTH=(\d+)/);
-        out.push({uri:l,bw:m?+m[1]:0});
-        attrs=null;
-      }else if(l.startsWith('#')){attrs=null;}
+    if(l&&!l.startsWith('#'))return resolveUrl(l,baseUrl);
+  }
+  return null;
+}
+function variantUrls(text,baseUrl,limit){
+  const out=[];const lines=String(text||'').split(/\r?\n/);
+  for(let i=0;i<lines.length&&out.length<limit;i++){
+    if(lines[i].indexOf('#EXT-X-STREAM-INF')===0){
+      for(let j=i+1;j<lines.length;j++){
+        const l=lines[j].trim();
+        if(l&&!l.startsWith('#')){out.push(resolveUrl(l,baseUrl));break;}
+      }
     }
   }
   return out;
 }
-function parseMediaUris(txt){
-  const lines=txt.split(/\r?\n/);const segs=[];
-  for(const raw of lines){
-    const l=raw.trim();
-    if(l&&!l.startsWith('#')){segs.push(l);if(segs.length>=3)break;}
-  }
-  if(!segs.length){
-    const m=txt.match(/#EXT-X-MAP:URI="([^"]+)"/);
-    if(m)segs.push(m[1]);
-  }
-  return segs;
+async function probeSegmentAlive(url){
+  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),SEG_TIMEOUT);
+  try{
+    const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});
+    if(!r.ok)return false;
+    try{ctl.abort();}catch(e){}
+    return true;
+  }catch(e){return false;}
+  finally{clearTimeout(t);}
 }
-async function probeSegments(base,txt){
-  const uris=parseMediaUris(txt);
-  if(!uris.length)return false;
-  for(const u of uris){
-    const abs=resolveUrl(base,u);
-    if(!abs)continue;
-    if(await probeSegmentBytes(abs))return true;
+async function probeMediaPlaylist(url){
+  let text='';
+  try{text=await fetchText(url,MANIFEST_TIMEOUT);}catch(e){return false;}
+  if(!text||text.indexOf('#EXTM3U')<0||text.indexOf('#EXTINF')<0)return false;
+  const seg=firstSegment(text,url);
+  if(!seg)return false;
+  return await probeSegmentAlive(seg);
+}
+/* Ступень 1: манифест. Ступень 2: медиаплейлист (или вариант мастера). Ступень 3: ответ первого сегмента. */
+async function probeChannel(url){
+  let text='';
+  try{text=await fetchText(url,MANIFEST_TIMEOUT);}catch(e){return false;}
+  if(!text||text.indexOf('#EXTM3U')<0)return false;
+  if(text.indexOf('#EXT-X-STREAM-INF')>=0){
+    const variants=variantUrls(text,url,2);
+    if(!variants.length)return false;
+    for(const v of variants){if(await probeMediaPlaylist(v))return true;}
+    return false;
+  }
+  if(text.indexOf('#EXTINF')>=0){
+    const seg=firstSegment(text,url);
+    if(!seg)return false;
+    return await probeSegmentAlive(seg);
   }
   return false;
-}
-async function probeMedia(url){
-  const txt=await fetchManifest(url);
-  if(!txt)return false;
-  if(!/#EXTINF|#EXT-X-(TARGETDURATION|MEDIA-SEQUENCE|MAP|PLAYLIST-TYPE)/.test(txt))return false;
-  if(!await probeKeyOk(txt,url))return false;
-  return await probeSegments(url,txt);
-}
-async function probeHls(url,depth){
-  depth=depth||0;
-  try{
-    const txt=await fetchManifest(url);
-    if(!txt)return null;
-    if(/#EXT-X-STREAM-INF/.test(txt)){
-      if(depth>=1)return null;
-      const variants=parseVariants(txt);
-      if(!variants.length)return null;
-      const order=variants.map((v,i)=>({uri:v.uri,bw:v.bw,i})).sort((a,b)=>a.bw-b.bw);
-      for(const v of order.slice(0,4)){
-        const vu=resolveUrl(url,v.uri);
-        if(!vu)continue;
-        if(await probeMedia(vu))return {level:v.i};
-      }
-      return null;
-    }
-    return (await probeMedia(url))?{level:null}:null;
-  }catch(e){return null;}
 }
 
 /* ================== СКАНЕР ================== */
@@ -995,7 +941,7 @@ function updateScanUI(sourceLabel){
   $('scanChecked').textContent='проверено '+scan.checked;
   $('scanFill').style.width=Math.min(100,found/TARGET*100)+'%';
   if(sourceLabel)$('scanSource').textContent=sourceLabel;
-  else if(scan.running)$('scanSource').textContent='Строгая проверка: манифест, ключи, сегменты…';
+  else if(scan.running)$('scanSource').textContent='Проверка источников…';
   else if(found>=TARGET)$('scanSource').textContent='Цель достигнута';
   else if(scan.exhausted)$('scanSource').textContent='Все источники проверены';
   else $('scanSource').textContent='Готово к поиску';
@@ -1022,12 +968,11 @@ async function probeQueue(){
       const c=scan.queue[qi++];
       if(scan.verifiedNames.has(nameKey(c.name))||scan.blockedNames.has(nameKey(c.name)))continue;
       scan.checked++;updateScanUI();
-      const res=await probeHls(c.url);
-      if(!res){scan.blockedUrls.add(c.url);continue;}
-      if(channels.length<TARGET&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedNames.has(nameKey(c.name))){
-        c.probeLevel=res.level;
-        scan.verifiedNames.add(nameKey(c.name));
-        addChannel(c);
+      const ok=await probeChannel(c.url);
+      if(ok&&channels.length<TARGET&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedNames.has(nameKey(c.name))){
+        scan.verifiedNames.add(nameKey(c.name));addChannel(c);
+      }else if(!ok){
+        scan.blockedUrls.add(c.url);scan.blockedNames.add(nameKey(c.name));
       }
     }
   });
@@ -1051,15 +996,14 @@ async function startScan(force=false){
   }finally{
     scan.running=false;updateScanUI();renderAll();restoreLast();
     if(channels.length>=TARGET)toast('Цель достигнута: '+TARGET+' рабочих каналов.','ok',5000);
-    else toast('Проверка завершена. Строгий фильтр прошли '+channels.length+' каналов.','warn',4200);
+    else toast('Проверка источников завершена.','warn',4200);
   }
 }
 function addChannel(c){
   const code=String(c.country||'').toUpperCase();
   const ch={id:'iptv-'+(++idCounter),n:channels.length+1,name:c.name,group:c.group,country:countryName(code),
     countryCode:isIntl(code)?'':code,url:c.url,logo:c.logo,type:'hls',tvgId:c.tvgId||'',
-    probeLevel:(typeof c.probeLevel==='number'&&c.probeLevel>=0)?c.probeLevel:null,
-    desc:'Прямой эфир • '+c.group+' • '+countryName(code)+'. Источник прошёл строгую проверку: манифест, ключи и сегменты потока отвечают из вашей сети.',verifiedAt:Date.now()};
+    desc:'Прямой эфир • '+c.group+' • '+countryName(code)+'. Источник прошёл проверку манифеста и первого сегмента.',verifiedAt:Date.now()};
   channels.push(ch);scheduleRender();updateScanUI();
   if(pendingKey&&ch.url===pendingKey){pendingKey=null;setTimeout(()=>tune(ch,true),0);toast('Канал по ссылке найден и включён.','ok',3000);}
 }
@@ -1125,6 +1069,7 @@ function tune(ch,user){
   current=ch;S.lastUrl=ch.type==='vod'?ch.id:ch.url;save();syncHash(ch);
   started=true;$('boot').hidden=true;
   renderAll();showBadge();revealCurrent();
+  if(user&&matchMedia('(max-width:940px)').matches)player.scrollIntoView({behavior:'smooth',block:'start'});
   $('loading').hidden=false;
   signalText='подключение…';updateSignal();
   if(ch.type==='vod'){mode='vod';startVod(ch,ses);}else{mode='hls';playHls(ch,ses);}
@@ -1134,14 +1079,10 @@ async function playHls(ch,ses){
   let playTimer=setTimeout(()=>{if(ses===session&&mode==='hls'&&video.readyState<2)removeChannel(ch,'источник не начал вещание');},PLAY_TIMEOUT);
   const clearPlayTimer=()=>{clearTimeout(playTimer);playTimer=null;};
   if(H&&H.isSupported()){
-    hls=new H({maxBufferLength:30,manifestLoadingMaxRetry:1,levelLoadingMaxRetry:2,fragLoadingMaxRetry:2,
-      startLevel:(typeof ch.probeLevel==='number')?ch.probeLevel:-1});
+    hls=new H({maxBufferLength:30,manifestLoadingMaxRetry:1,levelLoadingMaxRetry:2,fragLoadingMaxRetry:2});
     let rec=0;
     hls.on(H.Events.MANIFEST_PARSED,()=>{
       if(ses!==session)return;
-      if(typeof ch.probeLevel==='number'&&ch.probeLevel>=0&&ch.probeLevel<hls.levels.length){
-        try{hls.currentLevel=ch.probeLevel;}catch(e){}
-      }
       buildQuality();
       video.play().catch(()=>{if(ses===session){clearPlayTimer();$('loading').hidden=true;$('gesture').hidden=false;}});
     });
@@ -1153,15 +1094,7 @@ async function playHls(ch,ses){
     hls.on(H.Events.ERROR,(e,d)=>{
       if(ses!==session||!d.fatal)return;
       if(d.type===H.ErrorTypes.MEDIA_ERROR&&rec<1){rec++;try{hls.recoverMediaError();}catch(err){clearPlayTimer();removeChannel(ch,'ошибка декодирования');}return;}
-      if(d.type===H.ErrorTypes.NETWORK_ERROR){
-        if(typeof ch.probeLevel==='number'&&ch.probeLevel>=0&&hls.currentLevel!==ch.probeLevel&&rec<2){
-          rec++;
-          try{hls.currentLevel=ch.probeLevel;hls.startLoad();}catch(err){clearPlayTimer();removeChannel(ch,'источник не отвечает');}
-          return;
-        }
-        if(rec<2){rec++;setTimeout(()=>{if(ses===session&&hls)try{hls.startLoad();}catch(err){clearPlayTimer();removeChannel(ch,'источник не отвечает');}},800);return;}
-        clearPlayTimer();removeChannel(ch,'источник не отвечает');return;
-      }
+      if(d.type===H.ErrorTypes.NETWORK_ERROR&&rec<2){rec++;setTimeout(()=>{if(ses===session&&hls)try{hls.startLoad();}catch(err){clearPlayTimer();removeChannel(ch,'источник не отвечает');}},800);return;}
       clearPlayTimer();removeChannel(ch,'источник не отвечает');
     });
     hls.loadSource(ch.url);hls.attachMedia(video);
@@ -1251,6 +1184,7 @@ function sortedGenres(groups){return Object.keys(groups).sort((a,b)=>groups[b]-g
 function setCat(key){
   S.cat=key;save();$('chList').scrollTop=0;
   renderGenres();renderList();updateSideHead();
+  if(matchMedia('(max-width:940px)').matches)$('sidebar').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderGenres(){
   const bar=$('genreBar'),sl=bar.scrollLeft;
@@ -1306,11 +1240,12 @@ function openGenres(){renderGenreSheet();$('genreModal').hidden=false;$('genreCl
 function closeGenres(){$('genreModal').hidden=true;$('genreBtn').focus();}
 $('genreModal').addEventListener('click',e=>{if(e.target===$('genreModal'))closeGenres();});
 
-/* ================== СТРАНА ================== */
+/* ================== СТРАНА (только справа) ================== */
 function countryCounts(){const m={};channels.forEach(c=>{const k=c.countryCode||'INTL';m[k]=(m[k]||0)+1;});return m;}
 function setCountry(code){
   S.country=code;save();$('chList').scrollTop=0;
   renderCountries();renderList();updateSideHead();
+  if(matchMedia('(max-width:940px)').matches)$('sidebar').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderCountries(){
   const counts=countryCounts();
@@ -1447,7 +1382,7 @@ function renderWindow(){
     sb.appendChild(document.createTextNode(ch.country));
     tx.append(nm,sb);
     const st=document.createElement('button');st.className='fav-btn press'+(isFav(ch)?' on':'');
-    st.innerHTML=icon('star',16);st.title=isFav(ch)?'Убрать из избранного':'В избранное';
+    st.innerHTML=icon('star',15);st.title=isFav(ch)?'Убрать из избранного':'В избранное';
     st.setAttribute('aria-label','Избранное');
     st.addEventListener('click',e=>{e.stopPropagation();toggleFav(ch);});
     b.append(th,tx,st);
@@ -1467,24 +1402,23 @@ let winRaf=0;
 $('chList').addEventListener('scroll',()=>{if(winRaf)return;winRaf=requestAnimationFrame(()=>{winRaf=0;renderWindow();});},{passive:true});
 addEventListener('resize',()=>{updateGenreArrows();if(shownCache.length)renderWindow();});
 
-/* ================== NOW BAR / ПРОГРАММА ================== */
+/* ================== КАРТОЧКА ================== */
 function renderAll(){
   renderGenres();renderCountries();renderList();renderInfo();updateSideHead();updateScanUI();
   if(!$('genreModal').hidden)renderGenreSheet();
   if(!$('countryModal').hidden)renderCountrySheet();
-  if(!$('programModal').hidden&&current)$('programModalSub').textContent=current.name;
 }
 function renderInfo(){
   if(!current)return;
-  $('nowNum').textContent=pad2(current.n);$('nowName').textContent=current.name;
-  $('nowCat').textContent=current.group;$('nowCountry').textContent=current.country;
-  const st=$('nowStatus');st.className='tag '+(current.type==='vod'?'vod':'ok');st.textContent=current.type==='vod'?'Кинозал':'Проверен';
-  const fv=$('nowFav');fv.classList.toggle('on',isFav(current));
+  $('infoNum').textContent=pad2(current.n);$('infoName').textContent=current.name;
+  $('infoDesc').textContent=current.desc;
+  $('infoCat').textContent=current.group;$('infoCountry').textContent=current.country;
+  const st=$('infoStatus');st.className='tag '+(current.type==='vod'?'vod':'ok');st.textContent=current.type==='vod'?'Кинозал':'Проверен';
+  const fv=$('infoFav');fv.classList.toggle('on',isFav(current));
   fv.title=isFav(current)?'Убрать из избранного (S)':'В избранное (S)';
-  const logo=$('nowLogo');
+  const logo=$('channelLogo');
   if(current.logo&&/^https:/i.test(current.logo)){logo.referrerPolicy='no-referrer';logo.src=current.logo;logo.hidden=false;logo.onerror=()=>{logo.hidden=true;};}
   else{logo.hidden=true;logo.removeAttribute('src');}
-  $('programDesc').textContent=current.desc;
   $('programNote').textContent=current.type==='vod'?'Расписание построено по реальной длине фрагментов':'Точная сетка — у вещателя';
   updateSignal();renderProgram();
 }
@@ -1518,17 +1452,6 @@ function renderProgram(){
     cards.appendChild(c);
   }
 }
-function openProgram(){
-  if(!current)return;
-  $('programModalSub').textContent=current.name;
-  renderProgram();
-  $('programModal').hidden=false;
-  $('programClose').focus();
-}
-function closeProgram(){$('programModal').hidden=true;$('programBtn').focus();}
-$('programBtn').addEventListener('click',openProgram);
-$('programClose').addEventListener('click',closeProgram);
-$('programModal').addEventListener('click',e=>{if(e.target===$('programModal'))closeProgram();});
 function showBadge(){
   $('badgeNum').textContent=pad2(current.n);$('badgeName').textContent=current.name;
   const lv=$('badgeLive');lv.textContent=current.type==='vod'?'КИНО':'LIVE';lv.classList.toggle('vod',current.type==='vod');
@@ -1578,10 +1501,9 @@ function padCommit(){
   const ch=channels.find(c=>c.n===n);
   if(ch)tune(ch,true);else toast('Канала с номером '+n+' пока нет.','warn');
 }
-function anySheetOpen(){return !$('genreModal').hidden||!$('countryModal').hidden||!$('shareModal').hidden||!$('programModal').hidden;}
+function anySheetOpen(){return !$('genreModal').hidden||!$('countryModal').hidden||!$('shareModal').hidden;}
 function closeTopSheet(){
   if(!$('shareModal').hidden)closeShare();
-  else if(!$('programModal').hidden)closeProgram();
   else if(!$('countryModal').hidden)closeCountries();
   else if(!$('genreModal').hidden)closeGenres();
 }
@@ -1608,7 +1530,6 @@ document.addEventListener('keydown',e=>{
     case 'c':case 'C':case 'с':case 'С':openCountries();break;
     case 'r':case 'R':case 'к':case 'К':shuffleChannel();break;
     case 's':case 'S':case 'ы':case 'Ы':if(current)toggleFav(current);break;
-    case 'p':case 'P':case 'з':case 'З':openProgram();break;
     case 'Enter':if(padBuf)padCommit();break;
   }
 });
@@ -1689,23 +1610,21 @@ $('searchCancel').addEventListener('click',()=>{$('search').value='';syncSearchC
 /* ================== ПРИВЯЗКА ================== */
 $('searchIcon').innerHTML=icon('search',15);
 $('countrySearchIcon').innerHTML=icon('search',15);
-$('searchClear').innerHTML=icon('close',11);
+$('searchClear').innerHTML=icon('close',10);
 $('topFs').innerHTML=icon('fs');$('fsBtn').innerHTML=icon('fs');
 $('prevBtn').innerHTML=icon('prev');$('nextBtn').innerHTML=icon('next');
-$('shuffleBtn').innerHTML=icon('shuffle',17);
+$('shuffleBtn').innerHTML=icon('shuffle',16);
 $('refreshIcon').innerHTML=icon('refresh',14);$('refreshIcon2').innerHTML=icon('refresh',14);
-$('exportIcon').innerHTML=icon('export',14);$('gestureBtn').innerHTML=icon('play',30);
+$('exportIcon').innerHTML=icon('export',14);$('gestureBtn').innerHTML=icon('play',28);
 $('genreBtnIcon').innerHTML=icon('grid',16);
 $('countryBtnIcon').innerHTML=icon('globe',19);
 $('countryBtnChev').innerHTML=icon('chevD',15);
 $('genreClose').innerHTML=icon('close',14);
 $('countryClose').innerHTML=icon('close',14);
-$('genrePrev').innerHTML=icon('chevL',15);$('genreNext').innerHTML=icon('chevR',15);
-$('nowFav').innerHTML=icon('star',19);
-$('programIcon').innerHTML=icon('cal',15);
-$('programClose').innerHTML=icon('close',14);
-$('shareIcon').innerHTML=icon('share',15);
-$('linkIcon').innerHTML=icon('link',16);
+$('genrePrev').innerHTML=icon('chevL',14);$('genreNext').innerHTML=icon('chevR',14);
+$('infoFav').innerHTML=icon('star',18);
+$('shareIcon').innerHTML=icon('share',16);
+$('linkIcon').innerHTML=icon('link',15);
 $('shareCopy').innerHTML=icon('copy',16);
 $('shareClose').innerHTML=icon('close',14);
 $('shareCopyRowIcon').innerHTML=icon('copy',17);
@@ -1734,9 +1653,9 @@ $('genreClose').addEventListener('click',closeGenres);
 $('countryBtn').addEventListener('click',openCountries);
 $('countryClose').addEventListener('click',closeCountries);
 $('filterReset').addEventListener('click',resetFilters);
-$('nowFav').addEventListener('click',()=>{if(current)toggleFav(current);});
-$('nowCat').addEventListener('click',()=>{if(current)setCat(current.group);});
-$('nowCountry').addEventListener('click',()=>{if(current)setCountry(current.countryCode||'INTL');});
+$('infoFav').addEventListener('click',()=>{if(current)toggleFav(current);});
+$('infoCat').addEventListener('click',()=>{if(current)setCat(current.group);});
+$('infoCountry').addEventListener('click',()=>{if(current)setCountry(current.countryCode||'INTL');});
 
 /* ================== СТАРТ ================== */
 video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);
