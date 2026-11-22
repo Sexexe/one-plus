@@ -58,7 +58,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .press{transition:background .1s var(--ease),color .1s var(--ease),transform .06s var(--ease),opacity .1s var(--ease)}
 .press:active:not(:disabled){transform:scale(.96)}
 
-#shell{position:relative;height:100%;max-height:var(--shell-max,100%);margin:0 auto;
+#shell{position:relative;height:100%;margin:0 auto;
   display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
 #shell::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(1100px 560px at 14% -12%,rgba(10,132,255,.11),transparent 62%),radial-gradient(900px 500px at 102% -6%,rgba(191,90,242,.07),transparent 60%)}
@@ -108,8 +108,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;overflow:hidden}
 
-/* плеер БЕЗ aspect-ratio: высоту задаёт JS-фит, чтобы nowbar всегда влезал при любом масштабе */
-.player{position:relative;flex:1 1 auto;min-height:0;max-width:100%;
+.player{position:relative;flex:1 1 auto;min-height:0;max-width:100%;aspect-ratio:auto;
   background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 .ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
@@ -157,7 +156,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
   position:static;display:flex;flex-direction:column;padding:12px 8px 10px 10px;
   min-height:0;overflow:hidden}
 .legend{flex:none;padding:10px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
-.ch-list{flex:1;min-height:0;overflow-y:auto;padding-right:5px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent}
+.ch-list{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:5px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent}
 .ch-list::-webkit-scrollbar{width:8px;display:block}
 .ch-list::-webkit-scrollbar-track{background:transparent}
 .ch-list::-webkit-scrollbar-thumb{background:rgba(120,120,128,.55);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
@@ -338,72 +337,24 @@ footer{display:none}
   .toasts{right:12px;left:12px;bottom:max(12px,env(safe-area-inset-bottom));max-width:none}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ===== ПК 1000×600, без внешней прокрутки, скролл только в блоке каналов ===== */
+@media(min-width:941px){
+  html,body{overflow:hidden!important;height:100%!important}
+  #shell{width:1000px!important;height:600px!important;min-width:1000px!important;min-height:600px!important;
+    max-width:1000px!important;max-height:600px!important;margin:0 auto!important;overflow:hidden!important;position:relative!important}
+  .top{flex:0 0 52px!important;height:52px!important}
+  .layout{height:548px!important;min-height:0!important;max-height:548px!important;overflow:hidden!important}
+  .main-col{height:100%!important;min-height:0!important;overflow:hidden!important}
+  .player{flex:1 1 auto!important;min-height:0!important;aspect-ratio:auto!important;max-height:none!important}
+  .nowbar{flex:0 0 auto!important}
+  .sidebar{height:100%!important;min-height:0!important;overflow:hidden!important}
+  .ch-list{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
+  .modal-backdrop,.toasts{position:absolute!important}
+}
 </style>
 </head>
 <body>
-<!--TVBOX-BAD-PATCH:START-->
-<script id="tvbox-bad-storage">
-(function(){
-  var KEYS = { 'tv-box-v5': 1, 'tv-box-v4': 1 };
-  var origGet = Storage.prototype.getItem;
-  var origSet = Storage.prototype.setItem;
-
-  function now(){ return Date.now(); }
-
-  function normalize(raw){
-    try{
-      var s = JSON.parse(raw);
-      if(!s || typeof s !== 'object') return raw;
-
-      var bu = s.blockedUrls;
-      var t = now();
-
-      if(!bu || Array.isArray(bu) || typeof bu !== 'object'){
-        var arr = Array.isArray(bu) ? bu : [];
-        var obj = {};
-        for(var i=0;i<arr.length;i++){
-          if(arr[i]) obj[arr[i]] = t;
-        }
-        s.blockedUrls = obj;
-      }else{
-        var keys = Object.keys(bu);
-        for(var j=0;j<keys.length;j++){
-          bu[keys[j]] = t;
-        }
-        s.blockedUrls = bu;
-      }
-
-      return JSON.stringify(s);
-    }catch(e){
-      return raw;
-    }
-  }
-
-  Storage.prototype.getItem = function(k){
-    var v = origGet.call(this, k);
-    if(KEYS[k] && v){
-      var n = normalize(v);
-      if(n !== v){
-        try{ origSet.call(this, k, n); }catch(e){}
-      }
-      return n;
-    }
-    return v;
-  };
-
-  Storage.prototype.setItem = function(k, v){
-    if(KEYS[k] && typeof v === 'string'){
-      try{
-        var n = normalize(v);
-        if(n !== v) v = n;
-      }catch(e){}
-    }
-    return origSet.call(this, k, v);
-  };
-})();
-</script>
-<!--TVBOX-BAD-PATCH:END-->
-
 <div id="shell">
 
 <header class="top">
@@ -455,7 +406,7 @@ footer{display:none}
       </div>
       <div class="overlay boot" id="boot">
         <div class="boot-title">TV BOX</div>
-        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит проверку манифеста и первого сегмента, прежде чем попасть в список.</p>
+        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Живые потоки попадают в список, а неотвеченные перепроверяются ещё раз — чтобы не потерять канал из-за одного таймаута.</p>
         <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
       </div>
       <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--label2)">Подключение к источнику…</p></div>
@@ -571,85 +522,100 @@ footer{display:none}
 (function(){
 'use strict';
 
-/* ================== РАЗМЕР РАМКИ (VK) + АКТИВНЫЙ ФИТ ПЛЕЕРА ================== */
-var lastSentH=0;
-function targetHeight(){
-  var s=window.screen||{};
-  var base=s.availHeight||s.height||800;
-  return Math.max(600,Math.min(4050,Math.round(base-280)));
-}
+/* ================== ПК 1000×600: вписать в окно, если оно меньше ================== */
 function isDesktopFit(){
   return matchMedia('(min-width:941px)').matches && !document.fullscreenElement;
 }
-/* Главная фикса вертикали: плеер получает ЯВНУЮ высоту в px = колонка − nowbar − gap.
-   Не зависит от округления aspect-ratio, поэтому nowbar влезает при любом масштабе/zoom. */
-function fitPlayer(){
-  var pl=document.getElementById('player');
-  if(!pl)return;
-  if(!isDesktopFit()){pl.style.height='';pl.style.flex='';return;}
-  var main=document.querySelector('.main-col');
-  var nb=document.querySelector('.nowbar');
-  if(!main)return;
-  var avail=main.clientHeight;
-  if(!avail)return;                       /* ещё не разложен — ResizeObserver догонит */
-  var nbH=nb?nb.getBoundingClientRect().height:0;
-  var gap=12;                             /* = gap в .main-col */
-  var h=Math.floor(avail-nbH-gap);
-  if(h<140)h=140;
-  pl.style.flex='0 0 '+h+'px';
-  pl.style.height=h+'px';
-}
-function fitFrame(){
-  var ih=window.innerHeight||document.documentElement.clientHeight;
-  var want=targetHeight();
-  var oversized=ih>want*1.4;
-  document.documentElement.style.setProperty('--shell-max',oversized?want+'px':'100%');
-  try{
-    if(window.vkBridge&&window.vkBridge.send&&want!==lastSentH){
-      lastSentH=want;
-      window.vkBridge.send('VKWebAppResize',{height:want});
-    }
-  }catch(e){}
-  fitPlayer();
+function applyFrame(){
+  var shell=document.getElementById('shell');
+  if(!shell)return;
+  document.documentElement.style.overflow='hidden';
+  document.body.style.overflow='hidden';
+  if(!isDesktopFit()){
+    shell.style.removeProperty('transform');
+    shell.style.removeProperty('margin-top');
+    return;
+  }
+  var vw=window.innerWidth||document.documentElement.clientWidth||1000;
+  var vh=window.innerHeight||document.documentElement.clientHeight||600;
+  var s=Math.min(1,vw/1000,vh/600);
+  if(s<0.25)s=0.25;
+  var tf='';
+  var mt='0px';
+  if(s<1){
+    tf='scale('+s+')';
+    mt=Math.max(0,Math.round((vh-600*s)/2))+'px';
+  }
+  shell.style.setProperty('transform-origin','top center','important');
+  shell.style.setProperty('transform',tf,'important');
+  shell.style.setProperty('margin-top',mt,'important');
 }
 var fitT=null;
-function fitSoon(){clearTimeout(fitT);fitT=setTimeout(function(){fitFrame();fitPlayer();},90);}
+function fitSoon(){clearTimeout(fitT);fitT=setTimeout(applyFrame,90);}
 addEventListener('resize',fitSoon);
 addEventListener('orientationchange',fitSoon);
-addEventListener('load',function(){fitFrame();fitPlayer();});
-try{
-  var ro=new ResizeObserver(function(){fitPlayer();});
-  var _m=document.querySelector('.main-col'),_n=document.querySelector('.nowbar');
-  if(_m)ro.observe(_m); if(_n)ro.observe(_n);
-}catch(e){}
-fitFrame();setTimeout(fitFrame,400);setTimeout(fitFrame,1500);setTimeout(fitFrame,3000);
+addEventListener('load',applyFrame);
+document.addEventListener('fullscreenchange',applyFrame);
+applyFrame();
+setTimeout(applyFrame,250);
+setTimeout(applyFrame,900);
 
-/* ================== ЦЕЛЬ И ИСТОЧНИКИ (ускорено) ================== */
-const TARGET=5000, CONCURRENCY=48, MANIFEST_TIMEOUT=2600, SEG_TIMEOUT=2200, PLAY_TIMEOUT=12000;
-const BLOCK_TTL=Number.MAX_SAFE_INTEGER; /* URL-бан устаревает через 12 ч — ожившие каналы возвращаются */
-const BASE='https://iptv-org.github.io/iptv/';
-const RAW='https://raw.githubusercontent.com/iptv-org/iptv/master/streams/';
-const countrySrc=(code,label)=>({label,country:code,urls:[BASE+'countries/'+code+'.m3u',RAW+code+'.m3u']});
-const categorySrc=(cat,label)=>({label,urls:[BASE+'categories/'+cat+'.m3u']});
-const SOURCES=[
+/* ================== ЦЕЛЬ И ИСТОЧНИКИ ================== */
+var TARGET=5000;
+var CONCURRENCY=20;
+var RETRY_CONCURRENCY=8;
+var MANIFEST_TIMEOUT=4500;
+var SEG_TIMEOUT=4500;
+var PLAY_TIMEOUT=14000;
+var RETRY_MANIFEST_TIMEOUT=9000;
+var RETRY_SEG_TIMEOUT=9000;
+var BASE='https://iptv-org.github.io/iptv/';
+var RAW='https://raw.githubusercontent.com/iptv-org/iptv/master/streams/';
+function countrySrc(code,label){return {label:label,country:code,urls:[BASE+'countries/'+code+'.m3u',RAW+code+'.m3u']};}
+function categorySrc(cat,label){return {label:label,urls:[BASE+'categories/'+cat+'.m3u']};}
+var SOURCES=[
   countrySrc('ru','Россия'),
-  countrySrc('by','Беларусь'),countrySrc('kz','Казахстан'),
-  categorySrc('music','Музыка'),categorySrc('movies','Кино'),categorySrc('comedy','Комедии'),
-  categorySrc('series','Сериалы'),categorySrc('documentary','Документальные'),categorySrc('science','Наука'),
-  categorySrc('travel','Путешествия'),categorySrc('outdoor','Приключения'),categorySrc('kids','Детские'),
-  categorySrc('animation','Мультфильмы'),categorySrc('entertainment','Развлекательные'),
-  categorySrc('news','Новости'),categorySrc('sports','Спорт'),categorySrc('general','Общие'),
-  countrySrc('cn','Китай'),countrySrc('tr','Турция'),countrySrc('in','Индия'),
-  countrySrc('am','Армения'),countrySrc('az','Азербайджан'),countrySrc('ge','Грузия'),
-  countrySrc('kg','Киргизия'),countrySrc('uz','Узбекистан'),countrySrc('ir','Иран'),countrySrc('ae','ОАЭ'),
-  categorySrc('culture','Культура'),categorySrc('education','Образование'),categorySrc('family','Семейные'),
-  categorySrc('lifestyle','Стиль жизни'),categorySrc('auto','Авто'),categorySrc('business','Бизнес'),
-  categorySrc('classic','Классика'),categorySrc('cooking','Кулинария'),categorySrc('relax','Релакс'),
-  categorySrc('religious','Религия'),categorySrc('weather','Погода'),
+  countrySrc('by','Беларусь'),
+  countrySrc('kz','Казахстан'),
+  categorySrc('music','Музыка'),
+  categorySrc('movies','Кино'),
+  categorySrc('comedy','Комедии'),
+  categorySrc('series','Сериалы'),
+  categorySrc('documentary','Документальные'),
+  categorySrc('science','Наука'),
+  categorySrc('travel','Путешествия'),
+  categorySrc('outdoor','Приключения'),
+  categorySrc('kids','Детские'),
+  categorySrc('animation','Мультфильмы'),
+  categorySrc('entertainment','Развлекательные'),
+  categorySrc('news','Новости'),
+  categorySrc('sports','Спорт'),
+  categorySrc('general','Общие'),
+  countrySrc('cn','Китай'),
+  countrySrc('tr','Турция'),
+  countrySrc('in','Индия'),
+  countrySrc('am','Армения'),
+  countrySrc('az','Азербайджан'),
+  countrySrc('ge','Грузия'),
+  countrySrc('kg','Киргизия'),
+  countrySrc('uz','Узбекистан'),
+  countrySrc('ir','Иран'),
+  countrySrc('ae','ОАЭ'),
+  categorySrc('culture','Культура'),
+  categorySrc('education','Образование'),
+  categorySrc('family','Семейные'),
+  categorySrc('lifestyle','Стиль жизни'),
+  categorySrc('auto','Авто'),
+  categorySrc('business','Бизнес'),
+  categorySrc('classic','Классика'),
+  categorySrc('cooking','Кулинария'),
+  categorySrc('relax','Релакс'),
+  categorySrc('religious','Религия'),
+  categorySrc('weather','Погода'),
   {label:'Мировой каталог (все страны)',urls:[BASE+'index.m3u']}
 ];
 
-const GROUP_RU={
+var GROUP_RU={
   Music:'Музыка',Movies:'Кино',Comedy:'Комедии',Series:'Сериалы',Documentary:'Документальные',
   Science:'Наука',Travel:'Путешествия',Outdoor:'Приключения',Kids:'Детские',Animation:'Мультфильмы',
   Entertainment:'Развлекательные',News:'Новости',Sports:'Спорт',General:'Общие',Culture:'Культура',
@@ -658,92 +624,100 @@ const GROUP_RU={
   Undefined:'Разное',Legislative:'Общество',Shop:'Магазины'
 };
 
-const COUNTRY_RU={
-AD:'Андорра',AE:'Объединённые Арабские Эмираты',AF:'Афганистан',AG:'Антигуа и Барбуда',AI:'Ангилья',
-AL:'Албания',AM:'Армения',AO:'Ангола',AQ:'Антарктида',AR:'Аргентина',AS:'Американское Самоа',AT:'Австрия',
-AU:'Австралия',AW:'Аруба',AX:'Аландские острова',AZ:'Азербайджан',BA:'Босния и Герцеговина',BB:'Барбадос',
-BD:'Бангладеш',BE:'Бельгия',BF:'Буркина-Фасо',BG:'Болгария',BH:'Бахрейн',BI:'Бурунди',BJ:'Бенин',BL:'Сен-Бартелеми',
-BM:'Бермудские острова',BN:'Бруней',BO:'Боливия',BQ:'Бонэйр, Синт-Эстатиус и Саба',BR:'Бразилия',BS:'Багамские Острова',
-BT:'Бутан',BV:'Остров Буве',BW:'Ботсвана',BY:'Беларусь',BZ:'Белиз',CA:'Канада',CC:'Кокосовые острова',
-CD:'Демократическая Республика Конго',CF:'Центральноафриканская Республика',CG:'Республика Конго',CH:'Швейцария',
-CI:'Кот-д’Ивуар',CK:'Острова Кука',CL:'Чили',CM:'Камерун',CN:'Китай',CO:'Колумбия',CR:'Коста-Рика',CU:'Куба',
-CV:'Кабо-Верде',CW:'Кюрасао',CX:'Остров Рождества',CY:'Кипр',CZ:'Чехия',DE:'Германия',DJ:'Джибути',DK:'Дания',
-DM:'Доминика',DO:'Доминиканская Республика',DZ:'Алжир',EC:'Эквадор',EE:'Эстония',EG:'Египет',EH:'Западная Сахара',
-ER:'Эритрея',ES:'Испания',ET:'Эфиопия',FI:'Финляндия',FJ:'Фиджи',FK:'Фолклендские острова',FM:'Микронезия',
-FO:'Фарерские острова',FR:'Франция',GA:'Габон',GB:'Великобритания',GD:'Гренада',GE:'Грузия',GF:'Французская Гвиана',
-GG:'Гернси',GH:'Гана',GI:'Гибралтар',GL:'Гренландия',GM:'Гамбия',GN:'Гвинея',GP:'Гваделупа',GQ:'Экваториальная Гвинея',
-GR:'Греция',GS:'Южная Георгия и Южные Сандвичевы острова',GT:'Гватемала',GU:'Гуам',GW:'Гвинея-Бисау',GY:'Гайана',
-HK:'Гонконг',HM:'Остров Херд и острова Макдональд',HN:'Гондурас',HR:'Хорватия',HT:'Гаити',HU:'Венгрия',
-ID:'Индонезия',IE:'Ирландия',IL:'Израиль',IM:'Остров Мэн',IN:'Индия',IO:'Британская территория в Индийском океане',
-IQ:'Ирак',IR:'Иран',IS:'Исландия',IT:'Италия',JE:'Джерси',JM:'Ямайка',JO:'Иордания',JP:'Япония',KE:'Кения',
-KG:'Киргизия',KH:'Камбоджа',KI:'Кирибати',KM:'Коморские Острова',KN:'Сент-Китс и Невис',KP:'Северная Корея',
-KR:'Южная Корея',KW:'Кувейт',KY:'Каймановы острова',KZ:'Казахстан',LA:'Лаос',LB:'Ливан',LC:'Сент-Люсия',
-LI:'Лихтенштейн',LK:'Шри-Ланка',LR:'Либерия',LS:'Лесото',LT:'Литва',LU:'Люксембург',LV:'Латвия',LY:'Ливия',
-MA:'Марокко',MC:'Монако',MD:'Молдова',ME:'Черногория',MF:'Сен-Мартен',MG:'Мадагаскар',MH:'Маршалловы Острова',
-MK:'Северная Македония',ML:'Мали',MM:'Мьянма',MN:'Монголия',MO:'Макао',MP:'Северные Марианские острова',
-MQ:'Мартиника',MR:'Мавритания',MS:'Монтсеррат',MT:'Мальта',MU:'Маврикий',MV:'Мальдивы',MW:'Малави',MX:'Мексика',
-MY:'Малайзия',MZ:'Мозамбик',NA:'Намибия',NC:'Новая Каледония',NE:'Нигер',NF:'Остров Норфолк',NG:'Нигерия',
-NI:'Никарагуа',NL:'Нидерланды',NO:'Норвегия',NP:'Непал',NR:'Науру',NU:'Ниуэ',NZ:'Новая Зеландия',OM:'Оман',
-PA:'Панама',PE:'Перу',PF:'Французская Полинезия',PG:'Папуа — Новая Гвинея',PH:'Филиппины',PK:'Пакистан',
-PL:'Польша',PM:'Сен-Пьер и Микелон',PN:'Питкэрн',PR:'Пуэрто-Рико',PS:'Палестина',PT:'Португалия',PW:'Палау',
-PY:'Парагвай',QA:'Катар',RE:'Реюньон',RO:'Румыния',RS:'Сербия',RU:'Россия',RW:'Руанда',SA:'Саудовская Аравия',
-SB:'Соломоновы Острова',SC:'Сейшельские Острова',SD:'Судан',SE:'Швеция',SG:'Сингапур',SH:'Святая Елена',
-SI:'Словения',SJ:'Шпицберген и Ян-Майен',SK:'Словакия',SL:'Сьерра-Леоне',SM:'Сан-Марино',SN:'Сенегал',
-SO:'Сомали',SR:'Суринам',SS:'Южный Судан',ST:'Сан-Томе и Принсипи',SV:'Сальвадор',SX:'Синт-Мартен',
-SY:'Сирия',SZ:'Эсватини',TC:'Острова Тёркс и Кайкос',TD:'Чад',TF:'Французские Южные территории',TG:'Того',
-TH:'Таиланд',TJ:'Таджикистан',TK:'Токелау',TL:'Восточный Тимор',TM:'Туркмения',TN:'Тунис',TO:'Тонга',
-TR:'Турция',TT:'Тринидад и Тобаго',TV:'Тувалу',TW:'Тайвань',TZ:'Танзания',UA:'Украина',UG:'Уганда',
-UM:'Внешние малые острова США',US:'Соединённые Штаты Америки',UY:'Уругвай',UZ:'Узбекистан',VA:'Ватикан',
-VC:'Сент-Винсент и Гренадины',VE:'Венесуэла',VG:'Виргинские острова (Великобритания)',VI:'Виргинские острова (США)',
-VN:'Вьетнам',VU:'Вануату',WF:'Уоллис и Футуна',WS:'Самоа',XK:'Косово',YE:'Йемен',YT:'Майотта',
-ZA:'Южно-Африканская Республика',ZM:'Замбия',ZW:'Зимбабве'
+var COUNTRY_RU={
+  AD:'Андорра',AE:'Объединённые Арабские Эмираты',AF:'Афганистан',AG:'Антигуа и Барбуда',AI:'Ангилья',
+  AL:'Албания',AM:'Армения',AO:'Ангола',AQ:'Антарктида',AR:'Аргентина',AS:'Американское Самоа',AT:'Австрия',
+  AU:'Австралия',AW:'Аруба',AX:'Аландские острова',AZ:'Азербайджан',BA:'Босния и Герцеговина',BB:'Барбадос',
+  BD:'Бангладеш',BE:'Бельгия',BF:'Буркина-Фасо',BG:'Болгария',BH:'Бахрейн',BI:'Бурунди',BJ:'Бенин',BL:'Сен-Бартелеми',
+  BM:'Бермудские острова',BN:'Бруней',BO:'Боливия',BQ:'Бонэйр, Синт-Эстатиус и Саба',BR:'Бразилия',BS:'Багамские Острова',
+  BT:'Бутан',BV:'Остров Буве',BW:'Ботсвана',BY:'Беларусь',BZ:'Белиз',CA:'Канада',CC:'Кокосовые острова',
+  CD:'Демократическая Республика Конго',CF:'Центральноафриканская Республика',CG:'Республика Конго',CH:'Швейцария',
+  CI:'Кот-д’Ивуар',CK:'Острова Кука',CL:'Чили',CM:'Камерун',CN:'Китай',CO:'Колумбия',CR:'Коста-Рика',CU:'Куба',
+  CV:'Кабо-Верде',CW:'Кюрасао',CX:'Остров Рождества',CY:'Кипр',CZ:'Чехия',DE:'Германия',DJ:'Джибути',DK:'Дания',
+  DM:'Доминика',DO:'Доминиканская Республика',DZ:'Алжир',EC:'Эквадор',EE:'Эстония',EG:'Египет',EH:'Западная Сахара',
+  ER:'Эритрея',ES:'Испания',ET:'Эфиопия',FI:'Финляндия',FJ:'Фиджи',FK:'Фолклендские острова',FM:'Микронезия',
+  FO:'Фарерские острова',FR:'Франция',GA:'Габон',GB:'Великобритания',GD:'Гренада',GE:'Грузия',GF:'Французская Гвиана',
+  GG:'Гернси',GH:'Гана',GI:'Гибралтар',GL:'Гренландия',GM:'Гамбия',GN:'Гвинея',GP:'Гваделупа',GQ:'Экваториальная Гвинея',
+  GR:'Греция',GS:'Южная Георгия и Южные Сандвичевы острова',GT:'Гватемала',GU:'Гуам',GW:'Гвинея-Бисау',GY:'Гайана',
+  HK:'Гонконг',HM:'Остров Херд и острова Макдональд',HN:'Гондурас',HR:'Хорватия',HT:'Гаити',HU:'Венгрия',
+  ID:'Индонезия',IE:'Ирландия',IL:'Израиль',IM:'Остров Мэн',IN:'Индия',IO:'Британская территория в Индийском океане',
+  IQ:'Ирак',IR:'Иран',IS:'Исландия',IT:'Италия',JE:'Джерси',JM:'Ямайка',JO:'Иордания',JP:'Япония',KE:'Кения',
+  KG:'Киргизия',KH:'Камбоджа',KI:'Кирибати',KM:'Коморские Острова',KN:'Сент-Китс и Невис',KP:'Северная Корея',
+  KR:'Южная Корея',KW:'Кувейт',KY:'Каймановы острова',KZ:'Казахстан',LA:'Лаос',LB:'Ливан',LC:'Сент-Люсия',
+  LI:'Лихтенштейн',LK:'Шри-Ланка',LR:'Либерия',LS:'Лесото',LT:'Литва',LU:'Люксембург',LV:'Латвия',LY:'Ливия',
+  MA:'Марокко',MC:'Монако',MD:'Молдова',ME:'Черногория',MF:'Сен-Мартен',MG:'Мадагаскар',MH:'Маршалловы Острова',
+  MK:'Северная Македония',ML:'Мали',MM:'Мьянма',MN:'Монголия',MO:'Макао',MP:'Северные Марианские острова',
+  MQ:'Мартиника',MR:'Мавритания',MS:'Монтсеррат',MT:'Мальта',MU:'Маврикий',MV:'Мальдивы',MW:'Малави',MX:'Мексика',
+  MY:'Малайзия',MZ:'Мозамбик',NA:'Намибия',NC:'Новая Каледония',NE:'Нигер',NF:'Остров Норфолк',NG:'Нигерия',
+  NI:'Никарагуа',NL:'Нидерланды',NO:'Норвегия',NP:'Непал',NR:'Науру',NU:'Ниуэ',NZ:'Новая Зеландия',OM:'Оман',
+  PA:'Панама',PE:'Перу',PF:'Французская Полинезия',PG:'Папуа — Новая Гвинея',PH:'Филиппины',PK:'Пакистан',
+  PL:'Польша',PM:'Сен-Пьер и Микелон',PN:'Питкэрн',PR:'Пуэрто-Рико',PS:'Палестина',PT:'Португалия',PW:'Палау',
+  PY:'Парагвай',QA:'Катар',RE:'Реюньон',RO:'Румыния',RS:'Сербия',RU:'Россия',RW:'Руанда',SA:'Саудовская Аравия',
+  SB:'Соломоновы Острова',SC:'Сейшельские Острова',SD:'Судан',SE:'Швеция',SG:'Сингапур',SH:'Святая Елена',
+  SI:'Словения',SJ:'Шпицберген и Ян-Майен',SK:'Словакия',SL:'Сьерра-Леоне',SM:'Сан-Марино',SN:'Сенегал',
+  SO:'Сомали',SR:'Суринам',SS:'Южный Судан',ST:'Сан-Томе и Принсипи',SV:'Сальвадор',SX:'Синт-Мартен',
+  SY:'Сирия',SZ:'Эсватини',TC:'Острова Тёркс и Кайкос',TD:'Чад',TF:'Французские Южные территории',TG:'Того',
+  TH:'Таиланд',TJ:'Таджикистан',TK:'Токелау',TL:'Восточный Тимор',TM:'Туркмения',TN:'Тунис',TO:'Тонга',
+  TR:'Турция',TT:'Тринидад и Тобаго',TV:'Тувалу',TW:'Тайвань',TZ:'Танзания',UA:'Украина',UG:'Уганда',
+  UM:'Внешние малые острова США',US:'Соединённые Штаты Америки',UY:'Уругвай',UZ:'Узбекистан',VA:'Ватикан',
+  VC:'Сент-Винсент и Гренадины',VE:'Венесуэла',VG:'Виргинские острова (Великобритания)',VI:'Виргинские острова (США)',
+  VN:'Вьетнам',VU:'Вануату',WF:'Уоллис и Футуна',WS:'Самоа',XK:'Косово',YE:'Йемен',YT:'Майотта',
+  ZA:'Южно-Африканская Республика',ZM:'Замбия',ZW:'Зимбабве'
 };
-const COUNTRY_EN={
-AD:'Andorra',AE:'United Arab Emirates UAE',AF:'Afghanistan',AG:'Antigua and Barbuda',AI:'Anguilla',AL:'Albania',
-AM:'Armenia',AO:'Angola',AR:'Argentina',AT:'Austria',AU:'Australia',AW:'Aruba',AZ:'Azerbaijan',
-BA:'Bosnia and Herzegovina',BB:'Barbados',BD:'Bangladesh',BE:'Belgium',BF:'Burkina Faso',BG:'Bulgaria',
-BH:'Bahrain',BI:'Burundi',BJ:'Benin',BM:'Bermuda',BN:'Brunei',BO:'Bolivia',BR:'Brazil',BS:'Bahamas',BT:'Bhutan',
-BW:'Botswana',BY:'Belarus',BZ:'Belize',CA:'Canada',CD:'DR Congo',CF:'Central African Republic',CG:'Congo',
-CH:'Switzerland',CI:'Ivory Coast Cote dIvoire',CK:'Cook Islands',CL:'Chile',CM:'Cameroon',CN:'China',CO:'Colombia',
-CR:'Costa Rica',CU:'Cuba',CV:'Cape Verde',CW:'Curacao',CY:'Cyprus',CZ:'Czechia Czech Republic',DE:'Germany',
-DJ:'Djibouti',DK:'Denmark',DM:'Dominica',DO:'Dominican Republic',DZ:'Algeria',EC:'Ecuador',EE:'Estonia',
-EG:'Egypt',ER:'Eritrea',ES:'Spain',ET:'Ethiopia',FI:'Finland',FJ:'Fiji',FM:'Micronesia',FO:'Faroe Islands',
-FR:'France',GA:'Gabon',GB:'United Kingdom UK Britain England',GD:'Grenada',GE:'Georgia',GH:'Ghana',
-GI:'Gibraltar',GL:'Greenland',GM:'Gambia',GN:'Guinea',GQ:'Equatorial Guinea',GR:'Greece',GT:'Guatemala',
-GU:'Guam',GW:'Guinea-Bissau',GY:'Guyana',HK:'Hong Kong',HN:'Honduras',HR:'Croatia',HT:'Haiti',HU:'Hungary',
-ID:'Indonesia',IE:'Ireland',IL:'Israel',IM:'Isle of Man',IN:'India',IQ:'Iraq',IR:'Iran',IS:'Iceland',IT:'Italy',
-JM:'Jamaica',JO:'Jordan',JP:'Japan',KE:'Kenya',KG:'Kyrgyzstan',KH:'Cambodia',KI:'Kiribati',KM:'Comoros',
-KN:'Saint Kitts and Nevis',KP:'North Korea',KR:'South Korea',KW:'Kuwait',KY:'Cayman Islands',KZ:'Kazakhstan',
-LA:'Laos',LB:'Lebanon',LC:'Saint Lucia',LI:'Liechtenstein',LK:'Sri Lanka',LR:'Liberia',LS:'Lesotho',LT:'Lithuania',
-LU:'Luxembourg',LV:'Latvia',LY:'Libya',MA:'Morocco',MC:'Monaco',MD:'Moldova',ME:'Montenegro',MG:'Madagascar',
-MH:'Marshall Islands',MK:'North Macedonia',ML:'Mali',MM:'Myanmar Burma',MN:'Mongolia',MO:'Macao',MQ:'Martinique',
-MR:'Mauritania',MT:'Malta',MU:'Mauritius',MV:'Maldives',MW:'Malawi',MX:'Mexico',MY:'Malaysia',MZ:'Mozambique',
-NA:'Namibia',NC:'New Caledonia',NE:'Niger',NG:'Nigeria',NI:'Nicaragua',NL:'Netherlands Holland',NO:'Norway',
-NP:'Nepal',NR:'Nauru',NZ:'New Zealand',OM:'Oman',PA:'Panama',PE:'Peru',PF:'French Polynesia',
-PG:'Papua New Guinea',PH:'Philippines',PK:'Pakistan',PL:'Poland',PR:'Puerto Rico',PS:'Palestine',PT:'Portugal',
-PW:'Palau',PY:'Paraguay',QA:'Qatar',RE:'Reunion',RO:'Romania',RS:'Serbia',RU:'Russia',RW:'Rwanda',
-SA:'Saudi Arabia',SB:'Solomon Islands',SC:'Seychelles',SD:'Sudan',SE:'Sweden',SG:'Singapore',SI:'Slovenia',
-SK:'Slovakia',SL:'Sierra Leone',SM:'San Marino',SN:'Senegal',SO:'Somalia',SR:'Suriname',SS:'South Sudan',
-ST:'Sao Tome and Principe',SV:'El Salvador',SX:'Sint Maarten',SY:'Syria',SZ:'Eswatini Swaziland',TD:'Chad',
-TG:'Togo',TH:'Thailand',TJ:'Tajikistan',TL:'Timor-Leste',TM:'Turkmenistan',TN:'Tunisia',TO:'Tonga',TR:'Turkey',
-TT:'Trinidad and Tobago',TV:'Tuvalu',TW:'Taiwan',TZ:'Tanzania',UA:'Ukraine',UG:'Uganda',US:'United States USA America',
-UY:'Uruguay',UZ:'Uzbekistan',VA:'Vatican',VC:'Saint Vincent and the Grenadines',VE:'Venezuela',
-VG:'British Virgin Islands',VI:'US Virgin Islands',VN:'Vietnam',VU:'Vanuatu',WS:'Samoa',XK:'Kosovo',YE:'Yemen',
-ZA:'South Africa',ZM:'Zambia',ZW:'Zimbabwe'
-};
-const INTL_CODES=['WW','INT','UN','XX'];
-const countryName=code=>{
-  const c=String(code||'').toUpperCase();
-  if(!c||INTL_CODES.includes(c))return 'Международный';
-  return COUNTRY_RU[c]||c;
-};
-const isIntl=code=>!code||INTL_CODES.includes(String(code).toUpperCase());
-const norm=s=>String(s||'').toLowerCase().replace(/ё/g,'е').replace(/[^0-9a-zа-я]+/gi,' ').replace(/\s+/g,' ').trim();
-const countryHay=code=>norm(countryName(code)+' '+(COUNTRY_EN[code]||'')+' '+code);
-const ALL_COUNTRIES=Object.keys(COUNTRY_RU).sort((a,b)=>COUNTRY_RU[a].localeCompare(COUNTRY_RU[b],'ru'));
 
-const GB='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/';
-const CINEMA=[
+var COUNTRY_EN={
+  AD:'Andorra',AE:'United Arab Emirates UAE',AF:'Afghanistan',AG:'Antigua and Barbuda',AI:'Anguilla',AL:'Albania',
+  AM:'Armenia',AO:'Angola',AR:'Argentina',AT:'Austria',AU:'Australia',AW:'Aruba',AZ:'Azerbaijan',
+  BA:'Bosnia and Herzegovina',BB:'Barbados',BD:'Bangladesh',BE:'Belgium',BF:'Burkina Faso',BG:'Bulgaria',
+  BH:'Bahrain',BI:'Burundi',BJ:'Benin',BM:'Bermuda',BN:'Brunei',BO:'Bolivia',BR:'Brazil',BS:'Bahamas',BT:'Bhutan',
+  BW:'Botswana',BY:'Belarus',BZ:'Belize',CA:'Canada',CD:'DR Congo',CF:'Central African Republic',CG:'Congo',
+  CH:'Switzerland',CI:'Ivory Coast Cote dIvoire',CK:'Cook Islands',CL:'Chile',CM:'Cameroon',CN:'China',CO:'Colombia',
+  CR:'Costa Rica',CU:'Cuba',CV:'Cape Verde',CW:'Curacao',CY:'Cyprus',CZ:'Czechia Czech Republic',DE:'Germany',
+  DJ:'Djibouti',DK:'Denmark',DM:'Dominica',DO:'Dominican Republic',DZ:'Algeria',EC:'Ecuador',EE:'Estonia',
+  EG:'Egypt',ER:'Eritrea',ES:'Spain',ET:'Ethiopia',FI:'Finland',FJ:'Fiji',FM:'Micronesia',FO:'Faroe Islands',
+  FR:'France',GA:'Gabon',GB:'United Kingdom UK Britain England',GD:'Grenada',GE:'Georgia',GH:'Ghana',
+  GI:'Gibraltar',GL:'Greenland',GM:'Gambia',GN:'Guinea',GQ:'Equatorial Guinea',GR:'Greece',GT:'Guatemala',
+  GU:'Guam',GW:'Guinea-Bissau',GY:'Guyana',HK:'Hong Kong',HN:'Honduras',HR:'Croatia',HT:'Haiti',HU:'Hungary',
+  ID:'Indonesia',IE:'Ireland',IL:'Israel',IM:'Isle of Man',IN:'India',IQ:'Iraq',IR:'Iran',IS:'Iceland',IT:'Italy',
+  JM:'Jamaica',JO:'Jordan',JP:'Japan',KE:'Kenya',KG:'Kyrgyzstan',KH:'Cambodia',KI:'Kiribati',KM:'Comoros',
+  KN:'Saint Kitts and Nevis',KP:'North Korea',KR:'South Korea',KW:'Kuwait',KY:'Cayman Islands',KZ:'Kazakhstan',
+  LA:'Laos',LB:'Lebanon',LC:'Saint Lucia',LI:'Liechtenstein',LK:'Sri Lanka',LR:'Liberia',LS:'Lesotho',LT:'Lithuania',
+  LU:'Luxembourg',LV:'Latvia',LY:'Libya',MA:'Morocco',MC:'Monaco',MD:'Moldova',ME:'Montenegro',MG:'Madagascar',
+  MH:'Marshall Islands',MK:'North Macedonia',ML:'Mali',MM:'Myanmar Burma',MN:'Mongolia',MO:'Macao',MQ:'Martinique',
+  MR:'Mauritania',MT:'Malta',MU:'Mauritius',MV:'Maldives',MW:'Malawi',MX:'Mexico',MY:'Malaysia',MZ:'Mozambique',
+  NA:'Namibia',NC:'New Caledonia',NE:'Niger',NG:'Nigeria',NI:'Nicaragua',NL:'Netherlands Holland',NO:'Norway',
+  NP:'Nepal',NR:'Nauru',NZ:'New Zealand',OM:'Oman',PA:'Panama',PE:'Peru',PF:'French Polynesia',
+  PG:'Papua New Guinea',PH:'Philippines',PK:'Pakistan',PL:'Poland',PR:'Puerto Rico',PS:'Palestine',PT:'Portugal',
+  PW:'Palau',PY:'Paraguay',QA:'Qatar',RE:'Reunion',RO:'Romania',RS:'Serbia',RU:'Russia',RW:'Rwanda',
+  SA:'Saudi Arabia',SB:'Solomon Islands',SC:'Seychelles',SD:'Sudan',SE:'Sweden',SG:'Singapore',SI:'Slovenia',
+  SK:'Slovakia',SL:'Sierra Leone',SM:'San Marino',SN:'Senegal',SO:'Somalia',SR:'Suriname',SS:'South Sudan',
+  ST:'Sao Tome and Principe',SV:'El Salvador',SX:'Sint Maarten',SY:'Syria',SZ:'Eswatini Swaziland',TD:'Chad',
+  TG:'Togo',TH:'Thailand',TJ:'Tajikistan',TL:'Timor-Leste',TM:'Turkmenistan',TN:'Tunisia',TO:'Tonga',TR:'Turkey',
+  TT:'Trinidad and Tobago',TV:'Tuvalu',TW:'Taiwan',TZ:'Tanzania',UA:'Ukraine',UG:'Uganda',US:'United States USA America',
+  UY:'Uruguay',UZ:'Uzbekistan',VA:'Vatican',VC:'Saint Vincent and the Grenadines',VE:'Venezuela',
+  VG:'British Virgin Islands',VI:'US Virgin Islands',VN:'Vietnam',VU:'Vanuatu',WS:'Samoa',XK:'Kosovo',YE:'Yemen',
+  ZA:'South Africa',ZM:'Zambia',ZW:'Zimbabwe'
+};
+
+var INTL_CODES=['WW','INT','UN','XX'];
+function countryName(code){
+  var c=String(code||'').toUpperCase();
+  if(!c||INTL_CODES.indexOf(c)>=0)return 'Международный';
+  return COUNTRY_RU[c]||c;
+}
+function isIntl(code){
+  return !code||INTL_CODES.indexOf(String(code).toUpperCase())>=0;
+}
+function norm(s){
+  return String(s||'').toLowerCase().replace(/ё/g,'е').replace(/[^0-9a-zа-я]+/gi,' ').replace(/\s+/g,' ').trim();
+}
+function countryHay(code){
+  return norm(countryName(code)+' '+(COUNTRY_EN[code]||'')+' '+code);
+}
+var ALL_COUNTRIES=Object.keys(COUNTRY_RU).sort(function(a,b){return COUNTRY_RU[a].localeCompare(COUNTRY_RU[b],'ru');});
+
+var GB='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/';
+var CINEMA=[
   {id:'cinema-1',name:'СМЕХОРАМА',group:'Комедии',country:'Россия',countryCode:'RU',type:'vod',desc:'Комедийный кинозал: «Большой кролик» (Blender Foundation, CC-BY) и немая комедия Чаплина из общественного достояния.',items:[
     {title:'Большой кролик',meta:'Анимационная комедия • CC-BY • без диалогов',url:GB+'BigBuckBunny.mp4',dur:596},
     {title:'Чарли Чаплин: «Лавка ростовщика»',meta:'Немая комедия • 1916 • общественное достояние',url:'https://archive.org/download/CC_1916_10_02_ThePawnshop/CC_1916_10_02_ThePawnshop_512kb.mp4',dur:1560}
@@ -765,7 +739,7 @@ const CINEMA=[
   ]}
 ];
 
-const IC={
+var IC={
   play:'<path d="m8 5 11 7-11 7z" fill="currentColor" stroke="none"/>',
   pause:'<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/>',
   prev:'<path d="M19 20 9 12l10-8z"/><path d="M5 19V5"/>',
@@ -791,151 +765,160 @@ const IC={
   send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
   chat:'<path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l2-5.4a8.3 8.3 0 0 1-1-4A8.4 8.4 0 0 1 12.5 3 8.4 8.4 0 0 1 21 11.5z"/>'
 };
-const icon=(n,s=18)=>'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';
+function icon(n,s){
+  if(s===undefined)s=18;
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';
+}
 
-const $=id=>document.getElementById(id);
-const video=$('video'),player=$('player');
-const pad2=n=>String(n).padStart(2,'0');
-const nameKey=s=>String(s||'').toLowerCase().replace(/\s+/g,' ').trim();
-const cloneCinema=()=>CINEMA.map((c,i)=>Object.assign(JSON.parse(JSON.stringify(c)),{n:i+1}));
+function $(id){return document.getElementById(id);}
+var video=$('video'),player=$('player');
+function pad2(n){return String(n).padStart(2,'0');}
+function nameKey(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim();}
+function cloneCinema(){return CINEMA.map(function(c,i){return Object.assign(JSON.parse(JSON.stringify(c)),{n:i+1});});}
 
-let channels=cloneCinema();
-let current=channels[0];
-let session=0,hls=null,hlsPromise=null,mode='idle',segUrl=null,pendingSeek=0,started=false;
-let signalText='источник проверен';
-const durCache={},quarantine={};
-let idCounter=0,pendingKey=null;
+var channels=cloneCinema();
+var current=channels[0];
+var session=0,hls=null,hlsPromise=null,mode='idle',segUrl=null,pendingSeek=0,started=false;
+var signalText='источник проверен';
+var durCache={},quarantine={};
+var idCounter=0,pendingKey=null;
 
-const scan={running:false,sourceIdx:0,queue:[],seenUrls:new Set(),verifiedNames:new Set(),blockedUrls:new Set(),blockedNames:new Set(),checked:0,exhausted:false,abort:false};
-const DEF={vol:70,muted:false,cat:'all',country:'all',lastUrl:'',favs:{},blockedUrls:{}};
-let S=Object.assign({},DEF);
-try{const raw=localStorage.getItem('tv-box-v5');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+/* deadUrls — реальный мор (4xx / битый формат), банится навсегда.
+   retry — неотвеченные (таймаут/5xx), НЕ банятся, уходят на второй проход. */
+var scan={running:false,sourceIdx:0,queue:[],retry:[],seenUrls:new Set(),verifiedNames:new Set(),deadUrls:new Set(),deadNames:new Set(),checked:0,exhausted:false,abort:false};
+var DEF={vol:70,muted:false,cat:'all',country:'all',lastUrl:'',favs:{},deadUrls:{}};
+var S=Object.assign({},DEF);
+try{var raw=localStorage.getItem('tv-box-v7');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
 if(!S.favs||typeof S.favs!=='object')S.favs={};
 if(!S.country)S.country='all';
-/* миграция: старый формат (массив или прошлая версия) → сбрасываем накопленный бан одним разом,
-   дальше работает TTL. Это и возвращает каналы, которые «пропали» после прошлых запусков. */
-if(!S.blockedUrls)S.blockedUrls={};if(Array.isArray(S.blockedUrls)){var __ba=S.blockedUrls;S.blockedUrls={};var __bn=Date.now();__ba.forEach(function(__u){if(__u)S.blockedUrls[__u]=__bn;});}else if(typeof S.blockedUrls!=='object')S.blockedUrls={};
-delete S.sort; delete S.blockedNames;
-(function seedBlocked(){
-  var now=Date.now(),changed=false;
-  Object.keys(S.blockedUrls).forEach(function(u){
-    var ts=S.blockedUrls[u]||0;
-    if(true)scan.blockedUrls.add(u);
-    else{scan.blockedUrls.add(u);}
-  });
-  if(changed)save();
-})();
-let saveT=null;
-function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('tv-box-v5',JSON.stringify(S));}catch(e){}},200);}
-function markBlocked(url,name){
-  scan.blockedUrls.add(url);
-  S.blockedUrls[url]=Date.now();
-  scan.blockedNames.add(nameKey(name)); /* имя — только в этой сессии, не永 */
+if(!S.deadUrls||typeof S.deadUrls!=='object'||Array.isArray(S.deadUrls))S.deadUrls={};
+delete S.sort;delete S.blockedUrls;delete S.blockedNames;
+Object.keys(S.deadUrls).forEach(function(u){scan.deadUrls.add(u);});
+var saveT=null;
+function save(){
+  clearTimeout(saveT);
+  saveT=setTimeout(function(){try{localStorage.setItem('tv-box-v7',JSON.stringify(S));}catch(e){}},200);
+}
+function markDead(url,name){
+  scan.deadUrls.add(url);
+  scan.deadNames.add(nameKey(name));
+  S.deadUrls[url]=1;
   save();
 }
 
-const favKey=ch=>ch.type==='vod'?ch.id:ch.url;
-const isFav=ch=>!!S.favs[favKey(ch)];
-function applyFavChange(){save();renderGenres();renderInfo();if(S.cat==='fav')renderList();else renderWindow();if(!$('genreModal').hidden)renderGenreSheet();}
+function favKey(ch){return ch.type==='vod'?ch.id:ch.url;}
+function isFav(ch){return !!S.favs[favKey(ch)];}
+function applyFavChange(){
+  save();renderGenres();renderInfo();
+  if(S.cat==='fav')renderList();else renderWindow();
+  if(!$('genreModal').hidden)renderGenreSheet();
+}
 function toggleFav(ch){
-  const k=favKey(ch),was=isFav(ch);
+  var k=favKey(ch),was=isFav(ch);
   if(was)delete S.favs[k];else S.favs[k]=1;
   applyFavChange();
-  if(was)toast('«'+ch.name+'» убран из избранного','info',4600,{label:'Вернуть',fn:()=>{S.favs[k]=1;applyFavChange();toast('«'+ch.name+'» снова в избранном','ok',2200);}});
-  else toast('«'+ch.name+'» — в избранном','ok',2200);
+  if(was){
+    toast('«'+ch.name+'» убран из избранного','info',4600,{label:'Вернуть',fn:function(){S.favs[k]=1;applyFavChange();toast('«'+ch.name+'» снова в избранном','ok',2200);}});
+  }else{
+    toast('«'+ch.name+'» — в избранном','ok',2200);
+  }
 }
 
-let renderT=null;
-function scheduleRender(){if(renderT)return;renderT=setTimeout(()=>{renderT=null;renderAll();},350);}
+var renderT=null;
+function scheduleRender(){if(renderT)return;renderT=setTimeout(function(){renderT=null;renderAll();},350);}
 
-function toast(msg,type='info',ms=3800,action){
-  const box=$('toasts');while(box.children.length>=3)box.firstChild.remove();
-  const el=document.createElement('div');el.className='toast '+type;
-  const d=document.createElement('span');d.className='t-dot';
-  const t=document.createElement('span');t.className='msg';t.textContent=msg;
+function toast(msg,type,ms,action){
+  if(type===undefined)type='info';
+  if(ms===undefined)ms=3800;
+  var box=$('toasts');
+  while(box.children.length>=3)box.firstChild.remove();
+  var el=document.createElement('div');el.className='toast '+type;
+  var d=document.createElement('span');d.className='t-dot';
+  var t=document.createElement('span');t.className='msg';t.textContent=msg;
   el.append(d,t);
-  let timer;
+  var timer;
   if(action){
-    const b=document.createElement('button');b.className='t-action';b.textContent=action.label;
-    b.addEventListener('click',()=>{clearTimeout(timer);el.remove();action.fn();});
+    var b=document.createElement('button');b.className='t-action';b.textContent=action.label;
+    b.addEventListener('click',function(){clearTimeout(timer);el.remove();action.fn();});
     el.appendChild(b);
   }
   box.appendChild(el);
-  timer=setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(10px)';setTimeout(()=>el.remove(),240);},ms);
+  timer=setTimeout(function(){el.style.opacity='0';el.style.transform='translateY(10px)';setTimeout(function(){el.remove();},240);},ms);
 }
 
 function channelKey(ch){return ch.type==='vod'?ch.id:ch.url;}
 function appBase(){
-  try{const qs=new URLSearchParams(location.search);const vk=qs.get('vk_app_id');if(vk)return 'https://vk.com/app'+vk;}catch(e){}
+  try{var qs=new URLSearchParams(location.search);var vk=qs.get('vk_app_id');if(vk)return 'https://vk.com/app'+vk;}catch(e){}
   return location.href.split('#')[0];
 }
 function channelHash(ch){
-  let h='#ch='+encodeURIComponent(channelKey(ch));
+  var h='#ch='+encodeURIComponent(channelKey(ch));
   if(ch.type==='hls')h+='&t='+encodeURIComponent(ch.name)+'&g='+encodeURIComponent(ch.group)+'&c='+encodeURIComponent(ch.countryCode||'');
   return h;
 }
 function shareUrl(ch){return appBase()+channelHash(ch);}
 function buildShare(){
-  const ch=current||channels[0];
-  return {ch,url:shareUrl(ch),text:'«'+ch.name+'» — '+(ch.type==='vod'?'кинозал':'прямой эфир')+' в TV BOX ('+ch.country+'). Ссылка откроет именно этот канал.'};
+  var ch=current||channels[0];
+  var kind=ch.type==='vod'?'кинозал':'прямой эфир';
+  return {ch:ch,url:shareUrl(ch),text:'«'+ch.name+'» — '+kind+' в TV BOX ('+ch.country+'). Ссылка откроет именно этот канал.'};
 }
 function syncHash(ch){try{history.replaceState(null,'',channelHash(ch));}catch(e){}}
 function readHash(){
-  const h=location.hash.replace(/^#/,'');if(!h)return null;
-  let p;try{p=new URLSearchParams(h);}catch(e){return null;}
-  const key=p.get('ch');if(!key)return null;
-  return {key,name:p.get('t')||'',group:p.get('g')||'',country:p.get('c')||''};
+  var h=location.hash.replace(/^#/,'');if(!h)return null;
+  var p;try{p=new URLSearchParams(h);}catch(e){return null;}
+  var key=p.get('ch');if(!key)return null;
+  return {key:key,name:p.get('t')||'',group:p.get('g')||'',country:p.get('c')||''};
 }
 async function resolveDeepLink(dl){
   if(!dl)return;
   if(current&&started&&channelKey(current)===dl.key)return;
-  const found=channels.find(c=>channelKey(c)===dl.key);
+  var found=channels.find(function(c){return channelKey(c)===dl.key;});
   if(found){pendingKey=null;tune(found,true);return;}
   if(!/^https:\/\//i.test(dl.key)||!/\.m3u8(\?|$)/i.test(dl.key)){toast('Канал по ссылке сейчас недоступен.','warn');return;}
   pendingKey=dl.key;
   toast('Открываю канал по ссылке…','info',3000);
-  const ok=await probeChannel(dl.key);
+  var verdict=await probeChannel(dl.key);
   if(current&&started&&channelKey(current)===dl.key){pendingKey=null;return;}
-  const again=channels.find(c=>c.url===dl.key);
+  var again=channels.find(function(c){return c.url===dl.key;});
   if(again){pendingKey=null;tune(again,true);return;}
-  if(!ok){toast('Канал по ссылке пока не отвечает. Включу, как только он найдётся в поиске.','warn',5200);return;}
+  if(verdict!=='alive'){toast('Канал по ссылке пока не отвечает. Включу, как только он найдётся в поиске.','warn',5200);return;}
   pendingKey=null;
-  const meta={name:dl.name||'Канал по ссылке',url:dl.key,logo:'',group:dl.group||'Разное',country:(dl.country||'').toUpperCase(),tvgId:''};
+  var meta={name:dl.name||'Канал по ссылке',url:dl.key,logo:'',group:dl.group||'Разное',country:(dl.country||'').toUpperCase(),tvgId:''};
   scan.seenUrls.add(meta.url);scan.verifiedNames.add(nameKey(meta.name));
   addChannel(meta);
-  const added=channels.find(c=>c.url===dl.key);
+  var added=channels.find(function(c){return c.url===dl.key;});
   if(added){tune(added,true);toast('Канал по ссылке включён.','ok',3000);}
 }
-addEventListener('hashchange',()=>{const dl=readHash();if(dl)resolveDeepLink(dl);});
+addEventListener('hashchange',function(){var dl=readHash();if(dl)resolveDeepLink(dl);});
 async function copyText(t){
   try{await navigator.clipboard.writeText(t);return true;}catch(e){}
   try{
-    const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';
-    document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok;
+    var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();var ok=document.execCommand('copy');ta.remove();return ok;
   }catch(e){return false;}
 }
 
 function cleanName(s){return String(s||'').replace(/\s*\[[^\]]*\]/g,'').replace(/\s*\(\d{3,4}p\)/gi,'').replace(/\s+/g,' ').trim();}
-function countryFromId(id){const m=String(id||'').match(/\.([a-z]{2})(?:@|$)/i);return m?m[1].toUpperCase():'';}
-function translateGroup(g){const first=String(g||'').split(';')[0].trim();return GROUP_RU[first]||first||'Разное';}
+function countryFromId(id){var m=String(id||'').match(/\.([a-z]{2})(?:@|$)/i);return m?m[1].toUpperCase():'';}
+function translateGroup(g){var first=String(g||'').split(';')[0].trim();return GROUP_RU[first]||first||'Разное';}
 function isPrivateHost(h){return /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/i.test(h);}
 function isAllowed(c){
   if(!/^https:\/\//i.test(c.url))return false;
   if(!/\.m3u8(\?|$)/i.test(c.url))return false;
   if(/xxx|adult|porn|эротик|18\+/i.test(c.name+' '+c.group))return false;
-  try{const u=new URL(c.url);if(isPrivateHost(u.hostname))return false;}catch(e){return false;}
+  try{var u=new URL(c.url);if(isPrivateHost(u.hostname))return false;}catch(e){return false;}
   return true;
 }
 function parseM3U(text,sourceCountry){
-  const out=[];const lines=String(text||'').split(/\r?\n/);let meta=null;
-  for(const raw of lines){
-    const line=raw.trim();
-    if(line.startsWith('#EXTINF:')){
-      const attrs={};let m;const re=/([\w-]+)="([^"]*)"/g;
+  var out=[];var lines=String(text||'').split(/\r?\n/);var meta=null;
+  for(var li=0;li<lines.length;li++){
+    var line=lines[li].trim();
+    if(line.indexOf('#EXTINF:')===0){
+      var attrs={};var m;var re=/([\w-]+)="([^"]*)"/g;
       while((m=re.exec(line)))attrs[m[1]]=m[2];
-      meta={name:cleanName(line.slice(line.indexOf(',')+1)),attrs};
-    }else if(line&&!line.startsWith('#')&&meta){
-      const c={name:meta.name,url:line,logo:meta.attrs['tvg-logo']||'',group:translateGroup(meta.attrs['group-title']),
+      meta={name:cleanName(line.slice(line.indexOf(',')+1)),attrs:attrs};
+    }else if(line&&line.charAt(0)!=='#'&&meta){
+      var c={name:meta.name,url:line,logo:meta.attrs['tvg-logo']||'',group:translateGroup(meta.attrs['group-title']),
         country:(sourceCountry||countryFromId(meta.attrs['tvg-id'])||'').toUpperCase(),tvgId:meta.attrs['tvg-id']||''};
       if(isAllowed(c))out.push(c);
       meta=null;
@@ -944,63 +927,79 @@ function parseM3U(text,sourceCountry){
   return out;
 }
 
-async function fetchText(url,timeout){
-  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),timeout);
-  try{const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});if(!r.ok)throw new Error('HTTP '+r.status);return await r.text();}
+/* fetchProbe различает: ok (текст), dead (4xx — реальный мор), unknown (таймаут/сеть/5xx — не мор) */
+async function fetchProbe(url,timeout){
+  var ctl=new AbortController();var t=setTimeout(function(){ctl.abort();},timeout);
+  try{
+    var r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});
+    if(!r.ok)return (r.status>=400&&r.status<500)?{kind:'dead'}:{kind:'unknown'};
+    var text=await r.text();
+    return {kind:'ok',text:text};
+  }catch(e){return {kind:'unknown'};}
   finally{clearTimeout(t);}
 }
 function resolveUrl(u,base){try{return new URL(u,base).toString();}catch(e){return u;}}
 function firstSegment(text,baseUrl){
-  const lines=String(text||'').split(/\r?\n/);
-  for(const raw of lines){const l=raw.trim();if(l&&!l.startsWith('#'))return resolveUrl(l,baseUrl);}
+  var lines=String(text||'').split(/\r?\n/);
+  for(var i=0;i<lines.length;i++){var l=lines[i].trim();if(l&&l.charAt(0)!=='#')return resolveUrl(l,baseUrl);}
   return null;
 }
 function variantUrls(text,baseUrl,limit){
-  const out=[];const lines=String(text||'').split(/\r?\n/);
-  for(let i=0;i<lines.length&&out.length<limit;i++){
+  var out=[];var lines=String(text||'').split(/\r?\n/);
+  for(var i=0;i<lines.length&&out.length<limit;i++){
     if(lines[i].indexOf('#EXT-X-STREAM-INF')===0){
-      for(let j=i+1;j<lines.length;j++){
-        const l=lines[j].trim();
-        if(l&&!l.startsWith('#')){out.push(resolveUrl(l,baseUrl));break;}
+      for(var j=i+1;j<lines.length;j++){
+        var l=lines[j].trim();
+        if(l&&l.charAt(0)!=='#'){out.push(resolveUrl(l,baseUrl));break;}
       }
     }
   }
   return out;
 }
-async function probeSegmentAlive(url){
-  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),SEG_TIMEOUT);
+async function probeSegmentAlive(url,timeout){
+  var ctl=new AbortController();var t=setTimeout(function(){ctl.abort();},timeout||SEG_TIMEOUT);
   try{
-    const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});
-    if(!r.ok)return false;
+    var r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});
     try{ctl.abort();}catch(e){}
-    return true;
-  }catch(e){return false;}
+    if(r.ok)return 'alive';
+    return (r.status>=400&&r.status<500)?'dead':'unknown';
+  }catch(e){return 'unknown';}
   finally{clearTimeout(t);}
 }
-async function probeMediaPlaylist(url){
-  let text='';
-  try{text=await fetchText(url,MANIFEST_TIMEOUT);}catch(e){return false;}
-  if(!text||text.indexOf('#EXTM3U')<0||text.indexOf('#EXTINF')<0)return false;
-  const seg=firstSegment(text,url);
-  if(!seg)return false;
-  return await probeSegmentAlive(seg);
+async function probeMediaPlaylist(url,mt,st){
+  var m=await fetchProbe(url,mt||MANIFEST_TIMEOUT);
+  if(m.kind!=='ok')return m.kind;
+  var text=m.text;
+  if(!text||text.indexOf('#EXTM3U')<0||text.indexOf('#EXTINF')<0)return 'dead';
+  var seg=firstSegment(text,url);
+  if(!seg)return 'dead';
+  return await probeSegmentAlive(seg,st||SEG_TIMEOUT);
 }
-async function probeChannel(url){
-  let text='';
-  try{text=await fetchText(url,MANIFEST_TIMEOUT);}catch(e){return false;}
-  if(!text||text.indexOf('#EXTM3U')<0)return false;
+async function probeChannel(url,mt,st){
+  if(mt===undefined)mt=MANIFEST_TIMEOUT;
+  if(st===undefined)st=SEG_TIMEOUT;
+  var m=await fetchProbe(url,mt);
+  if(m.kind!=='ok')return m.kind;
+  var text=m.text;
+  if(!text||text.indexOf('#EXTM3U')<0)return 'dead';
   if(text.indexOf('#EXT-X-STREAM-INF')>=0){
-    const variants=variantUrls(text,url,2);
-    if(!variants.length)return false;
-    for(const v of variants){if(await probeMediaPlaylist(v))return true;}
-    return false;
+    var variants=variantUrls(text,url,2);
+    if(!variants.length)return 'dead';
+    var sawUnknown=false;
+    for(var i=0;i<variants.length;i++){
+      var r=await probeMediaPlaylist(variants[i],mt,st);
+      if(r==='alive')return 'alive';
+      if(r==='dead')return 'dead';
+      sawUnknown=true;
+    }
+    return sawUnknown?'unknown':'dead';
   }
   if(text.indexOf('#EXTINF')>=0){
-    const seg=firstSegment(text,url);
-    if(!seg)return false;
-    return await probeSegmentAlive(seg);
+    var seg=firstSegment(text,url);
+    if(!seg)return 'dead';
+    return await probeSegmentAlive(seg,st);
   }
-  return false;
+  return 'dead';
 }
 
 function updateScanUI(){
@@ -1008,74 +1007,87 @@ function updateScanUI(){
 }
 async function loadNextSource(){
   while(scan.sourceIdx<SOURCES.length&&channels.length<TARGET){
-    const src=SOURCES[scan.sourceIdx++];
-    let text='';
-    for(const url of src.urls){try{text=await fetchText(url,20000);if(text)break;}catch(e){}}
+    var src=SOURCES[scan.sourceIdx++];
+    var text='';
+    for(var ui=0;ui<src.urls.length;ui++){
+      try{var r=await fetchProbe(src.urls[ui],20000);if(r.kind==='ok'&&r.text){text=r.text;break;}}catch(e){}
+    }
     if(!text)continue;
-    const parsed=parseM3U(text,src.country);
-    const fresh=parsed.filter(c=>!scan.seenUrls.has(c.url)&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedUrls.has(c.url)&&!scan.blockedNames.has(nameKey(c.name)));
-    fresh.forEach(c=>scan.seenUrls.add(c.url));
+    var parsed=parseM3U(text,src.country);
+    var fresh=parsed.filter(function(c){
+      return !scan.seenUrls.has(c.url)&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.deadUrls.has(c.url)&&!scan.deadNames.has(nameKey(c.name));
+    });
+    fresh.forEach(function(c){scan.seenUrls.add(c.url);});
     scan.queue=scan.queue.concat(fresh);
     if(scan.queue.length)return true;
   }
   return false;
 }
-async function probeQueue(){
-  let qi=0;
-  const workers=Array.from({length:CONCURRENCY},async()=>{
-    while(qi<scan.queue.length&&channels.length<TARGET&&!scan.abort){
-      const c=scan.queue[qi++];
-      if(scan.verifiedNames.has(nameKey(c.name))||scan.blockedNames.has(nameKey(c.name))||scan.blockedUrls.has(c.url))continue;
-      scan.checked++;
-      const ok=await probeChannel(c.url);
-      if(ok&&channels.length<TARGET&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedNames.has(nameKey(c.name))){
-        scan.verifiedNames.add(nameKey(c.name));addChannel(c);
-      }else if(!ok){
-        markBlocked(c.url,c.name);
+async function probeQueuePass(list,conc,mt,st){
+  var qi=0;
+  var workers=[];
+  for(var w=0;w<conc;w++){
+    workers.push((async function(){
+      while(qi<list.length&&channels.length<TARGET&&!scan.abort){
+        var c=list[qi++];
+        if(scan.verifiedNames.has(nameKey(c.name))||scan.deadNames.has(nameKey(c.name))||scan.deadUrls.has(c.url))continue;
+        scan.checked++;
+        var verdict=await probeChannel(c.url,mt,st);
+        if(verdict==='alive'&&channels.length<TARGET&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.deadNames.has(nameKey(c.name))){
+          scan.verifiedNames.add(nameKey(c.name));addChannel(c);
+        }else if(verdict==='dead'){
+          markDead(c.url,c.name);
+        }else{
+          scan.retry.push(c);
+        }
       }
-    }
-  });
+    })());
+  }
   await Promise.all(workers);
-  scan.queue=[];
 }
-async function startScan(force=false){
+async function startScan(force){
   if(scan.running)return;
   if(force){
-    scan.abort=false;scan.sourceIdx=0;scan.queue=[];scan.checked=0;scan.exhausted=false;
-    scan.seenUrls.clear();scan.verifiedNames.clear();
-    scan.blockedUrls.clear();scan.blockedNames.clear();
-    S.blockedUrls={};save();               /* «Обновить» = полный сброс банов, перепроверяем всё */
+    scan.abort=false;scan.sourceIdx=0;scan.queue=[];scan.retry=[];scan.checked=0;scan.exhausted=false;
+    scan.seenUrls.clear();scan.verifiedNames.clear();scan.deadNames.clear();
+    scan.deadUrls.clear();S.deadUrls={};save();
     channels=cloneCinema();current=channels[0];idCounter=0;
-    renderAll();fitPlayer();if(started)tune(current);
+    renderAll();if(started)tune(current);
   }
   scan.running=true;scan.exhausted=false;updateScanUI();
   try{
     while(channels.length<TARGET&&!scan.abort){
-      if(!scan.queue.length){const ok=await loadNextSource();if(!ok){scan.exhausted=true;break;}}
-      await probeQueue();
+      if(!scan.queue.length){var ok=await loadNextSource();if(!ok){scan.exhausted=true;break;}}
+      var batch=scan.queue;scan.queue=[];
+      await probeQueuePass(batch,CONCURRENCY,MANIFEST_TIMEOUT,SEG_TIMEOUT);
+    }
+    if(scan.retry.length&&!scan.abort&&channels.length<TARGET){
+      toast('Допроверяю '+scan.retry.length+' неотвеченных источников…','info',4000);
+      var retryBatch=scan.retry;scan.retry=[];
+      await probeQueuePass(retryBatch,RETRY_CONCURRENCY,RETRY_MANIFEST_TIMEOUT,RETRY_SEG_TIMEOUT);
     }
   }finally{
-    scan.running=false;updateScanUI();renderAll();fitPlayer();restoreLast();
+    scan.running=false;updateScanUI();renderAll();restoreLast();
     if(channels.length>=TARGET)toast('Цель достигнута: '+TARGET+' рабочих каналов.','ok',5000);
-    else toast('Проверка источников завершена: '+channels.length+' рабочих. Остальные — реально не отвечающие потоки.','warn',5200);
+    else toast('Проверка завершена: '+channels.length+' рабочих. Неотвеченные оставлены на перепроверку при следующем запуске.','warn',5200);
   }
 }
 function addChannel(c){
-  const code=String(c.country||'').toUpperCase();
-  const ch={id:'iptv-'+(++idCounter),n:channels.length+1,name:c.name,group:c.group,country:countryName(code),
+  var code=String(c.country||'').toUpperCase();
+  var ch={id:'iptv-'+(++idCounter),n:channels.length+1,name:c.name,group:c.group,country:countryName(code),
     countryCode:isIntl(code)?'':code,url:c.url,logo:c.logo,type:'hls',tvgId:c.tvgId||'',
     desc:'Прямой эфир • '+c.group+' • '+countryName(code)+'. Источник прошёл проверку манифеста и первого сегмента.',verifiedAt:Date.now()};
   channels.push(ch);scheduleRender();updateScanUI();
-  if(pendingKey&&ch.url===pendingKey){pendingKey=null;setTimeout(()=>tune(ch,true),0);toast('Канал по ссылке найден и включён.','ok',3000);}
+  if(pendingKey&&ch.url===pendingKey){pendingKey=null;setTimeout(function(){tune(ch,true);},0);toast('Канал по ссылке найден и включён.','ok',3000);}
 }
-function renumber(){channels.forEach((c,i)=>c.n=i+1);}
+function renumber(){channels.forEach(function(c,i){c.n=i+1;});}
 function removeChannel(ch,reason){
-  const idx=channels.findIndex(c=>c.id===ch.id);if(idx<0)return;
-  if(ch.type==='hls')markBlocked(ch.url,ch.name);
+  var idx=channels.findIndex(function(c){return c.id===ch.id;});if(idx<0)return;
+  if(ch.type==='hls')markDead(ch.url,ch.name);
   channels.splice(idx,1);renumber();
   if(current&&current.id===ch.id){
     current=null;
-    const next=channels[Math.min(idx,channels.length-1)];
+    var next=channels[Math.min(idx,channels.length-1)];
     if(next)tune(next);else showEmpty();
   }
   renderAll();updateScanUI();
@@ -1089,26 +1101,26 @@ function showEmpty(){
 }
 function restoreLast(){
   if(!S.lastUrl||started)return;
-  const ch=channels.find(c=>c.url===S.lastUrl||(c.type==='vod'&&c.id===S.lastUrl));
+  var ch=channels.find(function(c){return c.url===S.lastUrl||(c.type==='vod'&&c.id===S.lastUrl);});
   if(ch){current=ch;renderAll();}
 }
 
 function ensureHls(){
   if(window.Hls)return Promise.resolve(window.Hls);
   if(hlsPromise)return hlsPromise;
-  const cdns=[
+  var cdns=[
     'https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js',
     'https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js',
     'https://unpkg.com/hls.js@1.5.13/dist/hls.min.js'
   ];
-  hlsPromise=new Promise(res=>{
-    let i=0;
+  hlsPromise=new Promise(function(res){
+    var i=0;
     (function next(){
       if(window.Hls)return res(window.Hls);
       if(i>=cdns.length)return res(null);
-      const s=document.createElement('script');s.src=cdns[i++];let done=false;
-      const fin=ok=>{if(done)return;done=true;if(ok&&window.Hls)res(window.Hls);else{s.remove();next();}};
-      s.onload=()=>fin(true);s.onerror=()=>fin(false);setTimeout(()=>fin(false),9000);
+      var s=document.createElement('script');s.src=cdns[i++];var done=false;
+      var fin=function(ok){if(done)return;done=true;if(ok&&window.Hls)res(window.Hls);else{s.remove();next();}};
+      s.onload=function(){fin(true);};s.onerror=function(){fin(false);};setTimeout(function(){fin(false);},9000);
       document.head.appendChild(s);
     })();
   });
@@ -1124,40 +1136,40 @@ function destroyPlayer(){
 }
 function tune(ch,user){
   if(!ch)return;
-  destroyPlayer();const ses=session;
+  destroyPlayer();var ses=session;
   current=ch;S.lastUrl=ch.type==='vod'?ch.id:ch.url;save();syncHash(ch);
   started=true;$('boot').hidden=true;
-  renderAll();fitPlayer();showBadge();revealCurrent();
+  renderAll();showBadge();revealCurrent();
   $('loading').hidden=false;
   signalText='подключение…';updateSignal();
   if(ch.type==='vod'){mode='vod';startVod(ch,ses);}else{mode='hls';playHls(ch,ses);}
 }
 async function playHls(ch,ses){
-  const H=await ensureHls();if(ses!==session)return;
-  let playTimer=setTimeout(()=>{if(ses===session&&mode==='hls'&&video.readyState<2)removeChannel(ch,'источник не начал вещание');},PLAY_TIMEOUT);
-  const clearPlayTimer=()=>{clearTimeout(playTimer);playTimer=null;};
+  var H=await ensureHls();if(ses!==session)return;
+  var playTimer=setTimeout(function(){if(ses===session&&mode==='hls'&&video.readyState<2)removeChannel(ch,'источник не начал вещание');},PLAY_TIMEOUT);
+  var clearPlayTimer=function(){clearTimeout(playTimer);playTimer=null;};
   if(H&&H.isSupported()){
     hls=new H({maxBufferLength:30,manifestLoadingMaxRetry:1,levelLoadingMaxRetry:2,fragLoadingMaxRetry:2});
-    let rec=0;
-    hls.on(H.Events.MANIFEST_PARSED,()=>{
+    var rec=0;
+    hls.on(H.Events.MANIFEST_PARSED,function(){
       if(ses!==session)return;
       buildQuality();
-      video.play().catch(()=>{if(ses===session){clearPlayTimer();$('loading').hidden=true;$('gesture').hidden=false;}});
+      video.play().catch(function(){if(ses===session){clearPlayTimer();$('loading').hidden=true;$('gesture').hidden=false;}});
     });
-    hls.on(H.Events.LEVEL_SWITCHED,(e,d)=>{
+    hls.on(H.Events.LEVEL_SWITCHED,function(e,d){
       if(ses!==session)return;
-      const lv=hls.levels[d.level];
+      var lv=hls.levels[d.level];
       if(lv&&lv.height){signalText='в эфире • '+lv.height+'p';updateSignal();}
     });
-    hls.on(H.Events.ERROR,(e,d)=>{
+    hls.on(H.Events.ERROR,function(e,d){
       if(ses!==session||!d.fatal)return;
       if(d.type===H.ErrorTypes.MEDIA_ERROR&&rec<1){rec++;try{hls.recoverMediaError();}catch(err){clearPlayTimer();removeChannel(ch,'ошибка декодирования');}return;}
-      if(d.type===H.ErrorTypes.NETWORK_ERROR&&rec<2){rec++;setTimeout(()=>{if(ses===session&&hls)try{hls.startLoad();}catch(err){clearPlayTimer();removeChannel(ch,'источник не отвечает');}},800);return;}
+      if(d.type===H.ErrorTypes.NETWORK_ERROR&&rec<2){rec++;setTimeout(function(){if(ses===session&&hls)try{hls.startLoad();}catch(err){clearPlayTimer();removeChannel(ch,'источник не отвечает');}},800);return;}
       clearPlayTimer();removeChannel(ch,'источник не отвечает');
     });
     hls.loadSource(ch.url);hls.attachMedia(video);
   }else if(video.canPlayType('application/vnd.apple.mpegurl')){
-    video.src=ch.url;video.play().catch(()=>{if(ses===session){clearPlayTimer();$('loading').hidden=true;$('gesture').hidden=false;}});
+    video.src=ch.url;video.play().catch(function(){if(ses===session){clearPlayTimer();$('loading').hidden=true;$('gesture').hidden=false;}});
   }else{
     clearPlayTimer();
     $('loading').hidden=true;$('errorText').textContent='HLS-движок не загрузился. Кинозалы работают без него.';$('error').hidden=false;
@@ -1165,98 +1177,107 @@ async function playHls(ch,ses){
   video.addEventListener('playing',clearPlayTimer,{once:true});
 }
 function buildQuality(){
-  const sel=$('quality');sel.innerHTML='';
+  var sel=$('quality');sel.innerHTML='';
   if(!hls||!hls.levels||hls.levels.length<2){sel.hidden=true;return;}
-  const a=document.createElement('option');a.value='-1';a.textContent='Авто';sel.appendChild(a);
-  hls.levels.forEach((lv,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=(lv.height||Math.round(lv.bitrate/1000)+'k')+'p';sel.appendChild(o);});
+  var a=document.createElement('option');a.value='-1';a.textContent='Авто';sel.appendChild(a);
+  hls.levels.forEach(function(lv,i){var o=document.createElement('option');o.value=String(i);o.textContent=(lv.height||Math.round(lv.bitrate/1000)+'k')+'p';sel.appendChild(o);});
   sel.value=String(hls.currentLevel);sel.hidden=false;
 }
-$('quality').addEventListener('change',e=>{if(hls){hls.currentLevel=parseInt(e.target.value,10);toast('Качество: '+e.target.options[e.target.selectedIndex].text,'info',2000);}});
+$('quality').addEventListener('change',function(e){if(hls){hls.currentLevel=parseInt(e.target.value,10);toast('Качество: '+e.target.options[e.target.selectedIndex].text,'info',2000);}});
 
-function activeItems(ch){const q=quarantine[ch.id]||new Set();return ch.items.filter(it=>!q.has(it.url));}
-function schedule(ch){const items=activeItems(ch);const durs=items.map(it=>durCache[it.url]||it.dur);return{items,durs,total:durs.reduce((a,b)=>a+b,0)||1};}
+function activeItems(ch){var q=quarantine[ch.id]||new Set();return ch.items.filter(function(it){return !q.has(it.url);});}
+function schedule(ch){var items=activeItems(ch);var durs=items.map(function(it){return durCache[it.url]||it.dur;});return {items:items,durs:durs,total:durs.reduce(function(a,b){return a+b;},0)||1};}
 function mskSec(){
-  const p=new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(new Date());
-  const g=t=>+p.find(x=>x.type===t).value;return g('hour')*3600+g('minute')*60+g('second');
+  var p=new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).formatToParts(new Date());
+  var g=function(t){return +p.find(function(x){return x.type===t;}).value;};
+  return g('hour')*3600+g('minute')*60+g('second');
 }
-function mskTime(offset=0){return new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(Date.now()+offset*1000));}
+function mskTime(offset){
+  if(offset===undefined)offset=0;
+  return new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(Date.now()+offset*1000));
+}
 function startVod(ch,ses){
-  const sch=schedule(ch);
+  var sch=schedule(ch);
   if(!sch.items.length){removeChannel(ch,'лента недоступна');return;}
-  let pos=mskSec()%sch.total,i=0;while(i<sch.durs.length-1&&pos>sch.durs[i]){pos-=sch.durs[i];i++;}
+  var pos=mskSec()%sch.total,i=0;
+  while(i<sch.durs.length-1&&pos>sch.durs[i]){pos-=sch.durs[i];i++;}
   loadSeg(ch,i,pos,ses);
 }
 function loadSeg(ch,i,off,ses){
   if(ses!==session)return;
-  const sch=schedule(ch);const it=sch.items[i];if(!it)return;
+  var sch=schedule(ch);var it=sch.items[i];if(!it)return;
   segUrl=it.url;pendingSeek=off||0;
   signalText='кинозал • MP4';updateSignal();
   $('loading').hidden=false;
   video.src=it.url;video.load();
-  video.play().catch(()=>{if(ses===session&&mode==='vod'){$('loading').hidden=true;$('gesture').hidden=false;}});
+  video.play().catch(function(){if(ses===session&&mode==='vod'){$('loading').hidden=true;$('gesture').hidden=false;}});
   renderProgram();
 }
 function nextActiveIndex(ch,fromUrl){
-  const act=activeItems(ch);if(!act.length)return -1;
-  const orig=ch.items.findIndex(it=>it.url===fromUrl);
-  for(let s=1;s<=ch.items.length;s++){const cand=ch.items[(orig+s+ch.items.length)%ch.items.length];const ai=act.findIndex(it=>it.url===cand.url);if(ai>=0)return ai;}
+  var act=activeItems(ch);if(!act.length)return -1;
+  var orig=ch.items.findIndex(function(it){return it.url===fromUrl;});
+  for(var s=1;s<=ch.items.length;s++){
+    var cand=ch.items[(orig+s+ch.items.length)%ch.items.length];
+    var ai=act.findIndex(function(it){return it.url===cand.url;});
+    if(ai>=0)return ai;
+  }
   return 0;
 }
 function segmentFailed(){
-  const ch=current,it=ch.items.find(x=>x.url===segUrl);
+  var ch=current,it=ch.items.find(function(x){return x.url===segUrl;});
   if(!quarantine[ch.id])quarantine[ch.id]=new Set();
   if(it){quarantine[ch.id].add(it.url);toast('Фрагмент «'+it.title+'» недоступен — пропускаю.','warn');}
   if(!activeItems(ch).length){removeChannel(ch,'лента недоступна');return;}
   loadSeg(ch,nextActiveIndex(ch,segUrl),0,session);
 }
-video.addEventListener('loadedmetadata',()=>{
+video.addEventListener('loadedmetadata',function(){
   if(mode==='vod'&&isFinite(video.duration)&&video.duration>10){
     durCache[segUrl]=video.duration;
     if(pendingSeek>0&&pendingSeek<video.duration-8){try{video.currentTime=pendingSeek;}catch(e){}}
     pendingSeek=0;renderProgram();
   }
 });
-video.addEventListener('playing',()=>{
+video.addEventListener('playing',function(){
   $('loading').hidden=true;$('gesture').hidden=true;$('error').hidden=true;
   if(mode==='vod')signalText='в эфире • MP4';
   updateSignal();renderProgram();syncPlay();pokeControls();
 });
-video.addEventListener('waiting',()=>{if(mode!=='idle')$('loading').hidden=false;});
-video.addEventListener('canplay',()=>{$('loading').hidden=true;});
-video.addEventListener('error',()=>{
+video.addEventListener('waiting',function(){if(mode!=='idle')$('loading').hidden=false;});
+video.addEventListener('canplay',function(){$('loading').hidden=true;});
+video.addEventListener('error',function(){
   if(mode==='idle'||!started)return;
   if(mode==='hls')removeChannel(current,'ошибка плеера');
   else if(mode==='vod')segmentFailed();
 });
-video.addEventListener('ended',()=>{if(mode==='vod'){const i=nextActiveIndex(current,segUrl);if(i>=0)loadSeg(current,i,0,session);}});
-video.addEventListener('play',()=>{syncPlay();pokeControls();});
-video.addEventListener('pause',()=>{syncPlay();pokeControls();});
-let tuT=0;
-video.addEventListener('timeupdate',()=>{const n=Date.now();if(n-tuT>900){tuT=n;renderProgram();}});
+video.addEventListener('ended',function(){if(mode==='vod'){var i=nextActiveIndex(current,segUrl);if(i>=0)loadSeg(current,i,0,session);}});
+video.addEventListener('play',function(){syncPlay();pokeControls();});
+video.addEventListener('pause',function(){syncPlay();pokeControls();});
+var tuT=0;
+video.addEventListener('timeupdate',function(){var n=Date.now();if(n-tuT>900){tuT=n;renderProgram();}});
 
-function genreCounts(){const g={};channels.forEach(c=>{g[c.group]=(g[c.group]||0)+1;});return g;}
-function favCount(){let n=0;channels.forEach(c=>{if(isFav(c))n++;});return n;}
-function sortedGenres(groups){return Object.keys(groups).sort((a,b)=>groups[b]-groups[a]||a.localeCompare(b,'ru'));}
+function genreCounts(){var g={};channels.forEach(function(c){g[c.group]=(g[c.group]||0)+1;});return g;}
+function favCount(){var n=0;channels.forEach(function(c){if(isFav(c))n++;});return n;}
+function sortedGenres(groups){return Object.keys(groups).sort(function(a,b){return groups[b]-groups[a]||a.localeCompare(b,'ru');});}
 function setCat(key){
   S.cat=key;save();$('chList').scrollTop=0;
   renderGenres();renderList();
 }
 function renderGenres(){
-  const groups=genreCounts();
+  var groups=genreCounts();
   if(S.cat!=='all'&&S.cat!=='fav'&&!groups[S.cat])S.cat='all';
-  const label=S.cat==='all'?'Все жанры':S.cat==='fav'?'Избранное':S.cat;
+  var label=S.cat==='all'?'Все жанры':S.cat==='fav'?'Избранное':S.cat;
   $('genreBtnLabel').textContent=label;
   $('genreBtn').classList.toggle('filtered',S.cat!=='all');
 }
 function iosRow(label,active,onClick,opts){
   opts=opts||{};
-  const b=document.createElement('button');
+  var b=document.createElement('button');
   b.className='ios-row'+(opts.ctry?' ctry':'')+(active?' active':'');
-  const t=document.createElement('b');t.textContent=label;
+  var t=document.createElement('b');t.textContent=label;
   b.appendChild(t);
-  if(typeof opts.count==='number'){const s=document.createElement('small');s.className='cnt';s.textContent=opts.count;b.appendChild(s);}
-  else if(opts.note){const s=document.createElement('small');s.textContent=opts.note;b.appendChild(s);}
-  const tail=document.createElement('span');tail.className='tail';
+  if(typeof opts.count==='number'){var s=document.createElement('small');s.className='cnt';s.textContent=opts.count;b.appendChild(s);}
+  else if(opts.note){var s2=document.createElement('small');s2.textContent=opts.note;b.appendChild(s2);}
+  var tail=document.createElement('span');tail.className='tail';
   if(active)tail.innerHTML=icon('check',16);
   else if(!opts.disabled)tail.innerHTML=icon('chevR',15);
   b.appendChild(tail);
@@ -1264,11 +1285,11 @@ function iosRow(label,active,onClick,opts){
   return b;
 }
 function renderGenreSheet(){
-  const body=$('genreBody'),scroll=body.scrollTop;
-  const groups=genreCounts();
+  var body=$('genreBody'),scroll=body.scrollTop;
+  var groups=genreCounts();
   body.innerHTML='';
-  const h=document.createElement('div');h.className='ios-header';h.textContent='Найдено станций по жанрам';
-  const g=document.createElement('div');g.className='ios-group';
+  var h=document.createElement('div');h.className='ios-header';h.textContent='Найдено станций по жанрам';
+  var g=document.createElement('div');g.className='ios-group';
   g.appendChild(iosRow('Все жанры',S.cat==='all',function(){setCat('all');closeGenres();},{count:channels.length}));
   g.appendChild(iosRow('Избранное',S.cat==='fav',function(){setCat('fav');closeGenres();},{count:favCount()}));
   sortedGenres(groups).forEach(function(k){g.appendChild(iosRow(k,S.cat===k,function(){setCat(k);closeGenres();},{count:groups[k]}));});
@@ -1276,94 +1297,94 @@ function renderGenreSheet(){
 }
 function openGenres(){renderGenreSheet();$('genreModal').hidden=false;$('genreClose').focus();}
 function closeGenres(){$('genreModal').hidden=true;$('genreBtn').focus();}
-$('genreModal').addEventListener('click',e=>{if(e.target===$('genreModal'))closeGenres();});
+$('genreModal').addEventListener('click',function(e){if(e.target===$('genreModal'))closeGenres();});
 
-function countryCounts(){const m={};channels.forEach(c=>{const k=c.countryCode||'INTL';m[k]=(m[k]||0)+1;});return m;}
+function countryCounts(){var m={};channels.forEach(function(c){var k=c.countryCode||'INTL';m[k]=(m[k]||0)+1;});return m;}
 function setCountry(code){
   S.country=code;save();$('chList').scrollTop=0;
   renderCountries();renderList();
 }
 function renderCountries(){
-  const counts=countryCounts();
+  var counts=countryCounts();
   if(S.country!=='all'&&S.country!=='INTL'&&!counts[S.country])S.country='all';
-  const label=S.country==='all'?'Все страны':S.country==='INTL'?'Международный':countryName(S.country);
+  var label=S.country==='all'?'Все страны':S.country==='INTL'?'Международный':countryName(S.country);
   $('countryBtnLabel').textContent=label;
   $('countryBtn').classList.toggle('filtered',S.country!=='all');
 }
 function renderCountrySheet(){
-  const body=$('countryBody'),scroll=body.scrollTop;
-  const counts=countryCounts();
-  const q=norm($('countrySearch').value);
+  var body=$('countryBody'),scroll=body.scrollTop;
+  var counts=countryCounts();
+  var q=norm($('countrySearch').value);
   body.innerHTML='';
-  const avail=Object.keys(counts).filter(k=>k!=='INTL').sort((a,b)=>countryName(a).localeCompare(countryName(b),'ru'));
-  const availMatched=avail.filter(c=>!q||countryHay(c).includes(q));
-  const restMatched=ALL_COUNTRIES.filter(c=>!counts[c]&&(!q||countryHay(c).includes(q)));
-  const showAll=!q||norm('Все страны all').includes(q);
-  const showIntl=!!counts.INTL&&(!q||norm('Международный international').includes(q));
-  let any=false;
+  var avail=Object.keys(counts).filter(function(k){return k!=='INTL';}).sort(function(a,b){return countryName(a).localeCompare(countryName(b),'ru');});
+  var availMatched=avail.filter(function(c){return !q||countryHay(c).includes(q);});
+  var restMatched=ALL_COUNTRIES.filter(function(c){return !counts[c]&&(!q||countryHay(c).includes(q));});
+  var showAll=!q||norm('Все страны all').includes(q);
+  var showIntl=!!counts.INTL&&(!q||norm('Международный international').includes(q));
+  var any=false;
   if(showAll||showIntl||availMatched.length){
-    const h=document.createElement('div');h.className='ios-header';h.textContent='Сейчас в эфире';
-    const g=document.createElement('div');g.className='ios-group';
+    var h=document.createElement('div');h.className='ios-header';h.textContent='Сейчас в эфире';
+    var g=document.createElement('div');g.className='ios-group';
     if(showAll){g.appendChild(iosRow('Все страны',S.country==='all',function(){setCountry('all');closeCountries();},{ctry:true}));any=true;}
     if(showIntl){g.appendChild(iosRow('Международный',S.country==='INTL',function(){setCountry('INTL');closeCountries();},{ctry:true}));any=true;}
     availMatched.forEach(function(c){any=true;g.appendChild(iosRow(COUNTRY_RU[c]||c,S.country===c,function(){setCountry(c);closeCountries();},{ctry:true}));});
     body.append(h,g);
   }
   if(restMatched.length){
-    const h=document.createElement('div');h.className='ios-header';h.textContent='Все страны мира';
-    const g=document.createElement('div');g.className='ios-group';
-    restMatched.forEach(function(c){any=true;g.appendChild(iosRow(COUNTRY_RU[c],false,null,{ctry:true,disabled:true,note:'пока нет'}));});
-    body.append(h,g);
+    var h2=document.createElement('div');h2.className='ios-header';h2.textContent='Все страны мира';
+    var g2=document.createElement('div');g2.className='ios-group';
+    restMatched.forEach(function(c){any=true;g2.appendChild(iosRow(COUNTRY_RU[c],false,null,{ctry:true,disabled:true,note:'пока нет'}));});
+    body.append(h2,g2);
   }
   if(!any){
-    const d=document.createElement('div');d.className='sheet-empty';
+    var d=document.createElement('div');d.className='sheet-empty';
     d.textContent='Страна «'+$('countrySearch').value.trim()+'» не найдена. Попробуйте иначе — «Корея» или «Korea».';
     body.appendChild(d);
   }
   body.scrollTop=scroll;
 }
-function openCountries(){renderCountrySheet();$('countryModal').hidden=false;setTimeout(()=>{$('countrySearch').focus();},60);}
+function openCountries(){renderCountrySheet();$('countryModal').hidden=false;setTimeout(function(){$('countrySearch').focus();},60);}
 function closeCountries(){$('countryModal').hidden=true;$('countryBtn').focus();}
-$('countryModal').addEventListener('click',e=>{if(e.target===$('countryModal'))closeCountries();});
+$('countryModal').addEventListener('click',function(e){if(e.target===$('countryModal'))closeCountries();});
 $('countrySearch').addEventListener('input',renderCountrySheet);
-$('countrySearch').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){const first=$('countryBody').querySelector('.ios-row:not(:disabled)');if(first)first.click();}
+$('countrySearch').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){var first=$('countryBody').querySelector('.ios-row:not(:disabled)');if(first)first.click();}
 });
 
-let ROW_H=rowH();
+var ROW_H=rowH();
 function rowH(){return matchMedia('(min-width:941px)').matches?32:40;}
-let shownCache=[];
+var shownCache=[];
 function countryQueryCodes(q){
-  const hits=new Set();
+  var hits=new Set();
   if(!q||q.length<2)return hits;
   if(/^[a-z]{2}$/i.test(q))hits.add(q.toUpperCase());
-  ALL_COUNTRIES.forEach(code=>{if(countryHay(code).includes(q))hits.add(code);});
+  ALL_COUNTRIES.forEach(function(code){if(countryHay(code).includes(q))hits.add(code);});
   if(norm('Международный international').includes(q))hits.add('');
   return hits;
 }
 function computeShown(){
-  const raw=$('search').value.trim(),q=norm(raw);
-  const hits=countryQueryCodes(q);
-  const arr=channels.filter(ch=>{
-    const catOk=S.cat==='all'||(S.cat==='fav'?isFav(ch):ch.group===S.cat);
-    const cOk=S.country==='all'||(S.country==='INTL'?!ch.countryCode:ch.countryCode===S.country);
-    const hay=norm(ch.name+' '+ch.group+' '+ch.country+' '+(ch.countryCode||''));
-    const textOk=!q||hay.includes(q)||String(ch.n).includes(raw)||hits.has(ch.countryCode||'');
+  var raw=$('search').value.trim(),q=norm(raw);
+  var hits=countryQueryCodes(q);
+  var arr=channels.filter(function(ch){
+    var catOk=S.cat==='all'||(S.cat==='fav'?isFav(ch):ch.group===S.cat);
+    var cOk=S.country==='all'||(S.country==='INTL'?!ch.countryCode:ch.countryCode===S.country);
+    var hay=norm(ch.name+' '+ch.group+' '+ch.country+' '+(ch.countryCode||''));
+    var textOk=!q||hay.includes(q)||String(ch.n).includes(raw)||hits.has(ch.countryCode||'');
     return catOk&&cOk&&textOk;
   });
-  arr.sort((a,b)=>a.name.localeCompare(b.name,'ru')||a.n-b.n);
+  arr.sort(function(a,b){return a.name.localeCompare(b.name,'ru')||a.n-b.n;});
   return arr;
 }
 function resetFilters(){S.cat='all';S.country='all';$('search').value='';syncSearchClear();save();renderAll();}
 function renderList(){
-  const spacer=$('chSpacer');
+  var spacer=$('chSpacer');
   shownCache=computeShown();
   if(!shownCache.length){
     spacer.style.height='auto';spacer.style.background='transparent';
-    const d=document.createElement('div');d.className='ch-empty';
-    const p=document.createElement('p');
+    var d=document.createElement('div');d.className='ch-empty';
+    var p=document.createElement('p');
     p.textContent=S.cat==='fav'?'В избранном пока пусто. Отмечайте каналы звёздочкой — они появятся здесь.':'Ничего не найдено. Измените запрос, жанр или страну.';
-    const rb=document.createElement('button');rb.className='secondary-btn press';rb.textContent='Сбросить фильтры';
+    var rb=document.createElement('button');rb.className='secondary-btn press';rb.textContent='Сбросить фильтры';
     rb.addEventListener('click',resetFilters);
     d.append(p,rb);spacer.replaceChildren(d);return;
   }
@@ -1373,34 +1394,34 @@ function renderList(){
 }
 function renderWindow(){
   if(!shownCache.length)return;
-  const list=$('chList'),spacer=$('chSpacer');
-  const top=list.scrollTop,h=list.clientHeight||440;
-  const from=Math.max(0,Math.floor(top/ROW_H)-4);
-  const to=Math.min(shownCache.length,Math.ceil((top+h)/ROW_H)+4);
-  const frag=document.createDocumentFragment();
-  for(let i=from;i<to;i++){
-    const ch=shownCache[i],active=current&&ch.id===current.id;
-    const b=document.createElement('div');
+  var list=$('chList'),spacer=$('chSpacer');
+  var top=list.scrollTop,h=list.clientHeight||440;
+  var from=Math.max(0,Math.floor(top/ROW_H)-4);
+  var to=Math.min(shownCache.length,Math.ceil((top+h)/ROW_H)+4);
+  var frag=document.createDocumentFragment();
+  for(var i=from;i<to;i++){
+    var ch=shownCache[i],active=current&&ch.id===current.id;
+    var b=document.createElement('div');
     b.className='ch-item'+(active?' active':'')+(i===0?' first':'');
     b.style.top=(i*ROW_H)+'px';
     b.dataset.i=i;
     b.tabIndex=0;b.setAttribute('role','listitem');
     if(active)b.setAttribute('aria-current','true');
-    const th=document.createElement('span');th.className='ch-thumb';
-    const lt=document.createElement('i');lt.textContent=(ch.name[0]||'?').toUpperCase();th.appendChild(lt);
+    var th=document.createElement('span');th.className='ch-thumb';
+    var lt=document.createElement('i');lt.textContent=(ch.name[0]||'?').toUpperCase();th.appendChild(lt);
     if(ch.logo&&/^https:/i.test(ch.logo)){
-      const im=new Image();im.loading='lazy';im.decoding='async';im.referrerPolicy='no-referrer';im.alt='';
+      var im=new Image();im.loading='lazy';im.decoding='async';im.referrerPolicy='no-referrer';im.alt='';
       im.src=ch.logo;im.onerror=function(){im.remove();};th.appendChild(im);
     }
-    const tx=document.createElement('span');tx.className='ch-text';
-    const line=document.createElement('span');line.className='ch-line';
-    if(active){const eq=document.createElement('span');eq.className='eq';eq.innerHTML='<i></i><i></i><i></i>';line.appendChild(eq);}
-    const nm=document.createElement('span');nm.className='ch-name';nm.textContent=ch.name;nm.title=ch.name+' • '+ch.country;
+    var tx=document.createElement('span');tx.className='ch-text';
+    var line=document.createElement('span');line.className='ch-line';
+    if(active){var eq=document.createElement('span');eq.className='eq';eq.innerHTML='<i></i><i></i><i></i>';line.appendChild(eq);}
+    var nm=document.createElement('span');nm.className='ch-name';nm.textContent=ch.name;nm.title=ch.name+' • '+ch.country;
     line.appendChild(nm);
-    const sb=document.createElement('span');sb.className='ch-sub';
+    var sb=document.createElement('span');sb.className='ch-sub';
     sb.appendChild(document.createTextNode(ch.country));
     tx.append(line,sb);
-    const st=document.createElement('button');st.className='fav-btn press'+(isFav(ch)?' on':'');
+    var st=document.createElement('button');st.className='fav-btn press'+(isFav(ch)?' on':'');
     st.innerHTML=icon('star',12);st.title=isFav(ch)?'Убрать из избранного':'В избранное';
     st.setAttribute('aria-label','Избранное');
     b.append(th,tx,st);
@@ -1408,32 +1429,32 @@ function renderWindow(){
   }
   spacer.replaceChildren(frag);
 }
-$('chList').addEventListener('click',e=>{
-  const row=e.target.closest('.ch-item');
+$('chList').addEventListener('click',function(e){
+  var row=e.target.closest('.ch-item');
   if(!row)return;
-  const ch=shownCache[+row.dataset.i];
+  var ch=shownCache[+row.dataset.i];
   if(!ch)return;
   if(e.target.closest('.fav-btn')){toggleFav(ch);return;}
   tune(ch,true);
 });
-$('chList').addEventListener('keydown',e=>{
+$('chList').addEventListener('keydown',function(e){
   if(e.key!=='Enter'&&e.key!==' ')return;
-  const row=e.target.closest('.ch-item');
+  var row=e.target.closest('.ch-item');
   if(!row)return;
   e.preventDefault();
-  const ch=shownCache[+row.dataset.i];
+  var ch=shownCache[+row.dataset.i];
   if(ch)tune(ch,true);
 });
 function revealCurrent(){
   if(!current)return;
-  const i=shownCache.findIndex(c=>c.id===current.id);if(i<0)return;
-  const list=$('chList'),h=list.clientHeight||440,y=i*ROW_H;
+  var i=shownCache.findIndex(function(c){return c.id===current.id;});if(i<0)return;
+  var list=$('chList'),h=list.clientHeight||440,y=i*ROW_H;
   if(y<list.scrollTop||y+ROW_H>list.scrollTop+h)list.scrollTop=Math.max(0,y-h/2+ROW_H/2);
 }
-let winRaf=0;
-$('chList').addEventListener('scroll',()=>{if(winRaf)return;winRaf=requestAnimationFrame(()=>{winRaf=0;renderWindow();});},{passive:true});
-addEventListener('resize',()=>{
-  const nh=rowH();
+var winRaf=0;
+$('chList').addEventListener('scroll',function(){if(winRaf)return;winRaf=requestAnimationFrame(function(){winRaf=0;renderWindow();});},{passive:true});
+addEventListener('resize',function(){
+  var nh=rowH();
   if(nh!==ROW_H){ROW_H=nh;renderList();}
   else if(shownCache.length)renderWindow();
 });
@@ -1448,17 +1469,17 @@ function renderInfo(){
   $('infoNum').textContent=pad2(current.n);$('infoName').textContent=current.name;
   $('infoDesc').textContent=current.desc;
   $('infoCat').textContent=current.group;$('infoCountry').textContent=current.country;
-  const st=$('infoStatus');st.className='tag '+(current.type==='vod'?'vod':'ok');st.textContent=current.type==='vod'?'Кинозал':'Проверен';
-  const fv=$('infoFav');fv.classList.toggle('on',isFav(current));
+  var st=$('infoStatus');st.className='tag '+(current.type==='vod'?'vod':'ok');st.textContent=current.type==='vod'?'Кинозал':'Проверен';
+  var fv=$('infoFav');fv.classList.toggle('on',isFav(current));
   fv.title=isFav(current)?'Убрать из избранного (S)':'В избранное (S)';
-  const logo=$('channelLogo');
+  var logo=$('channelLogo');
   if(current.logo&&/^https:/i.test(current.logo)){logo.referrerPolicy='no-referrer';logo.src=current.logo;logo.hidden=false;logo.onerror=function(){logo.hidden=true;};}
   else{logo.hidden=true;logo.removeAttribute('src');}
   $('programNote').textContent=current.type==='vod'?'Расписание построено по реальной длине фрагментов':'Точная сетка — у вещателя';
   $('nowNum').textContent=pad2(current.n);
   $('nowName').textContent=current.name;
   $('nowMeta').textContent=current.group+' • '+current.country;
-  const nf=$('nowFav');
+  var nf=$('nowFav');
   nf.classList.toggle('on',isFav(current));
   nf.title=isFav(current)?'Убрать из избранного (S)':'В избранное (S)';
   updateSignal();renderProgram();
@@ -1466,78 +1487,82 @@ function renderInfo(){
 function updateSignal(){$('sigLabel').textContent=signalText;}
 function renderProgram(){
   if(!current)return;
-  const ch=current,cards=$('programCards'),tl=$('timeline');cards.innerHTML='';tl.innerHTML='';tl.hidden=true;
+  var ch=current,cards=$('programCards'),tl=$('timeline');cards.innerHTML='';tl.innerHTML='';tl.hidden=true;
   if(ch.type!=='vod'){
-    const c1=document.createElement('div');c1.className='prog-card now';c1.innerHTML='<em>Сейчас</em><strong>Прямой эфир</strong><span>'+ch.desc+'</span>';
-    const c2=document.createElement('div');c2.className='prog-card next';c2.innerHTML='<em>Далее</em><strong>Продолжение эфира</strong><span>Программа уточняется на стороне вещателя.</span>';
-    const c3=document.createElement('div');c3.className='prog-card next';c3.innerHTML='<em>Источник</em><strong>HLS-поток</strong><span>Проверен '+new Date(ch.verifiedAt||Date.now()).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+'. При потере сигнала канал удалится автоматически.</span>';
+    var c1=document.createElement('div');c1.className='prog-card now';c1.innerHTML='<em>Сейчас</em><strong>Прямой эфир</strong><span>'+ch.desc+'</span>';
+    var c2=document.createElement('div');c2.className='prog-card next';c2.innerHTML='<em>Далее</em><strong>Продолжение эфира</strong><span>Программа уточняется на стороне вещателя.</span>';
+    var c3=document.createElement('div');c3.className='prog-card next';c3.innerHTML='<em>Источник</em><strong>HLS-поток</strong><span>Проверен '+new Date(ch.verifiedAt||Date.now()).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+'. При потере сигнала канал удалится автоматически.</span>';
     cards.append(c1,c2,c3);return;
   }
-  const sch=schedule(ch);
-  if(!sch.items.length){const c=document.createElement('div');c.className='prog-card now';c.style.gridColumn='1/-1';c.innerHTML='<em>Лента</em><strong>Недоступна</strong><span>Канал будет удалён из рабочих.</span>';cards.appendChild(c);return;}
-  let ci=sch.items.findIndex(it=>it.url===segUrl);
-  if(ci<0){let pos=mskSec()%sch.total,i=0;while(i<sch.durs.length-1&&pos>sch.durs[i]){pos-=sch.durs[i];i++;}ci=i;}
+  var sch=schedule(ch);
+  if(!sch.items.length){var c0=document.createElement('div');c0.className='prog-card now';c0.style.gridColumn='1/-1';c0.innerHTML='<em>Лента</em><strong>Недоступна</strong><span>Канал будет удалён из рабочих.</span>';cards.appendChild(c0);return;}
+  var ci=sch.items.findIndex(function(it){return it.url===segUrl;});
+  if(ci<0){var pos=mskSec()%sch.total,i=0;while(i<sch.durs.length-1&&pos>sch.durs[i]){pos-=sch.durs[i];i++;}ci=i;}
   tl.hidden=false;
-  sch.items.forEach((it,i)=>{
-    const b=document.createElement('button');b.className='tl-seg'+(i===ci?' cur':'');b.style.flexGrow=String(Math.max(sch.durs[i],20));b.style.flexBasis='0';b.title=it.title+' • '+fmt(sch.durs[i]);b.innerHTML='<i></i><b>'+it.title+'</b>';
+  sch.items.forEach(function(it,i){
+    var b=document.createElement('button');b.className='tl-seg'+(i===ci?' cur':'');b.style.flexGrow=String(Math.max(sch.durs[i],20));b.style.flexBasis='0';b.title=it.title+' • '+fmt(sch.durs[i]);b.innerHTML='<i></i><b>'+it.title+'</b>';
     if(i===ci&&video.duration)b.firstChild.style.width=Math.min(100,video.currentTime/video.duration*100)+'%';
-    b.addEventListener('click',()=>{if(!started||current.id!==ch.id)tune(ch);loadSeg(ch,i,0,session);toast('Включаю: «'+it.title+'»','info',2000);});
+    b.addEventListener('click',function(){if(!started||current.id!==ch.id)tune(ch);loadSeg(ch,i,0,session);toast('Включаю: «'+it.title+'»','info',2000);});
     tl.appendChild(b);
   });
-  const elapsed=(started&&mode==='vod')?(video.currentTime||0):0;
-  let acc=-elapsed;
-  for(let k=0;k<3;k++){
-    const idx=(ci+k)%sch.items.length,it=sch.items[idx];const start=k===0?-elapsed:acc;if(k>0)acc+=sch.durs[(ci+k-1)%sch.items.length];
-    const c=document.createElement('div');c.className='prog-card '+(k===0?'now':'next');
-    c.innerHTML='<em>'+(k===0?'Сейчас':'Далее')+' • '+mskTime(start)+'–'+mskTime(start+sch.durs[idx])+' МСК</em><strong>'+it.title+'</strong><span>'+it.meta+'</span>';
-    cards.appendChild(c);
+  var elapsed=(started&&mode==='vod')?(video.currentTime||0):0;
+  var acc=-elapsed;
+  for(var k=0;k<3;k++){
+    var idx=(ci+k)%sch.items.length,it2=sch.items[idx];var start=k===0?-elapsed:acc;if(k>0)acc+=sch.durs[(ci+k-1)%sch.items.length];
+    var cc=document.createElement('div');cc.className='prog-card '+(k===0?'now':'next');
+    cc.innerHTML='<em>'+(k===0?'Сейчас':'Далее')+' • '+mskTime(start)+'–'+mskTime(start+sch.durs[idx])+' МСК</em><strong>'+it2.title+'</strong><span>'+it2.meta+'</span>';
+    cards.appendChild(cc);
   }
 }
 function showBadge(){
   $('badgeNum').textContent=pad2(current.n);$('badgeName').textContent=current.name;
-  const lv=$('badgeLive');lv.textContent=current.type==='vod'?'КИНО':'LIVE';lv.classList.toggle('vod',current.type==='vod');
-  const b=$('chBadge');b.classList.add('show');clearTimeout(showBadge.t);showBadge.t=setTimeout(()=>b.classList.remove('show'),2800);
+  var lv=$('badgeLive');lv.textContent=current.type==='vod'?'КИНО':'LIVE';lv.classList.toggle('vod',current.type==='vod');
+  var b=$('chBadge');b.classList.add('show');clearTimeout(showBadge.t);showBadge.t=setTimeout(function(){b.classList.remove('show');},2800);
 }
-const fmt=s=>{s=Math.max(0,Math.floor(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':':'')+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0');};
+function fmt(s){
+  s=Math.max(0,Math.floor(s||0));
+  var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;
+  return (h?h+':':'')+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0');
+}
 
 function syncPlay(){$('playBtn').innerHTML=icon(video.paused?'play':'pause');}
-function syncMute(){const ic=icon(S.muted?'mute':'vol');$('muteBtn').innerHTML=ic;$('topMute').innerHTML=ic;$('topMute').classList.toggle('active',!S.muted);}
+function syncMute(){var ic=icon(S.muted?'mute':'vol');$('muteBtn').innerHTML=ic;$('topMute').innerHTML=ic;$('topMute').classList.toggle('active',!S.muted);}
 function setMuted(m){S.muted=m;video.muted=m;save();syncMute();}
 function setVol(v,fromSlider){S.vol=Math.max(0,Math.min(100,Math.round(v)));video.volume=S.vol/100;if(S.vol>0&&S.muted)setMuted(false);if(!fromSlider)$('volRange').value=String(S.vol);save();}
 function stepChannel(dir){
-  const pool=shownCache.length?shownCache:channels;
+  var pool=shownCache.length?shownCache:channels;
   if(!pool.length)return;
-  const i=current?pool.findIndex(c=>c.id===current.id):-1;
+  var i=current?pool.findIndex(function(c){return c.id===current.id;}):-1;
   tune(pool[(i+dir+pool.length)%pool.length],true);
 }
 function shuffleChannel(){
-  const pool=shownCache.length?shownCache:channels;
+  var pool=shownCache.length?shownCache:channels;
   if(pool.length<2)return;
-  let ch;do{ch=pool[Math.floor(Math.random()*pool.length)];}while(current&&ch.id===current.id);
+  var ch;do{ch=pool[Math.floor(Math.random()*pool.length)];}while(current&&ch.id===current.id);
   tune(ch,true);
 }
-function togglePlay(){if(!started){tune(current||channels[0],true);return;}if(video.paused)video.play().catch(()=>$('gesture').hidden=false);else video.pause();}
-function toggleFs(){if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else player.requestFullscreen().catch(()=>toast('Полный экран недоступен в этом браузере.','warn'));}
+function togglePlay(){if(!started){tune(current||channels[0],true);return;}if(video.paused)video.play().catch(function(){$('gesture').hidden=false;});else video.pause();}
+function toggleFs(){if(document.fullscreenElement)document.exitFullscreen().catch(function(){});else player.requestFullscreen().catch(function(){toast('Полный экран недоступен в этом браузере.','warn');});}
 player.addEventListener('dblclick',toggleFs);
-document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);fitPlayer();pokeControls();});
-let hideT=null;
-function pokeControls(){$('controls').classList.remove('hide');clearTimeout(hideT);if(document.fullscreenElement&&!video.paused)hideT=setTimeout(()=>$('controls').classList.add('hide'),2600);}
+document.addEventListener('fullscreenchange',function(){var on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);pokeControls();});
+var hideT=null;
+function pokeControls(){$('controls').classList.remove('hide');clearTimeout(hideT);if(document.fullscreenElement&&!video.paused)hideT=setTimeout(function(){$('controls').classList.add('hide');},2600);}
 player.addEventListener('mousemove',pokeControls);
 player.addEventListener('touchstart',pokeControls,{passive:true});
 
-let padBuf='',padT=null;
+var padBuf='',padT=null;
 function padPress(d){
   padBuf=(padBuf+d).slice(-4);clearTimeout(padT);
-  const osd=$('numOsd');osd.textContent=padBuf;osd.hidden=false;
-  const n=parseInt(padBuf,10);
+  var osd=$('numOsd');osd.textContent=padBuf;osd.hidden=false;
+  var n=parseInt(padBuf,10);
   if(padBuf.length>=4||n*10>channels.length){padCommit();return;}
   padT=setTimeout(padCommit,1200);
 }
 function padCommit(){
   clearTimeout(padT);$('numOsd').hidden=true;
   if(!padBuf)return;
-  const n=parseInt(padBuf,10);padBuf='';
-  const ch=channels.find(c=>c.n===n);
+  var n=parseInt(padBuf,10);padBuf='';
+  var ch=channels.find(function(c){return c.n===n;});
   if(ch)tune(ch,true);else toast('Канала с номером '+n+' пока нет.','warn');
 }
 function anySheetOpen(){return !$('genreModal').hidden||!$('countryModal').hidden||!$('shareModal').hidden||!$('infoModal').hidden;}
@@ -1547,7 +1572,7 @@ function closeTopSheet(){
   else if(!$('countryModal').hidden)closeCountries();
   else if(!$('genreModal').hidden)closeGenres();
 }
-document.addEventListener('keydown',e=>{
+document.addEventListener('keydown',function(e){
   if(anySheetOpen()){if(e.key==='Escape'){closeTopSheet();e.preventDefault();}return;}
   if(e.target.matches('input,select,textarea')){
     if(e.key==='Escape'){
@@ -1585,12 +1610,12 @@ function openInfo(){
 function closeInfo(){$('infoModal').hidden=true;$('infoBtn').focus();}
 $('infoBtn').addEventListener('click',openInfo);
 $('infoClose').addEventListener('click',closeInfo);
-$('infoModal').addEventListener('click',e=>{if(e.target===$('infoModal'))closeInfo();});
-$('nowFav').addEventListener('click',()=>{if(current)toggleFav(current);});
+$('infoModal').addEventListener('click',function(e){if(e.target===$('infoModal'))closeInfo();});
+$('nowFav').addEventListener('click',function(){if(current)toggleFav(current);});
 
 function openShare(){
   if(!current)return;
-  const s=buildShare();
+  var s=buildShare();
   $('shareSub').textContent=current.name+' • '+current.country;
   $('shareLink').value=s.url;
   $('shareNative').hidden=!navigator.share;
@@ -1598,46 +1623,46 @@ function openShare(){
   $('shareClose').focus();
 }
 function closeShare(){$('shareModal').hidden=true;$('shareBtn').focus();}
-const intent=u=>window.open(u,'_blank','noopener,noreferrer');
+function intent(u){return window.open(u,'_blank','noopener,noreferrer');}
 async function doCopy(){
   if(!current)return;
-  const ok=await copyText(shareUrl(current));
+  var ok=await copyText(shareUrl(current));
   if(ok)toast('Ссылка на «'+current.name+'» скопирована.','ok',2600);
   else{openShare();$('shareLink').select();toast('Скопируйте ссылку из поля вручную.','warn');}
 }
 $('shareBtn').addEventListener('click',openShare);
 $('shareClose').addEventListener('click',closeShare);
 $('shareCancel').addEventListener('click',closeShare);
-$('shareModal').addEventListener('click',e=>{if(e.target===$('shareModal'))closeShare();});
-$('shareLink').addEventListener('focus',e=>e.target.select());
+$('shareModal').addEventListener('click',function(e){if(e.target===$('shareModal'))closeShare();});
+$('shareLink').addEventListener('focus',function(e){e.target.select();});
 $('shareCopy').addEventListener('click',doCopy);
 $('shareCopyRow').addEventListener('click',doCopy);
-$('shareOpen').addEventListener('click',()=>{if(current)intent(shareUrl(current));});
-$('shareNative').addEventListener('click',async()=>{
-  const s=buildShare();
+$('shareOpen').addEventListener('click',function(){if(current)intent(shareUrl(current));});
+$('shareNative').addEventListener('click',async function(){
+  var s=buildShare();
   try{await navigator.share({title:'TV BOX — '+s.ch.name,text:s.text,url:s.url});}
   catch(e){
     if(e&&e.name==='AbortError')return;
-    const ok=await copyText(s.url);
+    var ok=await copyText(s.url);
     toast(ok?'Ссылка скопирована':'Поделиться не удалось.',ok?'ok':'warn');
   }
 });
-$('shareTg').addEventListener('click',()=>{const s=buildShare();intent('https://t.me/share/url?url='+encodeURIComponent(s.url)+'&text='+encodeURIComponent(s.text));});
-$('shareVk').addEventListener('click',()=>{const s=buildShare();intent('https://vk.com/share.php?url='+encodeURIComponent(s.url)+'&title='+encodeURIComponent(s.text));});
-$('shareWa').addEventListener('click',()=>{const s=buildShare();intent('https://wa.me/?text='+encodeURIComponent(s.text+' '+s.url));});
-$('shareX').addEventListener('click',()=>{const s=buildShare();intent('https://twitter.com/intent/tweet?text='+encodeURIComponent(s.text)+'&url='+encodeURIComponent(s.url));});
+$('shareTg').addEventListener('click',function(){var s=buildShare();intent('https://t.me/share/url?url='+encodeURIComponent(s.url)+'&text='+encodeURIComponent(s.text));});
+$('shareVk').addEventListener('click',function(){var s=buildShare();intent('https://vk.com/share.php?url='+encodeURIComponent(s.url)+'&title='+encodeURIComponent(s.text));});
+$('shareWa').addEventListener('click',function(){var s=buildShare();intent('https://wa.me/?text='+encodeURIComponent(s.text+' '+s.url));});
+$('shareX').addEventListener('click',function(){var s=buildShare();intent('https://twitter.com/intent/tweet?text='+encodeURIComponent(s.text)+'&url='+encodeURIComponent(s.url));});
 
-addEventListener('offline',()=>toast('Нет интернета. Поиск и эфиры временно недоступны.','bad',6000));
-addEventListener('online',()=>{toast('Сеть восстановлена.','ok');startScan();if(started&&current)tune(current);});
+addEventListener('offline',function(){toast('Нет интернета. Поиск и эфиры временно недоступны.','bad',6000);});
+addEventListener('online',function(){toast('Сеть восстановлена.','ok');startScan();if(started&&current)tune(current);});
 
 function syncSearchClear(){
-  const v=$('search').value;
+  var v=$('search').value;
   $('searchClear').hidden=!v;
   $('searchWrap').classList.toggle('filled',!!v);
 }
-$('search').addEventListener('input',()=>{syncSearchClear();renderList();});
-$('searchClear').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();$('search').focus();});
-$('searchCancel').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();$('search').blur();});
+$('search').addEventListener('input',function(){syncSearchClear();renderList();});
+$('searchClear').addEventListener('click',function(){$('search').value='';syncSearchClear();renderList();$('search').focus();});
+$('searchCancel').addEventListener('click',function(){$('search').value='';syncSearchClear();renderList();$('search').blur();});
 
 $('searchIcon').innerHTML=icon('search',14);
 $('countrySearchIcon').innerHTML=icon('search',15);
@@ -1666,48 +1691,43 @@ $('shareNativeIcon').innerHTML=icon('share',22);
 $('tgIcon').innerHTML=icon('send',22);
 $('waIcon').innerHTML=icon('chat',22);
 syncPlay();syncMute();
-$('bootBtn').addEventListener('click',()=>tune(current||channels[0],true));
-$('gestureBtn').addEventListener('click',()=>{video.play().then(()=>{$('gesture').hidden=true;}).catch(()=>toast('Браузер не дал запустить видео.','bad'));});
+$('bootBtn').addEventListener('click',function(){tune(current||channels[0],true);});
+$('gestureBtn').addEventListener('click',function(){video.play().then(function(){$('gesture').hidden=true;}).catch(function(){toast('Браузер не дал запустить видео.','bad');});});
 $('playBtn').addEventListener('click',togglePlay);
-$('prevBtn').addEventListener('click',()=>stepChannel(-1));
-$('nextBtn').addEventListener('click',()=>stepChannel(1));
+$('prevBtn').addEventListener('click',function(){stepChannel(-1);});
+$('nextBtn').addEventListener('click',function(){stepChannel(1);});
 $('shuffleBtn').addEventListener('click',shuffleChannel);
-$('muteBtn').addEventListener('click',()=>setMuted(!S.muted));
-$('topMute').addEventListener('click',()=>setMuted(!S.muted));
-$('volRange').addEventListener('input',e=>setVol(+e.target.value,true));
+$('muteBtn').addEventListener('click',function(){setMuted(!S.muted);});
+$('topMute').addEventListener('click',function(){setMuted(!S.muted);});
+$('volRange').addEventListener('input',function(e){setVol(+e.target.value,true);});
 $('fsBtn').addEventListener('click',toggleFs);$('topFs').addEventListener('click',toggleFs);
-$('retryBtn').addEventListener('click',()=>{if(current)tune(current,true);});
-$('sigRetry').addEventListener('click',()=>{if(current)tune(current,true);});
-$('nextFromError').addEventListener('click',()=>stepChannel(1));
+$('retryBtn').addEventListener('click',function(){if(current)tune(current,true);});
+$('sigRetry').addEventListener('click',function(){if(current)tune(current,true);});
+$('nextFromError').addEventListener('click',function(){stepChannel(1);});
 $('genreBtn').addEventListener('click',openGenres);
 $('genreClose').addEventListener('click',closeGenres);
 $('countryBtn').addEventListener('click',openCountries);
 $('countryClose').addEventListener('click',closeCountries);
-$('infoFav').addEventListener('click',()=>{if(current)toggleFav(current);});
-$('infoCat').addEventListener('click',()=>{if(current)setCat(current.group);});
-$('infoCountry').addEventListener('click',()=>{if(current)setCountry(current.countryCode||'INTL');});
+$('infoFav').addEventListener('click',function(){if(current)toggleFav(current);});
+$('infoCat').addEventListener('click',function(){if(current)setCat(current.group);});
+$('infoCountry').addEventListener('click',function(){if(current)setCountry(current.countryCode||'INTL');});
 
 video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);
 syncSearchClear();
-fitFrame();
-renderAll();fitPlayer();ensureHls();
-const dl=readHash();if(dl)resolveDeepLink(dl);
+applyFrame();
+renderAll();ensureHls();
+var dl=readHash();if(dl)resolveDeepLink(dl);
 startScan();
 })();
 </script>
 <!-- TVBOX_VK_ADS_PATCH_START -->
-<!-- provider: vk.com • format: interstitial • interval: 15m • cooldown: 900s -->
+<!-- provider: vk.com • format: interstitial • interval: 15m • cooldown: 900s • sound: не глушит эфир -->
 <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 <script>(function adManagerRuntime(CONFIG){
   'use strict';
-  var state={ready:false,showing:false,lastAdAt:0,timer:null,wasPlaying:false,resumeOnVisible:false,initDone:false};
+  var state={ready:false,showing:false,lastAdAt:0,timer:null,initDone:false};
   function log(){if(CONFIG.debug&&window.console&&console.log){try{console.log.apply(console,['[TVBOX-VK-ADS]'].concat(Array.prototype.slice.call(arguments)));}catch(e){}}}
   function getBridge(){return window.vkBridge||null;}
-  function getVideo(){return document.querySelector('video');}
-  function pauseMedia(){state.wasPlaying=false;}
-  
-  function resumeMedia(){state.wasPlaying=false;state.resumeOnVisible=false;}
-  
   function debugToast(msg){if(!CONFIG.debug)return;var el=document.getElementById('tvbox-vk-ads-debug');if(!el){el=document.createElement('div');el.id='tvbox-vk-ads-debug';el.style.cssText='position:fixed;left:16px;bottom:16px;z-index:2147483647;background:#151A22;color:#EDF1F7;border:1px solid #3A475D;border-left:3px solid #4C8DFF;border-radius:9px;padding:10px 14px;font:600 12px/1.5 system-ui,sans-serif;max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:opacity .25s';document.body.appendChild(el);}el.textContent=msg;el.style.opacity='1';clearTimeout(el._t);el._t=setTimeout(function(){el.style.opacity='0';},2800);}
   function withTimeout(p,ms){return new Promise(function(res,rej){var done=false;var t=setTimeout(function(){if(!done){done=true;rej(new Error('timeout'));}},ms);Promise.resolve(p).then(function(v){if(!done){done=true;clearTimeout(t);res(v);}},function(e){if(!done){done=true;clearTimeout(t);rej(e);}});});}
   function showAd(reason){
@@ -1716,15 +1736,15 @@ startScan();
     if(CONFIG.cooldownMs>0&&now-state.lastAdAt<CONFIG.cooldownMs){log('skip: cooldown',reason);if(CONFIG.debug)debugToast('Реклама пропущена (пауза): '+reason);return Promise.resolve(false);}
     var b=getBridge();
     if(!state.ready||!b){log('skip: not ready',reason);if(CONFIG.debug)debugToast('VK Bridge не готов — показ пропущен: '+reason);return Promise.resolve(false);}
-    state.showing=true;state.lastAdAt=now;pauseMedia();
+    state.showing=true;state.lastAdAt=now;
     log('interstitial',reason);if(CONFIG.debug)debugToast('Показ interstitial: '+reason);
     return withTimeout(b.send('VKWebAppShowNativeAds',{ad_format:'interstitial'}),25000)
       .then(function(data){log('result',data);if(CONFIG.debug)debugToast('Реклама завершена: '+reason);return true;})
       .catch(function(e){log('error',e);if(CONFIG.debug)debugToast('Реклама не показана ('+reason+'): '+(e&&e.message?e.message:'error'));return false;})
-      .finally(function(){state.showing=false;resumeMedia();});
+      .finally(function(){state.showing=false;});
   }
   function scheduleTimer(){if(state.timer)clearInterval(state.timer);if(CONFIG.intervalMs>0){state.timer=setInterval(function(){if(document.visibilityState==='visible')showAd('timer');},CONFIG.intervalMs);}}
-  function onVisibility(){if(document.visibilityState==='hidden'){if(CONFIG.onLeave)showAd('leave');}else{if(state.resumeOnVisible)resumeMedia();if(CONFIG.onReturn)showAd('return');}}
+  function onVisibility(){if(document.visibilityState==='hidden'){if(CONFIG.onLeave)showAd('leave');}else{if(CONFIG.onReturn)showAd('return');}}
   function init(){
     if(state.initDone)return;state.initDone=true;
     scheduleTimer();
@@ -1739,259 +1759,7 @@ startScan();
   }
   try{window.TVBoxVKAds={show:showAd,state:state,config:CONFIG};}catch(e){}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})({"version":"1.0.0","provider":"vk","adFormat":"interstitial","appId":"","intervalMs":900000,"cooldownMs":900000,"onLeave":true,"onReturn":true,"onLaunch":false,"debug":false,"cdn":"https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"});</script>
+})({version:'1.1.0',provider:'vk',adFormat:'interstitial',appId:'',intervalMs:900000,cooldownMs:900000,onLeave:true,onReturn:true,onLaunch:false,debug:false,cdn:'https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js'});</script>
 <!-- TVBOX_VK_ADS_PATCH_END -->
-<!--TVBOX-SIZE-PATCH:START-->
-<style id="tvbox-size-patch">
-@media (min-width: 941px){
-  html,body{
-    overflow:hidden !important;
-    height:100% !important;
-  }
-
-  #shell{
-    width:1000px !important;
-    height:600px !important;
-    min-width:1000px !important;
-    min-height:600px !important;
-    max-width:1000px !important;
-    max-height:600px !important;
-    margin:0 auto !important;
-    overflow:hidden !important;
-    position:relative !important;
-  }
-
-  .top{
-    flex:0 0 52px !important;
-    height:52px !important;
-  }
-
-  .layout{
-    height:548px !important;
-    min-height:0 !important;
-    max-height:548px !important;
-    overflow:hidden !important;
-    display:flex !important;
-    flex-direction:row !important;
-    align-items:stretch !important;
-    gap:14px !important;
-    padding:14px 22px 12px !important;
-  }
-
-  .main-col{
-    flex:1 1 auto !important;
-    width:auto !important;
-    min-width:0 !important;
-    height:100% !important;
-    min-height:0 !important;
-    overflow:hidden !important;
-    display:flex !important;
-    flex-direction:column !important;
-    gap:12px !important;
-  }
-
-  .player{
-    flex:1 1 auto !important;
-    width:100% !important;
-    min-height:0 !important;
-    aspect-ratio:auto !important;
-    max-height:none !important;
-  }
-
-  .nowbar{
-    flex:0 0 auto !important;
-    min-height:0 !important;
-  }
-
-  .sidebar{
-    flex:0 0 190px !important;
-    width:190px !important;
-    height:100% !important;
-    min-height:0 !important;
-    overflow:hidden !important;
-    display:flex !important;
-    flex-direction:column !important;
-  }
-
-  .ch-list{
-    flex:1 1 auto !important;
-    min-height:0 !important;
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-    overscroll-behavior:contain !important;
-  }
-
-  .ch-spacer{
-    position:relative !important;
-  }
-
-  .modal-backdrop{
-    position:absolute !important;
-  }
-
-  .toasts{
-    position:absolute !important;
-  }
-}
-</style>
-
-<script id="tvbox-size-runtime">
-(function(){
-  var shell = document.getElementById('shell');
-  if(!shell) return;
-
-  function isDesktop(){
-    return matchMedia('(min-width:941px)').matches && !document.fullscreenElement;
-  }
-
-  function apply(){
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-
-    if(!isDesktop()){
-      shell.style.removeProperty('transform');
-      shell.style.removeProperty('margin-top');
-      return;
-    }
-
-    var vw = window.innerWidth || document.documentElement.clientWidth || 1000;
-    var vh = window.innerHeight || document.documentElement.clientHeight || 600;
-    var s = Math.min(1, vw / 1000, vh / 600);
-    if(s < 0.25) s = 0.25;
-
-    shell.style.setProperty('transform-origin', 'top center', 'important');
-    shell.style.setProperty('transform', s < 1 ? 'scale(' + s + ')' : '', 'important');
-    shell.style.setProperty('margin-top', s < 1 ? Math.max(0, Math.round((vh - 600 * s) / 2)) + 'px' : '0px', 'important');
-  }
-
-  addEventListener('resize', apply);
-  addEventListener('orientationchange', apply);
-  document.addEventListener('fullscreenchange', apply);
-  apply();
-  setTimeout(apply, 250);
-  setTimeout(apply, 900);
-})();
-</script>
-<!--TVBOX-SIZE-PATCH:END-->
-<!--TVBOX-BAD-PATCH:START-->
-<script id="tvbox-bad-runtime">
-(function(){
-  var LIST_KEY = 'tvbox-bad-forever-v1';
-
-  function load(){
-    try{
-      var a = JSON.parse(localStorage.getItem(LIST_KEY) || '[]');
-      return Array.isArray(a) ? a : [];
-    }catch(e){
-      return [];
-    }
-  }
-
-  function save(a){
-    try{
-      localStorage.setItem(LIST_KEY, JSON.stringify(a.slice(-10000)));
-    }catch(e){}
-  }
-
-  function addBad(url){
-    if(!url) return;
-    url = String(url);
-    if(!/^https?:///i.test(url)) return;
-    if(!/.m3u8(?:?|$)/i.test(url)) return;
-
-    var a = load();
-    if(a.indexOf(url) < 0){
-      a.push(url);
-      save(a);
-    }
-  }
-
-  function currentUrlFromHash(){
-    try{
-      var p = new URLSearchParams(location.hash.replace(/^#/, ''));
-      return p.get('ch') || '';
-    }catch(e){
-      return '';
-    }
-  }
-
-  function isBad(url){
-    if(!url) return false;
-    return load().indexOf(String(url)) >= 0;
-  }
-
-  function bindVideo(){
-    var v = document.querySelector('video');
-    if(!v || v.__tvboxBadBound) return;
-    v.__tvboxBadBound = 1;
-    v.addEventListener('error', function(){
-      addBad(currentUrlFromHash());
-    }, true);
-  }
-
-  bindVideo();
-
-  try{
-    new MutationObserver(bindVideo).observe(document.documentElement, { childList:true, subtree:true });
-  }catch(e){}
-
-  var toastBox = document.getElementById('toasts');
-  if(toastBox){
-    try{
-      new MutationObserver(function(muts){
-        muts.forEach(function(mu){
-          mu.addedNodes.forEach(function(n){
-            if(!n || !n.textContent) return;
-            if(/удалён|не отвечает|не начал вещание|ошибка плеера|источник не отвечает/i.test(n.textContent)){
-              addBad(currentUrlFromHash());
-            }
-          });
-        });
-      }).observe(toastBox, { childList:true });
-    }catch(e){}
-  }
-
-  var origFetch = window.fetch;
-  if(origFetch){
-    window.fetch = function(input, init){
-      var url = '';
-      try{
-        url = typeof input === 'string' ? input : (input && input.url) || '';
-      }catch(e){}
-
-      if(url && /.m3u8(?:?|$)/i.test(url) && isBad(url)){
-        return Promise.reject(new TypeError('TVBOX_BAD_PERMANENT'));
-      }
-
-      return origFetch.apply(this, arguments);
-    };
-  }
-
-  var origOpen = XMLHttpRequest.prototype.open;
-  var origSend = XMLHttpRequest.prototype.send;
-
-  XMLHttpRequest.prototype.open = function(method, url){
-    try{
-      if(url && /.m3u8(?:?|$)/i.test(String(url)) && isBad(String(url))){
-        this.__tvboxBad = 1;
-      }
-    }catch(e){}
-    return origOpen.apply(this, arguments);
-  };
-
-  XMLHttpRequest.prototype.send = function(){
-    if(this.__tvboxBad){
-      var xhr = this;
-      setTimeout(function(){
-        try{ xhr.abort(); }catch(e){}
-      }, 0);
-      return;
-    }
-    return origSend.apply(this, arguments);
-  };
-})();
-</script>
-<!--TVBOX-BAD-PATCH:END-->
-
 </body>
 </html>
