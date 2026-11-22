@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>TV BOX — 5000 каналов</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,258 +11,312 @@
 <style>
 :root{
   color-scheme:dark;
-  --bg:#000;--surface:#1C1C1E;--surface2:#2C2C2E;--surface3:#3A3A3C;
-  --hair:rgba(255,255,255,.08);--sep:rgba(84,84,88,.6);
-  --text:#F5F5F7;--muted:rgba(235,235,245,.6);--dim:rgba(235,235,245,.3);
-  --fill:rgba(120,120,128,.24);--fill2:rgba(120,120,128,.36);
-  --accent:#0A84FF;--accent-soft:rgba(10,132,255,.18);
-  --ok:#30D158;--warn:#FF9F0A;--bad:#FF453A;--gold:#FFD60A;
-  --r-lg:16px;--r-md:12px;--r-sm:10px;
+  --bg:#000;--card:#1C1C1E;--card2:#2C2C2E;--card3:#3A3A3C;--card4:#48484A;
+  --sep:rgba(84,84,88,.65);--hair:rgba(255,255,255,.07);
+  --label:#FFFFFF;--label2:rgba(235,235,245,.6);--label3:rgba(235,235,245,.3);--label4:rgba(235,235,245,.16);
+  --fill:rgba(120,120,128,.24);--fill2:rgba(120,120,128,.36);--fill3:rgba(120,120,128,.14);
+  --blue:#0A84FF;--blue-soft:rgba(10,132,255,.16);
+  --teal:#64D2FF;--teal-soft:rgba(100,210,255,.15);
+  --green:#30D158;--orange:#FF9F0A;--red:#FF453A;--yellow:#FFD60A;--purple:#BF5AF2;
   --ease:cubic-bezier(.2,.8,.2,1);
-  --glass:rgba(22,22,24,.72);
+  --glass:rgba(18,18,20,.72);
+  --r-panel:18px;--r-group:12px;--r-btn:11px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.5) var(--bg)}
+html{scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.55) transparent}
 ::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(120,120,128,.45);border-radius:6px}
-::-webkit-scrollbar-thumb:hover{background:rgba(120,120,128,.7)}
+::-webkit-scrollbar-thumb{background:rgba(120,120,128,.45);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(120,120,128,.75);background-clip:padding-box}
 ::selection{background:rgba(10,132,255,.35)}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--label);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-size:14px}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1100px 560px at 14% -12%,rgba(10,132,255,.11),transparent 62%),radial-gradient(900px 500px at 102% -6%,rgba(191,90,242,.07),transparent 60%)}
 button,input,select{font:inherit}
 button{color:inherit}
-button:disabled{opacity:.35;cursor:not-allowed}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+button:disabled{opacity:.32;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:10px}
 [hidden]{display:none!important}
-.g-chip,.seg-btn,.icon-btn,.primary-btn,.secondary-btn,.foot-btn,.mini-btn,.ctrl-btn,.retry-btn,.g-card,.fav-btn{transition:background .18s var(--ease),color .18s var(--ease),transform .12s var(--ease),opacity .18s var(--ease)}
-.g-chip:active,.seg-btn:active,.icon-btn:active,.primary-btn:active,.secondary-btn:active,.foot-btn:active,.mini-btn:active,.ctrl-btn:active,.retry-btn:active,.g-card:active{transform:scale(.96)}
+.press{transition:background .18s var(--ease),color .18s var(--ease),transform .12s var(--ease),opacity .18s var(--ease)}
+.press:active:not(:disabled){transform:scale(.96)}
 
-/* ===== ШАПКА ===== */
-.top{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--hair)}
-.top-in{max-width:1560px;margin:0 auto;height:62px;padding:0 22px;display:flex;align-items:center;gap:14px}
+/* ================= NAV BAR ================= */
+.top{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:.5px solid var(--sep)}
+.top-in{position:relative;max-width:1560px;margin:0 auto;height:60px;padding:0 22px;display:flex;align-items:center;gap:14px}
 .brand{display:flex;align-items:center;gap:11px;flex:none}
-.logo{width:36px;height:36px;border-radius:10px;background:var(--accent);display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.04em;color:#fff}
-.brand-name{font-size:17px;font-weight:700;letter-spacing:-.01em}
-.brand-sub{font-size:10px;color:var(--dim);letter-spacing:.05em;margin-top:1px}
-.search-wrap{flex:1;max-width:520px;margin-left:auto;display:flex;align-items:center;gap:9px;background:var(--fill);border-radius:10px;padding:8px 12px;color:var(--dim);transition:background .18s var(--ease)}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(160deg,#0A84FF,#0060DF);display:grid;place-items:center;font-size:11px;font-weight:800;letter-spacing:.03em;color:#fff;box-shadow:0 4px 14px rgba(10,132,255,.35)}
+.brand-name{font-size:17px;font-weight:700;letter-spacing:-.02em}
+.brand-sub{font-size:10px;color:var(--label3);letter-spacing:.04em;margin-top:1px}
+.search-wrap{flex:1;max-width:560px;margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:10px;padding:8px 11px;color:var(--label3);transition:background .18s var(--ease)}
 .search-wrap:focus-within{background:var(--fill2)}
-.search-wrap:focus-within kbd{display:none}
-.search-wrap input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font-size:13.5px}
-.search-wrap input::placeholder{color:var(--dim)}
-.search-wrap kbd{font:600 10px/1 inherit;color:var(--dim);background:var(--fill);border-radius:5px;padding:3px 6px}
-#searchClear{width:20px;height:20px;border-radius:50%;background:var(--fill2);border:0;display:grid;place-items:center;color:var(--muted);cursor:pointer;flex:none}
-#searchClear:hover{color:var(--text)}
+.search-wrap input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--label);font-size:14px;letter-spacing:-.01em}
+.search-wrap input::placeholder{color:var(--label3)}
+#searchClear{width:18px;height:18px;border-radius:50%;background:var(--label3);border:0;display:grid;place-items:center;color:var(--card);cursor:pointer;flex:none}
+#searchCancel{display:none;border:0;background:none;color:var(--blue);font-size:14px;font-weight:500;cursor:pointer;flex:none;padding:0 2px}
+.search-wrap:focus-within #searchCancel,.search-wrap.filled #searchCancel{display:block}
 .top-actions{display:flex;align-items:center;gap:8px;flex:none}
-.counter{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ok);background:rgba(48,209,88,.15);border-radius:999px;padding:7px 12px;white-space:nowrap}
-.counter i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
-.clock{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-.icon-btn{width:38px;height:38px;border-radius:10px;background:var(--fill);border:0;display:grid;place-items:center;cursor:pointer;flex:none;color:var(--text)}
+.counter{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--green);background:rgba(48,209,88,.14);border-radius:999px;padding:7px 13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.counter i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(48,209,88,.85)}
+.clock{font-size:12.5px;color:var(--label2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.icon-btn{width:36px;height:36px;border-radius:10px;background:var(--fill);border:0;display:grid;place-items:center;cursor:pointer;flex:none;color:var(--label)}
 .icon-btn:hover:not(:disabled){background:var(--fill2)}
-.icon-btn.active{background:var(--accent-soft);color:var(--accent)}
-.icon-btn.on{color:var(--gold)}
+.icon-btn.active{background:var(--blue-soft);color:var(--blue)}
+.icon-btn.on{color:var(--yellow)}
 .icon-btn.on svg path{fill:currentColor}
-.genre-btn{width:auto;padding:0 14px;display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600}
+.nav-btn{width:auto;padding:0 13px;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600}
 
-/* ===== ЖАНРЫ ===== */
-.genre-wrap{max-width:1560px;margin:0 auto;position:relative;border-top:1px solid var(--hair)}
-.genre-wrap::before,.genre-wrap::after{content:'';position:absolute;top:0;bottom:0;width:44px;z-index:1;pointer-events:none;opacity:0;transition:.2s}
-.genre-wrap::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
-.genre-wrap::after{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
+/* ================= GENRE STRIP ================= */
+.genre-wrap{position:relative;max-width:1560px;margin:0 auto;display:flex;align-items:center;border-top:.5px solid var(--hair)}
+.genre-wrap::before,.genre-wrap::after{content:'';position:absolute;top:0;bottom:0;width:46px;z-index:1;pointer-events:none;opacity:0;transition:.2s}
+.genre-wrap::before{left:72px;background:linear-gradient(90deg,#000,transparent)}
+.genre-wrap::after{right:0;background:linear-gradient(270deg,#000,transparent)}
 .genre-wrap.has-overflow::before,.genre-wrap.has-overflow::after{opacity:1}
-.genre-bar{display:flex;gap:8px;align-items:center;height:48px;overflow-x:auto;padding:0 22px;scrollbar-width:none}
+.strip-label{flex:none;width:72px;padding-left:22px;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--label3)}
+.genre-bar{flex:1;min-width:0;display:flex;gap:8px;align-items:center;height:44px;overflow-x:auto;padding:0 22px 0 4px;scrollbar-width:none}
 .genre-bar::-webkit-scrollbar{display:none}
-.g-chip{flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;border:0;background:var(--fill);font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
-.g-chip:hover{background:var(--fill2);color:var(--text)}
-.g-chip.active{background:var(--accent);color:#fff}
-.g-count{font-size:10.5px;font-weight:600;opacity:.65;font-variant-numeric:tabular-nums}
-.g-chip.more{background:var(--accent-soft);color:var(--accent)}
-.g-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:28px;height:28px;border-radius:50%;background:rgba(44,44,46,.92);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--muted);box-shadow:0 4px 14px rgba(0,0,0,.5)}
-.g-arrow:hover{color:var(--text)}
-.g-arrow.left{left:6px}
+.g-chip{flex:none;display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;border:0;background:var(--fill);font-size:12.5px;font-weight:600;color:var(--label2);cursor:pointer;white-space:nowrap;letter-spacing:-.01em}
+.g-chip:hover{background:var(--fill2);color:var(--label)}
+.g-chip.active{background:var(--blue);color:#fff}
+.g-chip.more{background:var(--blue-soft);color:var(--blue)}
+.g-count{font-size:11px;font-weight:700;color:var(--label3);font-variant-numeric:tabular-nums;letter-spacing:0}
+.g-chip:hover .g-count{color:var(--label2)}
+.g-chip.active .g-count{color:rgba(255,255,255,.8)}
+.g-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:26px;height:26px;border-radius:50%;background:rgba(58,58,60,.94);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label2);box-shadow:0 4px 14px rgba(0,0,0,.6)}
+.g-arrow:hover{color:var(--label)}
+.g-arrow.left{left:76px}
 .g-arrow.right{right:6px}
 @media(pointer:coarse){.g-arrow{display:none}}
 
-/* ===== РАСКЛАДКА ===== */
-.layout{max-width:1560px;margin:0 auto;padding:20px 22px 24px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
-.main-col{min-width:0;display:flex;flex-direction:column;gap:16px}
-.panel{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-lg)}
+/* ================= LAYOUT ================= */
+.layout{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:20px 22px 22px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+.main-col{min-width:0;display:flex;flex-direction:column;gap:14px}
+.panel{background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:inset 0 .5px 0 rgba(255,255,255,.05)}
 
-/* ===== ПЛЕЕР ===== */
-.player{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--hair);border-radius:var(--r-lg);overflow:hidden;scroll-margin-top:126px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+/* ================= PLAYER ================= */
+.player{position:relative;aspect-ratio:16/9;background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;scroll-margin-top:122px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
-.ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--hair);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:600;opacity:0;transform:translateY(-6px);transition:.22s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
+.ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:600;opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
 .ch-badge.show{opacity:1;transform:none}
-.ch-badge b{color:var(--accent);font-variant-numeric:tabular-nums}
+.ch-badge b{color:var(--blue);font-variant-numeric:tabular-nums}
 .ch-badge span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.live{font-size:9px;font-weight:800;letter-spacing:.08em;padding:2px 7px;border-radius:6px;background:rgba(255,69,58,.2);color:#FF6961;flex:none}
-.live.vod{background:rgba(255,159,10,.18);color:var(--warn)}
-.num-osd{position:absolute;top:14px;right:14px;z-index:7;background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--hair);border-radius:12px;padding:8px 18px;font-size:30px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.1em}
-.controls{position:absolute;inset:auto 0 0;z-index:5;display:flex;align-items:center;gap:8px;padding:30px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.8));transition:opacity .2s}
+.live{font-size:9px;font-weight:800;letter-spacing:.08em;padding:2px 7px;border-radius:6px;background:rgba(255,69,58,.22);color:#FF6961;flex:none}
+.live.vod{background:rgba(255,159,10,.2);color:var(--orange)}
+.num-osd{position:absolute;top:14px;right:14px;z-index:7;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:13px;padding:8px 18px;font-size:30px;font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums;letter-spacing:.1em}
+.controls{position:absolute;inset:auto 0 0;z-index:5;display:flex;align-items:center;gap:8px;padding:32px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.82));transition:opacity .2s}
 .controls.hide{opacity:0;pointer-events:none}
-.ctrl-btn{width:38px;height:38px;border-radius:50%;flex:none;background:rgba(28,28,30,.72);backdrop-filter:blur(10px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--text)}
-.ctrl-btn:hover:not(:disabled){background:rgba(60,60,67,.85)}
-.vol-range{width:112px;accent-color:var(--accent);cursor:pointer}
+.ctrl-btn{width:38px;height:38px;border-radius:50%;flex:none;background:rgba(28,28,30,.7);backdrop-filter:blur(12px);border:0;display:grid;place-items:center;cursor:pointer;color:var(--label)}
+.ctrl-btn:hover:not(:disabled){background:rgba(72,72,74,.85)}
+.vol-range{width:112px;accent-color:var(--blue);cursor:pointer}
 .ctrl-fs{margin-left:auto}
 .overlay{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;background:rgba(0,0,0,.78)}
-.overlay.boot{z-index:10;background:rgba(0,0,0,.92)}
-.boot-title{font-size:clamp(26px,4vw,42px);font-weight:700;letter-spacing:.06em}
-.boot-sub{font-size:13px;color:var(--muted);max-width:480px;line-height:1.65}
-.primary-btn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer}
+.overlay.boot{z-index:10;background:rgba(0,0,0,.93)}
+.boot-title{font-size:clamp(26px,4vw,42px);font-weight:700;letter-spacing:.05em}
+.boot-sub{font-size:13px;color:var(--label2);max-width:470px;line-height:1.65}
+.primary-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:#fff;border:0;border-radius:var(--r-btn);padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:-.01em}
 .primary-btn:hover{filter:brightness(1.1)}
-.secondary-btn{background:var(--fill);border:0;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text)}
+.secondary-btn{background:var(--fill);border:0;border-radius:var(--r-btn);padding:10px 16px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--label)}
 .secondary-btn:hover{background:var(--fill2)}
-.overlay.error h2{font-size:20px;font-weight:700;letter-spacing:-.01em}
-.overlay.error p{font-size:13px;color:var(--muted);max-width:470px;line-height:1.6}
+.overlay.error h2{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.overlay.error p{font-size:13px;color:var(--label2);max-width:460px;line-height:1.6}
 .overlay-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.spinner{width:42px;height:42px;border-radius:50%;border:3px solid rgba(255,255,255,.14);border-top-color:var(--accent);animation:spin .8s linear infinite}
+.spinner{width:40px;height:40px;border-radius:50%;border:3px solid rgba(255,255,255,.14);border-top-color:var(--blue);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.gesture-btn{width:72px;height:72px;border-radius:50%;border:0;cursor:pointer;background:var(--accent);color:#fff;display:grid;place-items:center}
-.overlay.gesture p{font-size:13px;color:var(--muted)}
+.gesture-btn{width:72px;height:72px;border-radius:50%;border:0;cursor:pointer;background:var(--blue);color:#fff;display:grid;place-items:center;box-shadow:0 10px 34px rgba(10,132,255,.4)}
+.overlay.gesture p{font-size:13px;color:var(--label2)}
 .player:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;aspect-ratio:auto}
 
-/* ===== КАРТОЧКА КАНАЛА ===== */
+.action-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.action-bar .primary-btn{padding:10px 18px;font-size:13.5px}
+.action-bar .secondary-btn{display:inline-flex;align-items:center;gap:8px}
+.action-bar span.ic{display:grid;place-items:center}
+.share-hint{margin-left:auto;font-size:11.5px;color:var(--label3)}
+
+/* ================= CHANNEL CARD ================= */
 .info{padding:20px}
 .info-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
-.channel-logo{width:56px;height:56px;border-radius:12px;background:var(--surface2);object-fit:contain;padding:5px;flex:none}
-.info-num{font-size:28px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px;letter-spacing:-.02em}
+.channel-logo{width:56px;height:56px;border-radius:13px;background:var(--card2);object-fit:contain;padding:5px;flex:none}
+.info-num{font-size:28px;font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px;letter-spacing:-.03em}
 .info-titles{flex:1;min-width:200px}
-.info-titles h1{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
-.info-tags{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
-.tag{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--fill);border:0;color:var(--muted)}
-.tag.ok{color:var(--ok);background:rgba(48,209,88,.15)}
-.tag.vod{color:var(--warn);background:rgba(255,159,10,.15)}
+.info-titles h1{font-size:22px;font-weight:700;letter-spacing:-.025em;line-height:1.2}
+.info-tags{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--fill);border:0;color:var(--label2)}
+.tag.ok{color:var(--green);background:rgba(48,209,88,.14)}
+.tag.vod{color:var(--orange);background:rgba(255,159,10,.14)}
 button.tag{cursor:pointer}
-button.tag:hover{background:var(--accent-soft);color:var(--accent)}
-.desc{margin-top:15px;font-size:13.5px;line-height:1.65;color:var(--muted);max-width:920px}
-.program{margin-top:20px;padding-top:18px;border-top:1px solid var(--hair)}
+button.tag:hover{background:var(--blue-soft);color:var(--blue)}
+button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
+.desc{margin-top:15px;font-size:13.5px;line-height:1.65;color:var(--label2);max-width:920px}
+.program{margin-top:20px;padding-top:18px;border-top:.5px solid var(--sep)}
 .program-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.program-head h3{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim)}
-.program-note{margin-left:auto;font-size:11px;color:var(--dim)}
+.program-head h3{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--label3)}
+.program-note{margin-left:auto;font-size:11px;color:var(--label3)}
 .program-cards{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:10px}
-.prog-card{background:var(--surface2);border-radius:var(--r-md);padding:12px 14px;min-width:0}
-.prog-card.now{background:var(--accent-soft)}
-.prog-card em{display:block;font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
-.prog-card.next em{color:var(--dim)}
+.prog-card{background:var(--card2);border-radius:13px;padding:12px 14px;min-width:0}
+.prog-card.now{background:var(--blue-soft)}
+.prog-card em{display:block;font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.prog-card.next em{color:var(--label3)}
 .prog-card strong{display:block;font-size:13px;font-weight:600;line-height:1.4}
-.prog-card span{display:block;font-size:11px;color:var(--dim);margin-top:5px;line-height:1.5}
+.prog-card span{display:block;font-size:11px;color:var(--label3);margin-top:5px;line-height:1.5}
 .timeline{display:flex;gap:3px;height:28px;margin-top:12px}
-.tl-seg{position:relative;border:0;border-radius:7px;background:var(--surface2);cursor:pointer;overflow:hidden;min-width:8px;padding:0}
-.tl-seg.cur{background:var(--accent-soft)}
+.tl-seg{position:relative;border:0;border-radius:7px;background:var(--card2);cursor:pointer;overflow:hidden;min-width:8px;padding:0}
+.tl-seg.cur{background:var(--blue-soft)}
 .tl-seg i{position:absolute;inset:0;width:0;background:rgba(10,132,255,.35)}
-.tl-seg b{position:relative;z-index:1;display:block;padding:0 7px;font-size:9px;font-weight:600;line-height:28px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
-.tl-seg:hover{background:var(--surface3)}
-.signal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:1px solid var(--hair);font-size:12px;color:var(--muted)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:none}
-.dot.ok{background:var(--ok)}
-.dot.playing{background:var(--ok);animation:pulse 1.5s infinite}
-.dot.bad{background:var(--bad)}
-@keyframes pulse{50%{opacity:.35}}
-.signal-row select{background:var(--fill);border:0;color:var(--text);border-radius:8px;padding:5px 8px;font-size:11.5px;cursor:pointer}
-.retry-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--fill);border:0;border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.tl-seg b{position:relative;z-index:1;display:block;padding:0 7px;font-size:9px;font-weight:600;line-height:28px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--label2)}
+.tl-seg:hover{background:var(--card3)}
+.signal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:.5px solid var(--sep);font-size:12.5px;color:var(--label2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--label3);flex:none}
+.dot.ok{background:var(--green);box-shadow:0 0 8px rgba(48,209,88,.6)}
+.signal-row select{background:var(--fill);border:0;color:var(--label);border-radius:8px;padding:5px 8px;font-size:11.5px;cursor:pointer}
+.retry-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--fill);border:0;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
 .retry-btn:hover{background:var(--fill2)}
 
-/* ===== САЙДБАР ===== */
-.sidebar{position:sticky;top:126px;max-height:calc(100vh - 142px);display:flex;flex-direction:column;padding:14px 12px 12px 14px;scroll-margin-top:126px}
-.side-head,.scan-box,.list-tools,.legend,.side-foot{flex:none}
-.side-head{display:flex;align-items:center;gap:8px;padding-right:4px;margin-bottom:11px}
-.side-head h2{flex:1;min-width:0;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.side-head>span{font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:999px;font-variant-numeric:tabular-nums}
-.reset-chip{border:0;background:rgba(255,69,58,.15);color:var(--bad);border-radius:999px;font-size:10px;font-weight:600;padding:3px 9px;cursor:pointer;white-space:nowrap}
-.reset-chip:hover{background:rgba(255,69,58,.25)}
-.scan-box{background:var(--surface2);border-radius:var(--r-md);padding:10px 12px;margin:0 4px 11px 0}
-.scan-line{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:7px}
-.scan-line b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
-.scan-line span:last-child{margin-left:auto;color:var(--dim)}
-.scan-bar{height:4px;border-radius:2px;background:rgba(120,120,128,.24);overflow:hidden}
-.scan-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:2px;transition:width .25s var(--ease)}
-.list-tools{display:flex;align-items:center;gap:8px;padding:0 4px 10px}
-.seg{flex:1;display:flex;gap:2px;background:var(--fill);border-radius:9px;padding:2px}
-.seg-btn{flex:1;border:0;background:transparent;border-radius:7px;padding:5px 8px;font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
-.seg-btn.active{background:#636366;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-.mini-btn{width:30px;height:30px;border-radius:8px;background:var(--fill);border:0;display:grid;place-items:center;cursor:pointer;color:var(--muted);flex:none}
-.mini-btn:hover{background:var(--accent-soft);color:var(--accent)}
-.ch-list{flex:1;overflow-y:auto;padding-right:5px;min-height:200px;overscroll-behavior:contain}
-.ch-spacer{position:relative;width:100%}
-.ch-item{position:absolute;left:0;right:0;height:52px;display:grid;grid-template-columns:34px 36px minmax(0,1fr) 26px;gap:10px;align-items:center;text-align:left;background:transparent;border:0;border-radius:12px;padding:0 8px 0 10px;cursor:pointer;transition:background .14s var(--ease)}
-.ch-item:hover{background:rgba(120,120,128,.14)}
-.ch-item.active{background:var(--accent-soft)}
-.ch-num{font-size:11px;font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums}
-.ch-item.active .ch-num{color:var(--accent)}
-.ch-thumb{position:relative;width:36px;height:36px;border-radius:9px;background:var(--surface2);display:grid;place-items:center;overflow:hidden}
-.ch-thumb i{font-style:normal;font-size:13px;font-weight:700;color:var(--dim)}
-.ch-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:3px;background:var(--surface2)}
-.ch-text{min-width:0;display:flex;flex-direction:column;gap:2px}
-.ch-name{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
-.ch-meta{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ================= SIDEBAR ================= */
+.sidebar{position:sticky;top:122px;max-height:calc(100vh - 140px);display:flex;flex-direction:column;padding:16px 12px 12px 14px;scroll-margin-top:122px}
+.side-head,.country-picker,.legend,.side-foot{flex:none}
+.side-head{display:flex;align-items:center;gap:8px;padding:0 4px 10px}
+.side-head h2{flex:1;min-width:0;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reset-chip{border:0;background:rgba(255,69,58,.15);color:var(--red);border-radius:999px;font-size:10.5px;font-weight:600;padding:4px 10px;cursor:pointer;white-space:nowrap}
+.reset-chip:hover{background:rgba(255,69,58,.26)}
+.country-picker{width:100%;display:flex;align-items:center;gap:10px;height:46px;padding:0 13px;margin:0 4px 12px 0;border:0;border-radius:var(--r-group);background:var(--card2);cursor:pointer;color:var(--label);text-align:left}
+.country-picker:hover{background:var(--card3)}
+.country-picker .cp-ic{color:var(--teal);display:grid;place-items:center;flex:none}
+.country-picker b{flex:1;min-width:0;font-size:15px;font-weight:600;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.country-picker .cp-chev{color:var(--label3);display:grid;place-items:center;flex:none}
+.country-picker.filtered{background:var(--teal-soft)}
+.country-picker.filtered b{color:var(--teal)}
+.country-picker.filtered .cp-chev{color:var(--teal)}
+.ch-list{flex:1;overflow-y:auto;padding-right:5px;min-height:240px;overscroll-behavior:contain}
+.ch-spacer{position:relative;width:100%;background:var(--card2);border-radius:var(--r-group);overflow:hidden}
+.ch-item{position:absolute;left:0;right:0;height:60px;display:grid;grid-template-columns:38px minmax(0,1fr) 28px;gap:12px;align-items:center;text-align:left;background:transparent;border:0;padding:0 12px;cursor:pointer;transition:background .14s var(--ease)}
+.ch-item::before{content:'';position:absolute;left:62px;right:0;top:0;height:.5px;background:var(--sep)}
+.ch-item.first::before{display:none}
+.ch-item:hover{background:var(--fill3)}
+.ch-item.active{background:var(--blue-soft)}
+.ch-thumb{position:relative;width:38px;height:38px;border-radius:9px;background:var(--card3);display:grid;place-items:center;overflow:hidden}
+.ch-thumb i{font-style:normal;font-size:14px;font-weight:700;color:var(--label3)}
+.ch-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:3px;background:var(--card3)}
+.ch-text{min-width:0;display:flex;flex-direction:column;gap:3px}
+.ch-name{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.015em}
+.ch-sub{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-item.active .ch-sub{color:var(--label2)}
 .eq{display:inline-flex;gap:2px;align-items:flex-end;height:10px;flex:none}
-.eq i{width:2.5px;background:var(--accent);border-radius:1px;transform-origin:bottom;animation:eq 1s ease-in-out infinite}
+.eq i{width:2.5px;background:var(--blue);border-radius:1px;transform-origin:bottom;animation:eq 1s ease-in-out infinite}
 .eq i:nth-child(1){height:60%}
 .eq i:nth-child(2){height:100%;animation-delay:.2s}
 .eq i:nth-child(3){height:40%;animation-delay:.4s}
 @keyframes eq{50%{transform:scaleY(.35)}}
-.fav-btn{width:26px;height:26px;border-radius:6px;background:transparent;border:0;display:grid;place-items:center;color:var(--dim);cursor:pointer}
-.fav-btn:hover{color:var(--text);background:var(--fill)}
-.fav-btn.on{color:var(--gold)}
+.fav-btn{width:28px;height:28px;border-radius:7px;background:transparent;border:0;display:grid;place-items:center;color:var(--label4);cursor:pointer}
+.fav-btn:hover{color:var(--label2);background:var(--fill)}
+.fav-btn.on{color:var(--yellow)}
 .fav-btn.on svg path{fill:currentColor}
-.ch-empty{padding:26px 12px;text-align:center;color:var(--dim);font-size:12px;line-height:1.6;display:flex;flex-direction:column;gap:12px;align-items:center}
-.side-foot{display:flex;gap:8px;padding:11px 4px 2px;margin-top:9px;border-top:1px solid var(--hair)}
-.foot-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--fill);border:0;border-radius:10px;padding:8px 10px;font-size:11.5px;font-weight:600;cursor:pointer}
+.ch-empty{padding:30px 16px;text-align:center;color:var(--label3);font-size:12.5px;line-height:1.6;display:flex;flex-direction:column;gap:14px;align-items:center;background:transparent}
+.legend{padding:10px 4px 0;font-size:10.5px;color:var(--label3);line-height:1.6}
+.side-foot{display:flex;gap:8px;padding:11px 4px 2px;margin-top:9px;border-top:.5px solid var(--sep)}
+.foot-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--fill);border:0;border-radius:10px;padding:9px 10px;font-size:12px;font-weight:600;cursor:pointer}
 .foot-btn:hover:not(:disabled){background:var(--fill2)}
-.legend{padding:9px 4px 0;font-size:10px;color:var(--dim);line-height:1.6}
 
-/* ===== ЖАНРЫ: ШИТ ===== */
-.modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:grid;place-items:center;padding:20px}
-.modal{width:min(760px,100%);max-height:min(80vh,640px);display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.6);animation:pop .22s var(--ease)}
+/* ================= SHEETS ================= */
+.modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);display:grid;place-items:center;padding:20px}
+.modal{width:min(620px,100%);max-height:min(84vh,680px);display:flex;flex-direction:column;background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:0 30px 90px rgba(0,0,0,.7);animation:pop .24s var(--ease);overflow:hidden}
 @keyframes pop{from{opacity:0;transform:scale(.97)}}
-.grabber{display:none;width:36px;height:4px;border-radius:2px;background:var(--fill2);margin:8px auto 0;flex:none}
-.modal-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--hair)}
-.modal-head h3{font-size:15px;font-weight:700;letter-spacing:-.01em}
-.modal-sub{font-size:11px;color:var(--dim);margin-left:auto}
-.modal-head .icon-btn{width:32px;height:32px;border-radius:50%}
-.modal-grid{overflow-y:auto;padding:14px 16px 18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
-.g-card{display:flex;align-items:center;gap:10px;padding:12px 14px;border:0;border-radius:10px;background:var(--surface2);cursor:pointer;text-align:left;min-width:0}
-.g-card:hover{background:var(--surface3)}
-.g-card.active{background:var(--accent-soft)}
-.g-card b{flex:1;min-width:0;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
-.g-card .gc{font-size:12px;font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums;flex:none}
-.g-card .g-chev{color:var(--dim);display:grid;place-items:center;flex:none}
-.g-card.active .gc{color:var(--accent)}
-.g-card.active .g-chev{color:var(--accent)}
+.grabber{display:none;width:36px;height:5px;border-radius:3px;background:var(--fill2);margin:8px auto 0;flex:none}
+.modal-head{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:.5px solid var(--sep);flex:none}
+.modal-head h3{font-size:17px;font-weight:700;letter-spacing:-.02em;flex:none}
+.modal-sub{font-size:12px;color:var(--label3);margin-left:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal-head .icon-btn{width:30px;height:30px;border-radius:50%;background:var(--fill);color:var(--label2)}
+.sheet-search{display:flex;align-items:center;gap:8px;background:var(--fill);border-radius:10px;padding:9px 12px;margin:14px 16px 0;color:var(--label3);flex:none}
+.sheet-search:focus-within{background:var(--fill2)}
+.sheet-search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--label);font-size:14px}
+.sheet-search input::placeholder{color:var(--label3)}
+.modal-body{overflow-y:auto;padding:6px 16px 18px}
+.ios-header{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--label3);padding:16px 4px 7px}
+.ios-group{background:var(--card2);border-radius:var(--r-group);overflow:hidden}
+.ios-row{position:relative;width:100%;display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 14px;border:0;background:transparent;cursor:pointer;text-align:left;color:var(--label)}
+.ios-row+.ios-row::before{content:'';position:absolute;left:14px;right:0;top:0;height:.5px;background:var(--sep)}
+.ios-row:hover:not(:disabled){background:var(--fill3)}
+.ios-row b{flex:1;min-width:0;font-size:14.5px;font-weight:500;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ios-row small{font-size:11.5px;color:var(--label3);flex:none}
+.ios-row small.cnt{font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.ios-row .tail{display:grid;place-items:center;color:var(--label4);flex:none}
+.ios-row.active b{color:var(--blue);font-weight:600}
+.ios-row.active small.cnt{color:var(--blue)}
+.ios-row.active .tail{color:var(--blue)}
+.ios-row.ctry.active b{color:var(--teal)}
+.ios-row.ctry.active .tail{color:var(--teal)}
+.sheet-empty{padding:30px 12px;text-align:center;color:var(--label3);font-size:13px;line-height:1.6}
+.share-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.link-row{display:flex;gap:8px;align-items:center}
+.link-input{flex:1;min-width:0;background:var(--fill);border:0;border-radius:10px;padding:11px 12px;font-size:12px;color:var(--label2);outline:none}
+.link-input:focus{background:var(--fill2);color:var(--label)}
+.share-grid{display:flex;gap:14px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}
+.share-grid::-webkit-scrollbar{display:none}
+.share-item{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:0;cursor:pointer;color:var(--label2);font-size:10.5px;font-weight:600;width:64px}
+.s-badge{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;color:#fff;transition:transform .12s var(--ease),filter .15s;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.share-item:hover .s-badge{filter:brightness(1.12)}
+.share-item:active .s-badge{transform:scale(.94)}
+.s-badge.native{background:linear-gradient(160deg,#0A84FF,#0060DF)}
+.s-badge.tg{background:linear-gradient(160deg,#2AABEE,#229ED9)}
+.s-badge.vk{background:linear-gradient(160deg,#0077FF,#0058C7);font-weight:800;font-size:15px}
+.s-badge.wa{background:linear-gradient(160deg,#5BF675,#25D366);color:#06301A}
+.s-badge.x{background:linear-gradient(160deg,#3A3A3C,#1C1C1E);color:#fff;font-weight:800;font-size:18px}
+.share-actions{background:var(--card2);border-radius:var(--r-group);overflow:hidden}
+.share-actions .ios-row b{font-size:14.5px;color:var(--blue);font-weight:500}
+.share-actions .ios-row .tail{color:var(--blue)}
+.share-note{font-size:11.5px;color:var(--label3);line-height:1.6}
+.sheet-cancel{display:none;width:100%;background:var(--card2);border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:600;color:var(--blue);cursor:pointer;margin-top:2px}
 
-footer{max-width:1560px;margin:0 auto;padding:0 22px 28px;font-size:10.5px;color:var(--dim);line-height:1.8}
-footer b{color:var(--muted)}
-.toasts{position:fixed;right:18px;bottom:18px;z-index:300;display:flex;flex-direction:column;gap:8px;max-width:min(370px,calc(100vw - 36px))}
-.toast{display:flex;align-items:flex-start;gap:9px;background:rgba(28,28,30,.85);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--hair);border-radius:14px;padding:11px 14px;font-size:12.5px;font-weight:500;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:tin .22s var(--ease)}
-.t-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none;margin-top:4px}
-.toast.warn .t-dot{background:var(--warn)}
-.toast.bad .t-dot{background:var(--bad)}
-.toast.ok .t-dot{background:var(--ok)}
-@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+/* ================= STATUS + FOOTER ================= */
+.status{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:0 22px}
+.status-in{display:flex;align-items:center;gap:12px;background:var(--card);border:.5px solid var(--hair);border-radius:13px;padding:10px 14px;font-size:11.5px;color:var(--label2)}
+.status-in .st-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);flex:none;box-shadow:0 0 8px rgba(10,132,255,.7)}
+.status-in b{font-weight:600;color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-bar{flex:1;min-width:60px;height:3px;border-radius:2px;background:var(--fill);overflow:hidden}
+.st-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px;transition:width .3s var(--ease)}
+.st-num{color:var(--label3);font-variant-numeric:tabular-nums;white-space:nowrap}
+footer{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:14px 22px 30px;font-size:10.5px;color:var(--label3);line-height:1.8}
+footer b{color:var(--label2)}
+.toasts{position:fixed;right:18px;bottom:18px;z-index:300;display:flex;flex-direction:column;gap:8px;max-width:min(380px,calc(100vw - 36px))}
+.toast{display:flex;align-items:center;gap:10px;background:rgba(28,28,30,.86);backdrop-filter:blur(24px) saturate(180%);border:.5px solid var(--hair);border-radius:15px;padding:12px 14px;font-size:13px;font-weight:500;line-height:1.45;box-shadow:0 14px 40px rgba(0,0,0,.6);animation:tin .24s var(--ease)}
+.toast span.msg{flex:1;min-width:0}
+.t-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);flex:none}
+.toast.warn .t-dot{background:var(--orange)}
+.toast.bad .t-dot{background:var(--red)}
+.toast.ok .t-dot{background:var(--green)}
+.t-action{border:0;background:none;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;flex:none;padding:2px 0 2px 4px}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}}
 
-@media(max-width:1120px){.layout{grid-template-columns:minmax(0,1fr) 320px}.program-cards{grid-template-columns:1fr 1fr}}
+@media(max-width:1180px){.layout{grid-template-columns:minmax(0,1fr) 330px}.program-cards{grid-template-columns:1fr 1fr}.nav-btn .lbl{display:none}.nav-btn{width:36px;padding:0;justify-content:center}}
 @media(max-width:940px){
   .layout{grid-template-columns:1fr}
   .sidebar{position:static;max-height:none}
-  .ch-list{max-height:440px}
-  .player,#sidebar{scroll-margin-top:170px}
+  .ch-list{max-height:460px}
+  .player,#sidebar{scroll-margin-top:168px}
 }
 @media(max-width:640px){
   .top-in{height:auto;padding:10px 14px;flex-wrap:wrap;gap:10px}
   .search-wrap{order:3;flex-basis:100%;max-width:none;margin-left:0}
-  .search-wrap kbd{display:none}
-  .clock{display:none}.counter{font-size:11px;padding:6px 10px}
-  .genre-btn span{display:none}.genre-btn{width:38px;padding:0;justify-content:center}
+  .clock{display:none}.counter{font-size:11.5px;padding:6px 11px}
   .brand-sub{display:none}
-  .genre-bar{padding:0 14px;height:46px}
-  .layout{padding:14px 12px 20px}
+  .strip-label{width:60px;padding-left:14px;font-size:9px}
+  .genre-bar{padding:0 14px 0 2px;height:42px}
+  .genre-wrap::before{left:60px}
+  .g-arrow.left{left:64px}
+  .layout{padding:14px 12px 18px;gap:14px}
   .info{padding:16px}.program-cards{grid-template-columns:1fr}
-  .vol-range{width:80px}.controls{padding:24px 10px 10px;gap:6px}.ctrl-btn{width:34px;height:34px}
-  .info-titles h1{font-size:18px}.info-num{font-size:24px}.channel-logo{width:44px;height:44px}
+  .vol-range{width:64px}.controls{padding:24px 10px 10px;gap:5px}.ctrl-btn{width:34px;height:34px}
+  .info-titles h1{font-size:19px}.info-num{font-size:24px}.channel-logo{width:46px;height:46px}
+  .share-hint{flex-basis:100%;margin-left:0;order:3}
+  .status{padding:0 12px}
+  .status-in{flex-wrap:wrap}
+  .st-bar{order:3;flex-basis:100%}
+  footer{padding:12px 12px 28px}
   .modal-backdrop{place-items:end center;padding:0}
-  .modal{width:100%;max-height:84vh;border-radius:16px 16px 0 0;animation:sheet .3s var(--ease)}
-  @keyframes sheet{from{transform:translateY(40px);opacity:.6}}
+  .modal{width:100%;max-height:88vh;border-radius:16px 16px 0 0;animation:sheet .32s var(--ease)}
+  @keyframes sheet{from{transform:translateY(48px);opacity:.5}}
   .grabber{display:block}
-  .modal-grid{grid-template-columns:1fr;padding-bottom:max(18px,env(safe-area-inset-bottom))}
+  .modal-body{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+  .share-body{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+  .sheet-cancel{display:block}
+  .toasts{right:12px;left:12px;bottom:max(12px,env(safe-area-inset-bottom));max-width:none}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -275,24 +329,25 @@ footer b{color:var(--muted)}
       <div class="logo">TV</div>
       <div><div class="brand-name">TV BOX</div><div class="brand-sub">АВТОПРОВЕРКА • БЕЗ VPN</div></div>
     </div>
-    <div class="search-wrap">
+    <div class="search-wrap" id="searchWrap">
       <span id="searchIcon"></span>
-      <input id="search" type="text" placeholder="Поиск" autocomplete="off" enterkeyhint="search" aria-label="Поиск канала">
+      <input id="search" type="text" placeholder="Канал, жанр или страна" autocomplete="off" enterkeyhint="search" aria-label="Поиск канала, жанра или страны">
       <button id="searchClear" hidden aria-label="Очистить поиск"></button>
-      <kbd>/</kbd>
+      <button id="searchCancel">Отмена</button>
     </div>
     <div class="top-actions">
-      <div class="counter"><i></i><span id="topCounter">0/5000</span></div>
+      <div class="counter" title="Найдено рабочих каналов"><i></i><span id="topCounter">0/5000</span></div>
       <span class="clock" id="clock">--:-- МСК</span>
-      <button class="icon-btn genre-btn" id="genreBtn" title="Все жанры (G)"><span id="genreBtnIcon"></span><span>Жанры</span></button>
-      <button class="icon-btn" id="topMute" title="Звук (M)" aria-label="Звук"></button>
-      <button class="icon-btn" id="topFs" title="Полный экран (F)" aria-label="Полный экран"></button>
+      <button class="icon-btn nav-btn press" id="genreBtn" title="Все жанры (G)"><span id="genreBtnIcon"></span><span class="lbl">Жанры</span></button>
+      <button class="icon-btn press" id="topMute" title="Звук (M)" aria-label="Звук"></button>
+      <button class="icon-btn press" id="topFs" title="Полный экран (F)" aria-label="Полный экран"></button>
     </div>
   </div>
   <div class="genre-wrap" id="genreWrap">
-    <button class="g-arrow left" id="genrePrev" hidden aria-label="Жанры влево"></button>
+    <span class="strip-label">Жанр</span>
+    <button class="g-arrow left press" id="genrePrev" hidden aria-label="Жанры влево"></button>
     <div class="genre-bar" id="genreBar" role="tablist" aria-label="Жанры"></div>
-    <button class="g-arrow right" id="genreNext" hidden aria-label="Жанры вправо"></button>
+    <button class="g-arrow right press" id="genreNext" hidden aria-label="Жанры вправо"></button>
   </div>
 </header>
 
@@ -304,26 +359,33 @@ footer b{color:var(--muted)}
       <div class="num-osd" id="numOsd" hidden></div>
 
       <div class="controls" id="controls">
-        <button class="ctrl-btn" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
-        <button class="ctrl-btn" id="playBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
-        <button class="ctrl-btn" id="nextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
-        <button class="ctrl-btn" id="muteBtn" title="Звук (M)" aria-label="Звук"></button>
+        <button class="ctrl-btn press" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
+        <button class="ctrl-btn press" id="playBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
+        <button class="ctrl-btn press" id="nextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
+        <button class="ctrl-btn press" id="shuffleBtn" title="Случайный канал (R)" aria-label="Случайный канал"></button>
+        <button class="ctrl-btn press" id="muteBtn" title="Звук (M)" aria-label="Звук"></button>
         <input class="vol-range" id="volRange" type="range" min="0" max="100" value="70" title="Громкость" aria-label="Громкость">
-        <button class="ctrl-btn ctrl-fs" id="fsBtn" title="Полный экран (F)" aria-label="Полный экран"></button>
+        <button class="ctrl-btn press ctrl-fs" id="fsBtn" title="Полный экран (F)" aria-label="Полный экран"></button>
       </div>
 
       <div class="overlay boot" id="boot">
         <div class="boot-title">TV BOX</div>
-        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают из России без VPN. Цель — 5000 рабочих каналов. Жанры — на панели под шапкой.</p>
-        <button class="primary-btn" id="bootBtn">▶&nbsp; Включить эфир</button>
+        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают из России без VPN. Цель — 5000 рабочих каналов. Жанры и количество найденных станций — сверху, страна — справа.</p>
+        <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
       </div>
 
-      <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--muted)">Подключение к источнику…</p></div>
-      <div class="overlay gesture" id="gesture" hidden><button class="gesture-btn" id="gestureBtn" aria-label="Запустить"></button><p>Нажмите, чтобы запустить воспроизведение</p></div>
+      <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--label2)">Подключение к источнику…</p></div>
+      <div class="overlay gesture" id="gesture" hidden><button class="gesture-btn press" id="gestureBtn" aria-label="Запустить"></button><p>Нажмите, чтобы запустить воспроизведение</p></div>
       <div class="overlay error" id="error" hidden>
         <h2>Канал недоступен</h2><p id="errorText"></p>
-        <div class="overlay-actions"><button class="primary-btn" id="retryBtn">Повторить</button><button class="secondary-btn" id="nextFromError">Следующий канал</button></div>
+        <div class="overlay-actions"><button class="primary-btn press" id="retryBtn">Повторить</button><button class="secondary-btn press" id="nextFromError">Следующий канал</button></div>
       </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
+      <button class="secondary-btn press" id="copyLinkBtn"><span class="ic" id="linkIcon"></span> Копировать ссылку</button>
+      <span class="share-hint">Ссылка откроет приложение сразу на этом канале</span>
     </div>
 
     <div class="info panel">
@@ -333,12 +395,12 @@ footer b{color:var(--muted)}
         <div class="info-titles">
           <h1 id="infoName">—</h1>
           <div class="info-tags">
-            <button class="tag" id="infoCat" title="Показать все каналы этого жанра">—</button>
-            <span class="tag" id="infoCountry">—</span>
+            <button class="tag press" id="infoCat" title="Показать все каналы этого жанра">—</button>
+            <button class="tag ctry press" id="infoCountry" title="Показать все каналы этой страны">—</button>
             <span class="tag ok" id="infoStatus">Проверен</span>
           </div>
         </div>
-        <button class="icon-btn" id="infoFav" title="В избранное (S)" aria-label="Избранное"></button>
+        <button class="icon-btn press" id="infoFav" title="В избранное (S)" aria-label="Избранное"></button>
       </div>
       <p class="desc" id="infoDesc"></p>
 
@@ -351,49 +413,87 @@ footer b{color:var(--muted)}
       <div class="signal-row">
         <span class="dot ok" id="sigDot"></span><span id="sigLabel">источник проверен</span>
         <select id="quality" hidden title="Качество"></select>
-        <button class="retry-btn" id="sigRetry"><span id="refreshIcon"></span> Повторить</button>
+        <button class="retry-btn press" id="sigRetry"><span id="refreshIcon"></span> Повторить</button>
       </div>
     </div>
   </section>
 
   <aside class="sidebar panel" id="sidebar">
     <div class="side-head">
-      <h2 id="sideTitle">Все каналы</h2>
-      <button class="reset-chip" id="filterReset" hidden>Сбросить</button>
-      <span id="chCount">0</span>
+      <h2 id="sideTitle">Каналы</h2>
+      <button class="reset-chip press" id="filterReset" hidden>Сбросить</button>
     </div>
-    <div class="scan-box">
-      <div class="scan-line"><span>Найдено</span><b id="scanFound">0/5000</b><span id="scanChecked">проверено 0</span></div>
-      <div class="scan-bar"><i id="scanFill"></i></div>
-      <div class="scan-line" style="margin:7px 0 0"><span id="scanSource">Подготовка…</span></div>
-    </div>
-    <div class="list-tools">
-      <div class="seg" id="sortSeg" role="tablist" aria-label="Сортировка">
-        <button class="seg-btn" data-sort="number" title="По номеру">№</button>
-        <button class="seg-btn" data-sort="name" title="По названию">А–Я</button>
-        <button class="seg-btn" data-sort="category" title="По жанру">Жанр</button>
-      </div>
-      <button class="mini-btn" id="shuffleBtn" title="Случайный канал (R)" aria-label="Случайный канал"></button>
-    </div>
+
+    <button class="country-picker press" id="countryBtn" title="Выбрать страну (C)" aria-haspopup="dialog">
+      <span class="cp-ic" id="countryBtnIcon"></span>
+      <b id="countryBtnLabel">Все страны</b>
+      <span class="cp-chev" id="countryBtnChev"></span>
+    </button>
+
     <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
-    <div class="legend">Только проверенные источники. Звёздочка — избранное (S). Жанры появляются по мере нахождения каналов. Потерявший сигнал канал удаляется, поиск ищет замену до 5000.</div>
+
+    <div class="legend">Только проверенные источники. Количество найденных станций по жанрам — в меню жанров сверху. Звёздочка — избранное (S), случайный канал — R.</div>
     <div class="side-foot">
-      <button class="foot-btn" id="refreshScan"><span id="refreshIcon2"></span> Обновить</button>
-      <button class="foot-btn" id="exportBtn"><span id="exportIcon"></span> Экспорт M3U</button>
+      <button class="foot-btn press" id="refreshScan"><span id="refreshIcon2"></span> Обновить</button>
+      <button class="foot-btn press" id="exportBtn"><span id="exportIcon"></span> Экспорт M3U</button>
     </div>
   </aside>
 </main>
 
+<div class="status">
+  <div class="status-in">
+    <span class="st-dot"></span>
+    <b id="scanSource">Подготовка…</b>
+    <span class="st-bar"><i id="scanFill"></i></span>
+    <span class="st-num" id="scanChecked">проверено 0</span>
+  </div>
+</div>
+
 <footer>
-  <b>Как это работает:</b> список собирается из открытых IPTV-источников (включая полный мировой каталог iptv-org) и проверяется запросами из вашего браузера. Канал попадает в список только после успешной проверки HLS-манифеста. Нерабочие источники не показываются. VPN не используется. Итоговое число зависит от доступности источников в вашей сети.<br>
-  <b>Управление:</b> 0–9 — номер канала (до 4 цифр, Enter — сразу) • ↑↓ — переключение • ←→ — громкость • Пробел — пауза • M — звук • F — полный экран • G — жанры • S — избранное • R — случайный канал • / — поиск • двойной клик по видео — полный экран.
+  <b>Как это работает:</b> список собирается из открытых IPTV-источников (включая полный мировой каталог iptv-org) и проверяется запросами из вашего браузера. Канал попадает в список только после успешной проверки HLS-манифеста. Нерабочие источники не показываются. VPN не используется. Кнопка «Поделиться» создаёт ссылку, которая открывает приложение сразу на выбранном канале.<br>
+  <b>Управление:</b> 0–9 — номер канала (до 4 цифр, Enter — сразу) • ↑↓ — переключение • ←→ — громкость • Пробел — пауза • M — звук • F — полный экран • G — жанры • C — страна • S — избранное • R — случайный канал • / — поиск • двойной клик по видео — полный экран.
 </footer>
 
 <div class="modal-backdrop" id="genreModal" hidden>
-  <div class="modal panel" role="dialog" aria-modal="true" aria-label="Жанры">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Жанры">
     <div class="grabber"></div>
-    <div class="modal-head"><h3>Жанры</h3><span class="modal-sub" id="genreModalSub"></span><button class="icon-btn" id="genreClose" aria-label="Закрыть"></button></div>
-    <div class="modal-grid" id="genreGrid"></div>
+    <div class="modal-head"><h3>Жанры</h3><span class="modal-sub">Найдено станций по жанрам</span><button class="icon-btn press" id="genreClose" aria-label="Закрыть"></button></div>
+    <div class="modal-body" id="genreBody"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="countryModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Страны">
+    <div class="grabber"></div>
+    <div class="modal-head"><h3>Страна</h3><span class="modal-sub">Полные названия</span><button class="icon-btn press" id="countryClose" aria-label="Закрыть"></button></div>
+    <label class="sheet-search"><span id="countrySearchIcon"></span><input id="countrySearch" type="text" placeholder="Россия, Германия, Japan, JP…" autocomplete="off" enterkeyhint="search" aria-label="Поиск страны"></label>
+    <div class="modal-body" id="countryBody"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="shareModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Поделиться каналом">
+    <div class="grabber"></div>
+    <div class="modal-head"><h3>Поделиться</h3><span class="modal-sub" id="shareSub"></span><button class="icon-btn press" id="shareClose" aria-label="Закрыть"></button></div>
+    <div class="share-body">
+      <div class="link-row">
+        <input class="link-input" id="shareLink" readonly aria-label="Ссылка на канал">
+        <button class="icon-btn press" id="shareCopy" title="Скопировать" aria-label="Скопировать ссылку"></button>
+      </div>
+      <div class="share-grid">
+        <button class="share-item" id="shareNative" hidden><span class="s-badge native" id="shareNativeIcon"></span>Ещё…</button>
+        <button class="share-item" id="shareTg"><span class="s-badge tg" id="tgIcon"></span>Telegram</button>
+        <button class="share-item" id="shareVk"><span class="s-badge vk">VK</span>ВКонтакте</button>
+        <button class="share-item" id="shareWa"><span class="s-badge wa" id="waIcon"></span>WhatsApp</button>
+        <button class="share-item" id="shareX"><span class="s-badge x">X</span>X / Twitter</button>
+      </div>
+      <div class="share-actions">
+        <button class="ios-row" id="shareCopyRow"><span class="tail" id="shareCopyRowIcon"></span><b>Скопировать ссылку</b></button>
+        <button class="ios-row" id="shareOpen"><span class="tail" id="shareOpenIcon"></span><b>Открыть канал в новой вкладке</b></button>
+      </div>
+      <p class="share-note">Ссылка ведёт на это приложение и сразу включает выбранный канал. Если канал ещё не проверен, приложение проверит его отдельно и включит, как только он ответит.</p>
+      <button class="sheet-cancel press" id="shareCancel">Отмена</button>
+    </div>
   </div>
 </div>
 
@@ -435,37 +535,111 @@ const GROUP_RU={
   Classic:'Классика',Cooking:'Кулинария',Relax:'Релакс',Religious:'Религия',Weather:'Погода',
   Undefined:'Разное',Legislative:'Общество',Shop:'Магазины'
 };
-const COUNTRY_RU={
-  RU:'Россия',BY:'Беларусь',KZ:'Казахстан',CN:'Китай',TR:'Турция',IN:'Индия',AM:'Армения',
-  AZ:'Азербайджан',GE:'Грузия',KG:'Киргизия',UZ:'Узбекистан',IR:'Иран',AE:'ОАЭ',UA:'Украина',
-  MD:'Молдова',US:'США',GB:'Великобритания',DE:'Германия',FR:'Франция',IT:'Италия',ES:'Испания',
-  CA:'Канада',BR:'Бразилия',MX:'Мексика',AR:'Аргентина',JP:'Япония',KR:'Южная Корея',ID:'Индонезия',
-  TH:'Таиланд',VN:'Вьетнам',PH:'Филиппины',MY:'Малайзия',SG:'Сингапур',AU:'Австралия',NZ:'Новая Зеландия',
-  QA:'Катар',SA:'Саудовская Аравия',EG:'Египет',IL:'Израиль',PL:'Польша',CZ:'Чехия',RO:'Румыния',
-  BG:'Болгария',RS:'Сербия',HR:'Хорватия',SK:'Словакия',HU:'Венгрия',NL:'Нидерланды',BE:'Бельгия',
-  CH:'Швейцария',AT:'Австрия',SE:'Швеция',NO:'Норвегия',FI:'Финляндия',DK:'Дания',PT:'Португалия',
-  GR:'Греция',CY:'Кипр',LT:'Литва',LV:'Латвия',EE:'Эстония',TJ:'Таджикистан',TM:'Туркмения',MN:'Монголия'
-};
 
-/* ================== ГАРАНТИРОВАННЫЕ КИНОЗАЛЫ ================== */
+/* ================== ПОЛНЫЕ НАЗВАНИЯ СТРАН ================== */
+const COUNTRY_RU={
+AD:'Андорра',AE:'Объединённые Арабские Эмираты',AF:'Афганистан',AG:'Антигуа и Барбуда',AI:'Ангилья',
+AL:'Албания',AM:'Армения',AO:'Ангола',AQ:'Антарктида',AR:'Аргентина',AS:'Американское Самоа',AT:'Австрия',
+AU:'Австралия',AW:'Аруба',AX:'Аландские острова',AZ:'Азербайджан',BA:'Босния и Герцеговина',BB:'Барбадос',
+BD:'Бангладеш',BE:'Бельгия',BF:'Буркина-Фасо',BG:'Болгария',BH:'Бахрейн',BI:'Бурунди',BJ:'Бенин',BL:'Сен-Бартелеми',
+BM:'Бермудские острова',BN:'Бруней',BO:'Боливия',BQ:'Бонэйр, Синт-Эстатиус и Саба',BR:'Бразилия',BS:'Багамские Острова',
+BT:'Бутан',BV:'Остров Буве',BW:'Ботсвана',BY:'Беларусь',BZ:'Белиз',CA:'Канада',CC:'Кокосовые острова',
+CD:'Демократическая Республика Конго',CF:'Центральноафриканская Республика',CG:'Республика Конго',CH:'Швейцария',
+CI:'Кот-д’Ивуар',CK:'Острова Кука',CL:'Чили',CM:'Камерун',CN:'Китай',CO:'Колумбия',CR:'Коста-Рика',CU:'Куба',
+CV:'Кабо-Верде',CW:'Кюрасао',CX:'Остров Рождества',CY:'Кипр',CZ:'Чехия',DE:'Германия',DJ:'Джибути',DK:'Дания',
+DM:'Доминика',DO:'Доминиканская Республика',DZ:'Алжир',EC:'Эквадор',EE:'Эстония',EG:'Египет',EH:'Западная Сахара',
+ER:'Эритрея',ES:'Испания',ET:'Эфиопия',FI:'Финляндия',FJ:'Фиджи',FK:'Фолклендские острова',FM:'Микронезия',
+FO:'Фарерские острова',FR:'Франция',GA:'Габон',GB:'Великобритания',GD:'Гренада',GE:'Грузия',GF:'Французская Гвиана',
+GG:'Гернси',GH:'Гана',GI:'Гибралтар',GL:'Гренландия',GM:'Гамбия',GN:'Гвинея',GP:'Гваделупа',GQ:'Экваториальная Гвинея',
+GR:'Греция',GS:'Южная Георгия и Южные Сандвичевы острова',GT:'Гватемала',GU:'Гуам',GW:'Гвинея-Бисау',GY:'Гайана',
+HK:'Гонконг',HM:'Остров Херд и острова Макдональд',HN:'Гондурас',HR:'Хорватия',HT:'Гаити',HU:'Венгрия',
+ID:'Индонезия',IE:'Ирландия',IL:'Израиль',IM:'Остров Мэн',IN:'Индия',IO:'Британская территория в Индийском океане',
+IQ:'Ирак',IR:'Иран',IS:'Исландия',IT:'Италия',JE:'Джерси',JM:'Ямайка',JO:'Иордания',JP:'Япония',KE:'Кения',
+KG:'Киргизия',KH:'Камбоджа',KI:'Кирибати',KM:'Коморские Острова',KN:'Сент-Китс и Невис',KP:'Северная Корея',
+KR:'Южная Корея',KW:'Кувейт',KY:'Каймановы острова',KZ:'Казахстан',LA:'Лаос',LB:'Ливан',LC:'Сент-Люсия',
+LI:'Лихтенштейн',LK:'Шри-Ланка',LR:'Либерия',LS:'Лесото',LT:'Литва',LU:'Люксембург',LV:'Латвия',LY:'Ливия',
+MA:'Марокко',MC:'Монако',MD:'Молдова',ME:'Черногория',MF:'Сен-Мартен',MG:'Мадагаскар',MH:'Маршалловы Острова',
+MK:'Северная Македония',ML:'Мали',MM:'Мьянма',MN:'Монголия',MO:'Макао',MP:'Северные Марианские острова',
+MQ:'Мартиника',MR:'Мавритания',MS:'Монтсеррат',MT:'Мальта',MU:'Маврикий',MV:'Мальдивы',MW:'Малави',MX:'Мексика',
+MY:'Малайзия',MZ:'Мозамбик',NA:'Намибия',NC:'Новая Каледония',NE:'Нигер',NF:'Остров Норфолк',NG:'Нигерия',
+NI:'Никарагуа',NL:'Нидерланды',NO:'Норвегия',NP:'Непал',NR:'Науру',NU:'Ниуэ',NZ:'Новая Зеландия',OM:'Оман',
+PA:'Панама',PE:'Перу',PF:'Французская Полинезия',PG:'Папуа — Новая Гвинея',PH:'Филиппины',PK:'Пакистан',
+PL:'Польша',PM:'Сен-Пьер и Микелон',PN:'Питкэрн',PR:'Пуэрто-Рико',PS:'Палестина',PT:'Португалия',PW:'Палау',
+PY:'Парагвай',QA:'Катар',RE:'Реюньон',RO:'Румыния',RS:'Сербия',RU:'Россия',RW:'Руанда',SA:'Саудовская Аравия',
+SB:'Соломоновы Острова',SC:'Сейшельские Острова',SD:'Судан',SE:'Швеция',SG:'Сингапур',SH:'Святая Елена',
+SI:'Словения',SJ:'Шпицберген и Ян-Майен',SK:'Словакия',SL:'Сьерра-Леоне',SM:'Сан-Марино',SN:'Сенегал',
+SO:'Сомали',SR:'Суринам',SS:'Южный Судан',ST:'Сан-Томе и Принсипи',SV:'Сальвадор',SX:'Синт-Мартен',
+SY:'Сирия',SZ:'Эсватини',TC:'Острова Тёркс и Кайкос',TD:'Чад',TF:'Французские Южные территории',TG:'Того',
+TH:'Таиланд',TJ:'Таджикистан',TK:'Токелау',TL:'Восточный Тимор',TM:'Туркмения',TN:'Тунис',TO:'Тонга',
+TR:'Турция',TT:'Тринидад и Тобаго',TV:'Тувалу',TW:'Тайвань',TZ:'Танзания',UA:'Украина',UG:'Уганда',
+UM:'Внешние малые острова США',US:'Соединённые Штаты Америки',UY:'Уругвай',UZ:'Узбекистан',VA:'Ватикан',
+VC:'Сент-Винсент и Гренадины',VE:'Венесуэла',VG:'Виргинские острова (Великобритания)',VI:'Виргинские острова (США)',
+VN:'Вьетнам',VU:'Вануату',WF:'Уоллис и Футуна',WS:'Самоа',XK:'Косово',YE:'Йемен',YT:'Майотта',
+ZA:'Южно-Африканская Республика',ZM:'Замбия',ZW:'Зимбабве'
+};
+const COUNTRY_EN={
+AD:'Andorra',AE:'United Arab Emirates UAE',AF:'Afghanistan',AG:'Antigua and Barbuda',AI:'Anguilla',AL:'Albania',
+AM:'Armenia',AO:'Angola',AR:'Argentina',AT:'Austria',AU:'Australia',AW:'Aruba',AZ:'Azerbaijan',
+BA:'Bosnia and Herzegovina',BB:'Barbados',BD:'Bangladesh',BE:'Belgium',BF:'Burkina Faso',BG:'Bulgaria',
+BH:'Bahrain',BI:'Burundi',BJ:'Benin',BM:'Bermuda',BN:'Brunei',BO:'Bolivia',BR:'Brazil',BS:'Bahamas',BT:'Bhutan',
+BW:'Botswana',BY:'Belarus',BZ:'Belize',CA:'Canada',CD:'DR Congo',CF:'Central African Republic',CG:'Congo',
+CH:'Switzerland',CI:'Ivory Coast Cote dIvoire',CK:'Cook Islands',CL:'Chile',CM:'Cameroon',CN:'China',CO:'Colombia',
+CR:'Costa Rica',CU:'Cuba',CV:'Cape Verde',CW:'Curacao',CY:'Cyprus',CZ:'Czechia Czech Republic',DE:'Germany',
+DJ:'Djibouti',DK:'Denmark',DM:'Dominica',DO:'Dominican Republic',DZ:'Algeria',EC:'Ecuador',EE:'Estonia',
+EG:'Egypt',ER:'Eritrea',ES:'Spain',ET:'Ethiopia',FI:'Finland',FJ:'Fiji',FM:'Micronesia',FO:'Faroe Islands',
+FR:'France',GA:'Gabon',GB:'United Kingdom UK Britain England',GD:'Grenada',GE:'Georgia',GH:'Ghana',
+GI:'Gibraltar',GL:'Greenland',GM:'Gambia',GN:'Guinea',GQ:'Equatorial Guinea',GR:'Greece',GT:'Guatemala',
+GU:'Guam',GW:'Guinea-Bissau',GY:'Guyana',HK:'Hong Kong',HN:'Honduras',HR:'Croatia',HT:'Haiti',HU:'Hungary',
+ID:'Indonesia',IE:'Ireland',IL:'Israel',IM:'Isle of Man',IN:'India',IQ:'Iraq',IR:'Iran',IS:'Iceland',IT:'Italy',
+JM:'Jamaica',JO:'Jordan',JP:'Japan',KE:'Kenya',KG:'Kyrgyzstan',KH:'Cambodia',KI:'Kiribati',KM:'Comoros',
+KN:'Saint Kitts and Nevis',KP:'North Korea',KR:'South Korea',KW:'Kuwait',KY:'Cayman Islands',KZ:'Kazakhstan',
+LA:'Laos',LB:'Lebanon',LC:'Saint Lucia',LI:'Liechtenstein',LK:'Sri Lanka',LR:'Liberia',LS:'Lesotho',LT:'Lithuania',
+LU:'Luxembourg',LV:'Latvia',LY:'Libya',MA:'Morocco',MC:'Monaco',MD:'Moldova',ME:'Montenegro',MG:'Madagascar',
+MH:'Marshall Islands',MK:'North Macedonia',ML:'Mali',MM:'Myanmar Burma',MN:'Mongolia',MO:'Macao',MQ:'Martinique',
+MR:'Mauritania',MT:'Malta',MU:'Mauritius',MV:'Maldives',MW:'Malawi',MX:'Mexico',MY:'Malaysia',MZ:'Mozambique',
+NA:'Namibia',NC:'New Caledonia',NE:'Niger',NG:'Nigeria',NI:'Nicaragua',NL:'Netherlands Holland',NO:'Norway',
+NP:'Nepal',NR:'Nauru',NZ:'New Zealand',OM:'Oman',PA:'Panama',PE:'Peru',PF:'French Polynesia',
+PG:'Papua New Guinea',PH:'Philippines',PK:'Pakistan',PL:'Poland',PR:'Puerto Rico',PS:'Palestine',PT:'Portugal',
+PW:'Palau',PY:'Paraguay',QA:'Qatar',RE:'Reunion',RO:'Romania',RS:'Serbia',RU:'Russia',RW:'Rwanda',
+SA:'Saudi Arabia',SB:'Solomon Islands',SC:'Seychelles',SD:'Sudan',SE:'Sweden',SG:'Singapore',SI:'Slovenia',
+SK:'Slovakia',SL:'Sierra Leone',SM:'San Marino',SN:'Senegal',SO:'Somalia',SR:'Suriname',SS:'South Sudan',
+ST:'Sao Tome and Principe',SV:'El Salvador',SX:'Sint Maarten',SY:'Syria',SZ:'Eswatini Swaziland',TD:'Chad',
+TG:'Togo',TH:'Thailand',TJ:'Tajikistan',TL:'Timor-Leste',TM:'Turkmenistan',TN:'Tunisia',TO:'Tonga',TR:'Turkey',
+TT:'Trinidad and Tobago',TV:'Tuvalu',TW:'Taiwan',TZ:'Tanzania',UA:'Ukraine',UG:'Uganda',US:'United States USA America',
+UY:'Uruguay',UZ:'Uzbekistan',VA:'Vatican',VC:'Saint Vincent and the Grenadines',VE:'Venezuela',
+VG:'British Virgin Islands',VI:'US Virgin Islands',VN:'Vietnam',VU:'Vanuatu',WS:'Samoa',XK:'Kosovo',YE:'Yemen',
+ZA:'South Africa',ZM:'Zambia',ZW:'Zimbabwe'
+};
+const INTL_CODES=['WW','INT','UN','XX'];
+const countryName=code=>{
+  const c=String(code||'').toUpperCase();
+  if(!c||INTL_CODES.includes(c))return 'Международный';
+  return COUNTRY_RU[c]||c;
+};
+const isIntl=code=>!code||INTL_CODES.includes(String(code).toUpperCase());
+const norm=s=>String(s||'').toLowerCase().replace(/ё/g,'е').replace(/[^0-9a-zа-я]+/gi,' ').replace(/\s+/g,' ').trim();
+const countryHay=code=>norm(countryName(code)+' '+(COUNTRY_EN[code]||'')+' '+code);
+const ALL_COUNTRIES=Object.keys(COUNTRY_RU).sort((a,b)=>COUNTRY_RU[a].localeCompare(COUNTRY_RU[b],'ru'));
+
+/* ================== КИНОЗАЛЫ ================== */
 const GB='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/';
 const CINEMA=[
-  {id:'cinema-1',name:'СМЕХОРАМА',group:'Комедии',country:'Россия',type:'vod',desc:'Комедийный кинозал: «Большой кролик» (Blender Foundation, CC-BY) и немая комедия Чаплина из общественного достояния.',items:[
+  {id:'cinema-1',name:'СМЕХОРАМА',group:'Комедии',country:'Россия',countryCode:'RU',type:'vod',desc:'Комедийный кинозал: «Большой кролик» (Blender Foundation, CC-BY) и немая комедия Чаплина из общественного достояния.',items:[
     {title:'Большой кролик',meta:'Анимационная комедия • CC-BY • без диалогов',url:GB+'BigBuckBunny.mp4',dur:596},
     {title:'Чарли Чаплин: «Лавка ростовщика»',meta:'Немая комедия • 1916 • общественное достояние',url:'https://archive.org/download/CC_1916_10_02_ThePawnshop/CC_1916_10_02_ThePawnshop_512kb.mp4',dur:1560}
   ]},
-  {id:'cinema-2',name:'КОМПАС',group:'Приключения',country:'Россия',type:'vod',desc:'Приключенческий кинозал: «Синтел» (CC-BY) и короткие дорожные истории.',items:[
+  {id:'cinema-2',name:'КОМПАС',group:'Приключения',country:'Россия',countryCode:'RU',type:'vod',desc:'Приключенческий кинозал: «Синтел» (CC-BY) и короткие дорожные истории.',items:[
     {title:'Синтел',meta:'Фэнтези-приключение • CC-BY',url:GB+'Sintel.mp4',dur:888},
     {title:'Мы едем на Буллран',meta:'Дорожная короткометражка',url:GB+'WeAreGoingOnBullrun.mp4',dur:47},
     {title:'Subaru Outback: улицы и бездорожье',meta:'Автоприключения',url:GB+'SubaruOutbackOnStreetAndDirt.mp4',dur:594},
     {title:'Что можно купить за тысячу?',meta:'Автомобильное путешествие',url:GB+'WhatCarCanYouGetForAGrand.mp4',dur:567}
   ]},
-  {id:'cinema-3',name:'ОРБИТА',group:'Фантастика',country:'Россия',type:'vod',desc:'Фантастический кинозал: «Слёзы стали», «Сон слона» и «Синтел».',items:[
+  {id:'cinema-3',name:'ОРБИТА',group:'Фантастика',country:'Россия',countryCode:'RU',type:'vod',desc:'Фантастический кинозал: «Слёзы стали», «Сон слона» и «Синтел».',items:[
     {title:'Слёзы стали',meta:'Научная фантастика • CC-BY • англ.',url:GB+'TearsOfSteel.mp4',dur:734},
     {title:'Сон слона',meta:'Сюрреалистичная фантастика • CC-BY • англ.',url:GB+'ElephantsDream.mp4',dur:653},
     {title:'Синтел',meta:'Фэнтези-приключение • CC-BY',url:GB+'Sintel.mp4',dur:888}
   ]},
-  {id:'cinema-4',name:'ПОЛНОЧЬ',group:'Фантастика',country:'Россия',type:'vod',desc:'Ночной зал фантастики и ужасов: «Ночь живых мертвецов» (1968, общественное достояние). При недоступности — резервная лента.',items:[
+  {id:'cinema-4',name:'ПОЛНОЧЬ',group:'Фантастика',country:'Россия',countryCode:'RU',type:'vod',desc:'Ночной зал фантастики и ужасов: «Ночь живых мертвецов» (1968, общественное достояние). При недоступности — резервная лента.',items:[
     {title:'Ночь живых мертвецов',meta:'Хоррор-фантастика • 1968 • общественное достояние • англ.',url:'https://archive.org/download/night_of_the_living_dead/night_of_the_living_dead_512kb.mp4',dur:5760},
     {title:'Сон слона',meta:'Резервная лента • CC-BY • англ.',url:GB+'ElephantsDream.mp4',dur:653}
   ]}
@@ -485,11 +659,19 @@ const IC={
   export:'<path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 17v3h16v-3"/>',
   star:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9L3.5 9.7l5.9-.8z"/>',
   grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/>',
   shuffle:'<path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="m15 15 6 6"/><path d="M4 4l5 5"/>',
   close:'<path d="M18 6 6 18M6 6l12 12"/>',
   chevL:'<path d="m15 18-6-6 6-6"/>',
   chevR:'<path d="m9 18 6-6-6-6"/>',
-  check:'<path d="M20 6 9 17l-5-5"/>'
+  chevD:'<path d="m6 9 6 6 6-6"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  share:'<path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.5-1.5"/>',
+  copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  external:'<path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>',
+  send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
+  chat:'<path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l2-5.4a8.3 8.3 0 0 1-1-4A8.4 8.4 0 0 1 12.5 3 8.4 8.4 0 0 1 21 11.5z"/>'
 };
 const icon=(n,s=18)=>'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';
 
@@ -502,40 +684,102 @@ const cloneCinema=()=>CINEMA.map((c,i)=>Object.assign(JSON.parse(JSON.stringify(
 
 let channels=cloneCinema();
 let current=channels[0];
-let session=0,hls=null,hlsPromise=null,mode='idle',srcIdx=0,segUrl=null,pendingSeek=0,started=false;
+let session=0,hls=null,hlsPromise=null,mode='idle',segUrl=null,pendingSeek=0,started=false;
 let signalText='источник проверен';
 const durCache={},quarantine={};
-let idCounter=0;
+let idCounter=0,pendingKey=null;
 
 const scan={running:false,sourceIdx:0,queue:[],seenUrls:new Set(),verifiedNames:new Set(),blockedUrls:new Set(),blockedNames:new Set(),checked:0,exhausted:false,abort:false};
-const DEF={vol:70,muted:false,cat:'all',sort:'number',lastUrl:'',favs:{}};
+const DEF={vol:70,muted:false,cat:'all',country:'all',lastUrl:'',favs:{}};
 let S=Object.assign({},DEF);
-try{const raw=localStorage.getItem('tv-box-v3');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+try{const raw=localStorage.getItem('tv-box-v4');if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
 if(!S.favs||typeof S.favs!=='object')S.favs={};
+if(!S.country)S.country='all';
+delete S.sort;
 let saveT=null;
-function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('tv-box-v3',JSON.stringify(S));}catch(e){}},200);}
+function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('tv-box-v4',JSON.stringify(S));}catch(e){}},200);}
 
 const favKey=ch=>ch.type==='vod'?ch.id:ch.url;
 const isFav=ch=>!!S.favs[favKey(ch)];
+function applyFavChange(){save();renderGenres();renderInfo();if(S.cat==='fav')renderList();else renderWindow();if(!$('genreModal').hidden)renderGenreSheet();}
 function toggleFav(ch){
-  const k=favKey(ch);
-  if(S.favs[k])delete S.favs[k];else S.favs[k]=1;
-  save();renderGenres();renderInfo();
-  if(S.cat==='fav')renderList();else renderWindow();
-  toast(isFav(ch)?'«'+ch.name+'» — в избранном':'«'+ch.name+'» убран из избранного','info',2200);
+  const k=favKey(ch),was=isFav(ch);
+  if(was)delete S.favs[k];else S.favs[k]=1;
+  applyFavChange();
+  if(was)toast('«'+ch.name+'» убран из избранного','info',4600,{label:'Вернуть',fn:()=>{S.favs[k]=1;applyFavChange();toast('«'+ch.name+'» снова в избранном','ok',2200);}});
+  else toast('«'+ch.name+'» — в избранном','ok',2200);
 }
 
 let renderT=null;
 function scheduleRender(){if(renderT)return;renderT=setTimeout(()=>{renderT=null;renderAll();},350);}
 
 /* ================== ТОСТЫ ================== */
-function toast(msg,type='info',ms=3800){
-  const box=$('toasts');while(box.children.length>=4)box.firstChild.remove();
+function toast(msg,type='info',ms=3800,action){
+  const box=$('toasts');while(box.children.length>=3)box.firstChild.remove();
   const el=document.createElement('div');el.className='toast '+type;
   const d=document.createElement('span');d.className='t-dot';
-  const t=document.createElement('span');t.textContent=msg;
+  const t=document.createElement('span');t.className='msg';t.textContent=msg;
   el.append(d,t);
-  box.appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(8px)';setTimeout(()=>el.remove(),220);},ms);
+  let timer;
+  if(action){
+    const b=document.createElement('button');b.className='t-action';b.textContent=action.label;
+    b.addEventListener('click',()=>{clearTimeout(timer);el.remove();action.fn();});
+    el.appendChild(b);
+  }
+  box.appendChild(el);
+  timer=setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(10px)';setTimeout(()=>el.remove(),240);},ms);
+}
+
+/* ================== ССЫЛКИ НА КАНАЛ ================== */
+function channelKey(ch){return ch.type==='vod'?ch.id:ch.url;}
+function appBase(){
+  try{const qs=new URLSearchParams(location.search);const vk=qs.get('vk_app_id');if(vk)return 'https://vk.com/app'+vk;}catch(e){}
+  return location.href.split('#')[0];
+}
+function channelHash(ch){
+  let h='#ch='+encodeURIComponent(channelKey(ch));
+  if(ch.type==='hls')h+='&t='+encodeURIComponent(ch.name)+'&g='+encodeURIComponent(ch.group)+'&c='+encodeURIComponent(ch.countryCode||'');
+  return h;
+}
+function shareUrl(ch){return appBase()+channelHash(ch);}
+function buildShare(){
+  const ch=current||channels[0];
+  return {ch,url:shareUrl(ch),text:'«'+ch.name+'» — '+(ch.type==='vod'?'кинозал':'прямой эфир')+' в TV BOX ('+ch.country+'). Ссылка откроет именно этот канал.'};
+}
+function syncHash(ch){try{history.replaceState(null,'',channelHash(ch));}catch(e){}}
+function readHash(){
+  const h=location.hash.replace(/^#/,'');if(!h)return null;
+  let p;try{p=new URLSearchParams(h);}catch(e){return null;}
+  const key=p.get('ch');if(!key)return null;
+  return {key,name:p.get('t')||'',group:p.get('g')||'',country:p.get('c')||''};
+}
+async function resolveDeepLink(dl){
+  if(!dl)return;
+  if(current&&started&&channelKey(current)===dl.key)return;
+  const found=channels.find(c=>channelKey(c)===dl.key);
+  if(found){pendingKey=null;tune(found,true);return;}
+  if(!/^https:\/\//i.test(dl.key)||!/\.m3u8(\?|$)/i.test(dl.key)){toast('Канал по ссылке сейчас недоступен.','warn');return;}
+  pendingKey=dl.key;
+  toast('Открываю канал по ссылке…','info',3000);
+  const ok=await probeHls(dl.key);
+  if(current&&started&&channelKey(current)===dl.key){pendingKey=null;return;}
+  const again=channels.find(c=>c.url===dl.key);
+  if(again){pendingKey=null;tune(again,true);return;}
+  if(!ok){toast('Канал по ссылке пока не отвечает. Включу, как только он найдётся в поиске.','warn',5200);return;}
+  pendingKey=null;
+  const meta={name:dl.name||'Канал по ссылке',url:dl.key,logo:'',group:dl.group||'Разное',country:(dl.country||'').toUpperCase(),tvgId:''};
+  scan.seenUrls.add(meta.url);scan.verifiedNames.add(nameKey(meta.name));
+  addChannel(meta);
+  const added=channels.find(c=>c.url===dl.key);
+  if(added){tune(added,true);toast('Канал по ссылке включён.','ok',3000);}
+}
+addEventListener('hashchange',()=>{const dl=readHash();if(dl)resolveDeepLink(dl);});
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t);return true;}catch(e){}
+  try{
+    const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok;
+  }catch(e){return false;}
 }
 
 /* ================== ПАРСЕР M3U ================== */
@@ -550,9 +794,7 @@ function translateGroup(g){
   const first=String(g||'').split(';')[0].trim();
   return GROUP_RU[first]||first||'Разное';
 }
-function isPrivateHost(h){
-  return /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/i.test(h);
-}
+function isPrivateHost(h){return /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/i.test(h);}
 function isAllowed(c){
   if(!/^https:\/\//i.test(c.url))return false;
   if(!/\.m3u8(\?|$)/i.test(c.url))return false;
@@ -567,17 +809,10 @@ function parseM3U(text,sourceCountry){
     if(line.startsWith('#EXTINF:')){
       const attrs={};let m;const re=/([\w-]+)="([^"]*)"/g;
       while((m=re.exec(line)))attrs[m[1]]=m[2];
-      const name=cleanName(line.slice(line.indexOf(',')+1));
-      meta={name,attrs};
+      meta={name:cleanName(line.slice(line.indexOf(',')+1)),attrs};
     }else if(line&&!line.startsWith('#')&&meta){
-      const c={
-        name:meta.name,
-        url:line,
-        logo:meta.attrs['tvg-logo']||'',
-        group:translateGroup(meta.attrs['group-title']),
-        country:(sourceCountry||countryFromId(meta.attrs['tvg-id'])||'').toUpperCase(),
-        tvgId:meta.attrs['tvg-id']||''
-      };
+      const c={name:meta.name,url:line,logo:meta.attrs['tvg-logo']||'',group:translateGroup(meta.attrs['group-title']),
+        country:(sourceCountry||countryFromId(meta.attrs['tvg-id'])||'').toUpperCase(),tvgId:meta.attrs['tvg-id']||''};
       if(isAllowed(c))out.push(c);
       meta=null;
     }
@@ -585,7 +820,7 @@ function parseM3U(text,sourceCountry){
   return out;
 }
 
-/* ================== ПРОВЕРКА ИСТОЧНИКОВ ================== */
+/* ================== ПРОВЕРКА ================== */
 async function fetchText(url,timeout){
   const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),timeout);
   try{const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});if(!r.ok)throw new Error('HTTP '+r.status);return await r.text();}
@@ -606,13 +841,12 @@ async function probeHls(url){
 function updateScanUI(sourceLabel){
   const found=channels.length;
   $('topCounter').textContent=found+'/'+TARGET;
-  $('scanFound').textContent=found+'/'+TARGET;
   $('scanChecked').textContent='проверено '+scan.checked;
   $('scanFill').style.width=Math.min(100,found/TARGET*100)+'%';
   if(sourceLabel)$('scanSource').textContent=sourceLabel;
   else if(scan.running)$('scanSource').textContent='Проверка источников…';
-  else if(found>=TARGET)$('scanSource').textContent='Готово: '+TARGET+' рабочих каналов';
-  else if(scan.exhausted)$('scanSource').textContent='Все источники проверены. Найдено '+found+'.';
+  else if(found>=TARGET)$('scanSource').textContent='Цель достигнута';
+  else if(scan.exhausted)$('scanSource').textContent='Все источники проверены';
   else $('scanSource').textContent='Готово к поиску';
 }
 async function loadNextSource(){
@@ -620,9 +854,7 @@ async function loadNextSource(){
     const src=SOURCES[scan.sourceIdx++];
     updateScanUI('Загрузка: '+src.label);
     let text='';
-    for(const url of src.urls){
-      try{text=await fetchText(url,20000);if(text)break;}catch(e){}
-    }
+    for(const url of src.urls){try{text=await fetchText(url,20000);if(text)break;}catch(e){}}
     if(!text)continue;
     const parsed=parseM3U(text,src.country);
     const fresh=parsed.filter(c=>!scan.seenUrls.has(c.url)&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedUrls.has(c.url)&&!scan.blockedNames.has(nameKey(c.name)));
@@ -641,8 +873,7 @@ async function probeQueue(){
       scan.checked++;updateScanUI();
       const ok=await probeHls(c.url);
       if(ok&&channels.length<TARGET&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedNames.has(nameKey(c.name))){
-        scan.verifiedNames.add(nameKey(c.name));
-        addChannel(c);
+        scan.verifiedNames.add(nameKey(c.name));addChannel(c);
       }
     }
   });
@@ -660,27 +891,22 @@ async function startScan(force=false){
   scan.running=true;scan.exhausted=false;updateScanUI();
   try{
     while(channels.length<TARGET&&!scan.abort){
-      if(!scan.queue.length){
-        const ok=await loadNextSource();
-        if(!ok){scan.exhausted=true;break;}
-      }
+      if(!scan.queue.length){const ok=await loadNextSource();if(!ok){scan.exhausted=true;break;}}
       await probeQueue();
     }
   }finally{
     scan.running=false;updateScanUI();renderAll();restoreLast();
-    if(channels.length>=TARGET)toast('Найдено '+TARGET+' рабочих каналов. Поиск остановлен.','ok',5000);
-    else toast('Проверка завершена: найдено '+channels.length+' рабочих каналов.','warn',5000);
+    if(channels.length>=TARGET)toast('Цель достигнута: '+TARGET+' рабочих каналов.','ok',5000);
+    else toast('Проверка источников завершена.','warn',4200);
   }
 }
 function addChannel(c){
-  const country=COUNTRY_RU[c.country]||c.country||'Международный';
-  const ch={
-    id:'iptv-'+(++idCounter),n:channels.length+1,name:c.name,group:c.group,country,
-    countryCode:c.country,url:c.url,logo:c.logo,type:'hls',
-    desc:'Прямой эфир • '+c.group+' • '+country+'. Источник успешно прошёл проверку в вашей сети.',
-    verifiedAt:Date.now()
-  };
+  const code=String(c.country||'').toUpperCase();
+  const ch={id:'iptv-'+(++idCounter),n:channels.length+1,name:c.name,group:c.group,country:countryName(code),
+    countryCode:isIntl(code)?'':code,url:c.url,logo:c.logo,type:'hls',tvgId:c.tvgId||'',
+    desc:'Прямой эфир • '+c.group+' • '+countryName(code)+'. Источник успешно прошёл проверку в вашей сети.',verifiedAt:Date.now()};
   channels.push(ch);scheduleRender();updateScanUI();
+  if(pendingKey&&ch.url===pendingKey){pendingKey=null;setTimeout(()=>tune(ch,true),0);toast('Канал по ссылке найден и включён.','ok',3000);}
 }
 function renumber(){channels.forEach((c,i)=>c.n=i+1);}
 function removeChannel(ch,reason){
@@ -693,7 +919,7 @@ function removeChannel(ch,reason){
     if(next)tune(next);else showEmpty();
   }
   renderAll();updateScanUI();
-  toast('«'+ch.name+'» удалён из рабочих: '+reason,'warn',5000);
+  toast('«'+ch.name+'» удалён: '+reason,'warn',4600);
   if(channels.length<TARGET&&!scan.running&&!scan.exhausted)startScan();
 }
 function showEmpty(){
@@ -741,14 +967,13 @@ function destroyPlayer(){
 function tune(ch,user){
   if(!ch)return;
   destroyPlayer();const ses=session;
-  current=ch;S.lastUrl=ch.type==='vod'?ch.id:ch.url;save();
+  current=ch;S.lastUrl=ch.type==='vod'?ch.id:ch.url;save();syncHash(ch);
   started=true;$('boot').hidden=true;
   renderAll();showBadge();revealCurrent();
   if(user&&matchMedia('(max-width:940px)').matches)player.scrollIntoView({behavior:'smooth',block:'start'});
   $('loading').hidden=false;
   signalText='подключение…';updateSignal();
-  if(ch.type==='vod'){mode='vod';startVod(ch,ses);}
-  else{mode='hls';playHls(ch,ses);}
+  if(ch.type==='vod'){mode='vod';startVod(ch,ses);}else{mode='hls';playHls(ch,ses);}
 }
 async function playHls(ch,ses){
   const H=await ensureHls();if(ses!==session)return;
@@ -789,7 +1014,7 @@ function buildQuality(){
   hls.levels.forEach((lv,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=(lv.height||Math.round(lv.bitrate/1000)+'k')+'p';sel.appendChild(o);});
   sel.value=String(hls.currentLevel);sel.hidden=false;
 }
-$('quality').addEventListener('change',e=>{if(hls){hls.currentLevel=parseInt(e.target.value,10);toast('Качество: '+e.target.options[e.target.selectedIndex].text,'info',2200);}});
+$('quality').addEventListener('change',e=>{if(hls){hls.currentLevel=parseInt(e.target.value,10);toast('Качество: '+e.target.options[e.target.selectedIndex].text,'info',2000);}});
 
 /* ================== КИНОЗАЛЫ ================== */
 function activeItems(ch){const q=quarantine[ch.id]||new Set();return ch.items.filter(it=>!q.has(it.url));}
@@ -825,8 +1050,7 @@ function segmentFailed(){
   const ch=current,it=ch.items.find(x=>x.url===segUrl);
   if(!quarantine[ch.id])quarantine[ch.id]=new Set();
   if(it){quarantine[ch.id].add(it.url);toast('Фрагмент «'+it.title+'» недоступен — пропускаю.','warn');}
-  const act=activeItems(ch);
-  if(!act.length){removeChannel(ch,'лента недоступна');return;}
+  if(!activeItems(ch).length){removeChannel(ch,'лента недоступна');return;}
   loadSeg(ch,nextActiveIndex(ch,segUrl),0,session);
 }
 video.addEventListener('loadedmetadata',()=>{
@@ -854,13 +1078,12 @@ video.addEventListener('pause',()=>{syncPlay();pokeControls();});
 let tuT=0;
 video.addEventListener('timeupdate',()=>{const n=Date.now();if(n-tuT>900){tuT=n;renderProgram();}});
 
-/* ================== ЖАНРЫ ================== */
+/* ================== ЖАНРЫ + СЧЁТЧИКИ ================== */
 function genreCounts(){const g={};channels.forEach(c=>{g[c.group]=(g[c.group]||0)+1;});return g;}
 function favCount(){let n=0;channels.forEach(c=>{if(isFav(c))n++;});return n;}
 function sortedGenres(groups){return Object.keys(groups).sort((a,b)=>groups[b]-groups[a]||a.localeCompare(b,'ru'));}
 function setCat(key){
-  S.cat=key;save();
-  $('chList').scrollTop=0;
+  S.cat=key;save();$('chList').scrollTop=0;
   renderGenres();renderList();updateSideHead();
   if(matchMedia('(max-width:940px)').matches)$('sidebar').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -871,21 +1094,109 @@ function renderGenres(){
   const frag=document.createDocumentFragment();
   const mk=(key,label,count)=>{
     const b=document.createElement('button');
-    b.className='g-chip'+(S.cat===key?' active':'');
+    b.className='g-chip press'+(S.cat===key?' active':'');
     b.setAttribute('role','tab');b.setAttribute('aria-selected',S.cat===key?'true':'false');
+    b.setAttribute('aria-label',label+': '+count+' станций');
+    b.title=label+' — найдено '+count;
     const t=document.createElement('span');t.textContent=label;
     const c=document.createElement('span');c.className='g-count';c.textContent=count;
     b.append(t,c);
     b.addEventListener('click',()=>setCat(key));
     frag.appendChild(b);
   };
-  mk('all','Все',channels.length);
+  mk('all','Все жанры',channels.length);
   mk('fav','Избранное',favCount());
   sortedGenres(groups).forEach(k=>mk(k,k,groups[k]));
-  const more=document.createElement('button');more.className='g-chip more';more.textContent='Все жанры';
+  const more=document.createElement('button');more.className='g-chip more press';more.textContent='Список жанров';
   more.addEventListener('click',openGenres);frag.appendChild(more);
   bar.replaceChildren(frag);bar.scrollLeft=sl;updateGenreArrows();
 }
+function iosRow(label,active,onClick,opts){
+  opts=opts||{};
+  const b=document.createElement('button');
+  b.className='ios-row'+(opts.ctry?' ctry':'')+(active?' active':'');
+  const t=document.createElement('b');t.textContent=label;
+  b.appendChild(t);
+  if(typeof opts.count==='number'){const s=document.createElement('small');s.className='cnt';s.textContent=opts.count;b.appendChild(s);}
+  else if(opts.note){const s=document.createElement('small');s.textContent=opts.note;b.appendChild(s);}
+  const tail=document.createElement('span');tail.className='tail';
+  if(active)tail.innerHTML=icon('check',16);
+  else if(!opts.disabled)tail.innerHTML=icon('chevR',15);
+  b.appendChild(tail);
+  if(opts.disabled)b.disabled=true;else b.addEventListener('click',onClick);
+  return b;
+}
+function renderGenreSheet(){
+  const body=$('genreBody'),scroll=body.scrollTop;
+  const groups=genreCounts();
+  body.innerHTML='';
+  const h=document.createElement('div');h.className='ios-header';h.textContent='Найдено станций по жанрам';
+  const g=document.createElement('div');g.className='ios-group';
+  g.appendChild(iosRow('Все жанры',S.cat==='all',()=>{setCat('all');closeGenres();},{count:channels.length}));
+  g.appendChild(iosRow('Избранное',S.cat==='fav',()=>{setCat('fav');closeGenres();},{count:favCount()}));
+  sortedGenres(groups).forEach(k=>g.appendChild(iosRow(k,S.cat===k,()=>{setCat(k);closeGenres();},{count:groups[k]})));
+  body.append(h,g);body.scrollTop=scroll;
+}
+function openGenres(){renderGenreSheet();$('genreModal').hidden=false;$('genreClose').focus();}
+function closeGenres(){$('genreModal').hidden=true;$('genreBtn').focus();}
+$('genreModal').addEventListener('click',e=>{if(e.target===$('genreModal'))closeGenres();});
+
+/* ================== СТРАНА (только справа) ================== */
+function countryCounts(){const m={};channels.forEach(c=>{const k=c.countryCode||'INTL';m[k]=(m[k]||0)+1;});return m;}
+function setCountry(code){
+  S.country=code;save();$('chList').scrollTop=0;
+  renderCountries();renderList();updateSideHead();
+  if(matchMedia('(max-width:940px)').matches)$('sidebar').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function renderCountries(){
+  const counts=countryCounts();
+  if(S.country!=='all'&&S.country!=='INTL'&&!counts[S.country])S.country='all';
+  const label=S.country==='all'?'Все страны':S.country==='INTL'?'Международный':countryName(S.country);
+  $('countryBtnLabel').textContent=label;
+  $('countryBtn').classList.toggle('filtered',S.country!=='all');
+}
+function renderCountrySheet(){
+  const body=$('countryBody'),scroll=body.scrollTop;
+  const counts=countryCounts();
+  const q=norm($('countrySearch').value);
+  body.innerHTML='';
+  const avail=Object.keys(counts).filter(k=>k!=='INTL').sort((a,b)=>countryName(a).localeCompare(countryName(b),'ru'));
+  const availMatched=avail.filter(c=>!q||countryHay(c).includes(q));
+  const restMatched=ALL_COUNTRIES.filter(c=>!counts[c]&&(!q||countryHay(c).includes(q)));
+  const showAll=!q||norm('Все страны all').includes(q);
+  const showIntl=!!counts.INTL&&(!q||norm('Международный international').includes(q));
+  let any=false;
+
+  if(showAll||showIntl||availMatched.length){
+    const h=document.createElement('div');h.className='ios-header';h.textContent='Сейчас в эфире';
+    const g=document.createElement('div');g.className='ios-group';
+    if(showAll){g.appendChild(iosRow('Все страны',S.country==='all',()=>{setCountry('all');closeCountries();},{ctry:true}));any=true;}
+    if(showIntl){g.appendChild(iosRow('Международный',S.country==='INTL',()=>{setCountry('INTL');closeCountries();},{ctry:true}));any=true;}
+    availMatched.forEach(c=>{any=true;g.appendChild(iosRow(COUNTRY_RU[c]||c,S.country===c,()=>{setCountry(c);closeCountries();},{ctry:true}));});
+    body.append(h,g);
+  }
+  if(restMatched.length){
+    const h=document.createElement('div');h.className='ios-header';h.textContent='Все страны мира';
+    const g=document.createElement('div');g.className='ios-group';
+    restMatched.forEach(c=>{any=true;g.appendChild(iosRow(COUNTRY_RU[c],false,null,{ctry:true,disabled:true,note:'пока нет'}));});
+    body.append(h,g);
+  }
+  if(!any){
+    const d=document.createElement('div');d.className='sheet-empty';
+    d.textContent='Страна «'+$('countrySearch').value.trim()+'» не найдена. Попробуйте иначе — «Корея» или «Korea».';
+    body.appendChild(d);
+  }
+  body.scrollTop=scroll;
+}
+function openCountries(){renderCountrySheet();$('countryModal').hidden=false;setTimeout(()=>$('countrySearch').focus(),60);}
+function closeCountries(){$('countryModal').hidden=true;$('countryBtn').focus();}
+$('countryModal').addEventListener('click',e=>{if(e.target===$('countryModal'))closeCountries();});
+$('countrySearch').addEventListener('input',renderCountrySheet);
+$('countrySearch').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){const first=$('countryBody').querySelector('.ios-row:not(:disabled)');if(first)first.click();}
+});
+
+/* ================== СТРЕЛКИ ЖАНРОВ ================== */
 function updateGenreArrows(){
   const bar=$('genreBar'),wrap=$('genreWrap');
   const over=bar.scrollWidth>bar.clientWidth+4;
@@ -894,84 +1205,71 @@ function updateGenreArrows(){
   $('genreNext').hidden=!over||bar.scrollLeft+bar.clientWidth>=bar.scrollWidth-4;
 }
 $('genreBar').addEventListener('scroll',updateGenreArrows,{passive:true});
-addEventListener('resize',updateGenreArrows);
-$('genrePrev').addEventListener('click',()=>$('genreBar').scrollBy({left:-300,behavior:'smooth'}));
-$('genreNext').addEventListener('click',()=>$('genreBar').scrollBy({left:300,behavior:'smooth'}));
+$('genrePrev').addEventListener('click',()=>$('genreBar').scrollBy({left:-320,behavior:'smooth'}));
+$('genreNext').addEventListener('click',()=>$('genreBar').scrollBy({left:320,behavior:'smooth'}));
 
-function renderGenreModal(){
-  const grid=$('genreGrid');grid.innerHTML='';
-  const groups=genreCounts();
-  $('genreModalSub').textContent=channels.length+' каналов • '+Object.keys(groups).length+' жанров';
-  const mk=(key,label,count)=>{
-    const active=S.cat===key;
-    const b=document.createElement('button');b.className='g-card'+(active?' active':'');
-    const t=document.createElement('b');t.textContent=label;
-    const c=document.createElement('span');c.className='gc';c.textContent=count;
-    const s=document.createElement('span');s.className='g-chev';s.innerHTML=icon(active?'check':'chevR',14);
-    b.append(t,c,s);
-    b.addEventListener('click',()=>{setCat(key);closeGenres();});
-    grid.appendChild(b);
-  };
-  mk('all','Все каналы',channels.length);
-  mk('fav','Избранное',favCount());
-  sortedGenres(groups).forEach(k=>mk(k,k,groups[k]));
-}
-function openGenres(){renderGenreModal();$('genreModal').hidden=false;$('genreClose').focus();}
-function closeGenres(){$('genreModal').hidden=true;$('genreBtn').focus();}
-$('genreModal').addEventListener('click',e=>{if(e.target===$('genreModal'))closeGenres();});
-
-/* ================== СПИСОК (виртуальный) ================== */
-const ROW_H=56;
+/* ================== СПИСОК ================== */
+const ROW_H=60;
 let shownCache=[];
+function countryQueryCodes(q){
+  const hits=new Set();
+  if(!q||q.length<2)return hits;
+  if(/^[a-z]{2}$/i.test(q))hits.add(q.toUpperCase());
+  ALL_COUNTRIES.forEach(code=>{if(countryHay(code).includes(q))hits.add(code);});
+  if(norm('Международный international').includes(q))hits.add('');
+  return hits;
+}
 function computeShown(){
-  const q=$('search').value.trim().toLowerCase();
+  const raw=$('search').value.trim(),q=norm(raw);
+  const hits=countryQueryCodes(q);
   const arr=channels.filter(ch=>{
     const catOk=S.cat==='all'||(S.cat==='fav'?isFav(ch):ch.group===S.cat);
-    const hay=(ch.name+' '+ch.group+' '+ch.country).toLowerCase();
-    return catOk&&(!q||hay.includes(q)||String(ch.n).includes(q));
+    const cOk=S.country==='all'||(S.country==='INTL'?!ch.countryCode:ch.countryCode===S.country);
+    const hay=norm(ch.name+' '+ch.group+' '+ch.country+' '+(ch.countryCode||''));
+    const textOk=!q||hay.includes(q)||String(ch.n).includes(raw)||hits.has(ch.countryCode||'');
+    return catOk&&cOk&&textOk;
   });
-  if(S.sort==='name')arr.sort((a,b)=>a.name.localeCompare(b.name,'ru'));
-  else if(S.sort==='category')arr.sort((a,b)=>a.group.localeCompare(b.group,'ru')||a.name.localeCompare(b.name,'ru'));
-  else arr.sort((a,b)=>a.n-b.n);
+  arr.sort((a,b)=>a.name.localeCompare(b.name,'ru')||a.n-b.n);
   return arr;
 }
 function updateSideHead(){
-  $('sideTitle').textContent=S.cat==='all'?'Все каналы':S.cat==='fav'?'Избранное':S.cat;
-  $('filterReset').hidden=(S.cat==='all'&&!$('search').value.trim());
+  const parts=['Каналы'];
+  if(S.cat==='fav')parts.push('Избранное');else if(S.cat!=='all')parts.push(S.cat);
+  $('sideTitle').textContent=parts.join(' · ');
+  $('sideTitle').title=parts.join(' · ');
+  $('filterReset').hidden=(S.cat==='all'&&S.country==='all'&&!$('search').value.trim());
 }
-function resetFilters(){S.cat='all';$('search').value='';syncSearchClear();save();renderAll();}
+function resetFilters(){S.cat='all';S.country='all';$('search').value='';syncSearchClear();save();renderAll();}
 function renderList(){
   const spacer=$('chSpacer');
   shownCache=computeShown();
-  $('chCount').textContent=String(shownCache.length);
   if(!shownCache.length){
-    spacer.style.height='auto';
+    spacer.style.height='auto';spacer.style.background='transparent';
     const d=document.createElement('div');d.className='ch-empty';
     const p=document.createElement('p');
-    p.textContent=S.cat==='fav'?'В избранном пока пусто. Отмечайте каналы звёздочкой — они появятся здесь.':'Ничего не найдено. Измените запрос или выбери другой жанр.';
-    const rb=document.createElement('button');rb.className='secondary-btn';rb.textContent='Сбросить фильтры';
+    p.textContent=S.cat==='fav'?'В избранном пока пусто. Отмечайте каналы звёздочкой — они появятся здесь.':'Ничего не найдено. Измените запрос, жанр или страну.';
+    const rb=document.createElement('button');rb.className='secondary-btn press';rb.textContent='Сбросить фильтры';
     rb.addEventListener('click',resetFilters);
     d.append(p,rb);spacer.replaceChildren(d);return;
   }
+  spacer.style.background='';
   spacer.style.height=(shownCache.length*ROW_H)+'px';
   renderWindow();
 }
 function renderWindow(){
   if(!shownCache.length)return;
   const list=$('chList'),spacer=$('chSpacer');
-  const top=list.scrollTop,h=list.clientHeight||420;
+  const top=list.scrollTop,h=list.clientHeight||440;
   const from=Math.max(0,Math.floor(top/ROW_H)-4);
   const to=Math.min(shownCache.length,Math.ceil((top+h)/ROW_H)+4);
   const frag=document.createDocumentFragment();
   for(let i=from;i<to;i++){
-    const ch=shownCache[i];
-    const active=current&&ch.id===current.id;
+    const ch=shownCache[i],active=current&&ch.id===current.id;
     const b=document.createElement('div');
-    b.className='ch-item'+(active?' active':'');
+    b.className='ch-item'+(active?' active':'')+(i===0?' first':'');
     b.style.top=(i*ROW_H)+'px';
     b.tabIndex=0;b.setAttribute('role','listitem');
     if(active)b.setAttribute('aria-current','true');
-    const num=document.createElement('span');num.className='ch-num';num.textContent=pad2(ch.n);
     const th=document.createElement('span');th.className='ch-thumb';
     const lt=document.createElement('i');lt.textContent=(ch.name[0]||'?').toUpperCase();th.appendChild(lt);
     if(ch.logo&&/^https:/i.test(ch.logo)){
@@ -980,15 +1278,15 @@ function renderWindow(){
     }
     const tx=document.createElement('span');tx.className='ch-text';
     const nm=document.createElement('span');nm.className='ch-name';nm.textContent=ch.name;nm.title=ch.name;
-    const mt=document.createElement('span');mt.className='ch-meta';
-    if(active){const eq=document.createElement('span');eq.className='eq';eq.innerHTML='<i></i><i></i><i></i>';mt.appendChild(eq);}
-    mt.appendChild(document.createTextNode(ch.group+' • '+ch.country));
-    tx.append(nm,mt);
-    const st=document.createElement('button');st.className='fav-btn'+(isFav(ch)?' on':'');
-    st.innerHTML=icon('star',14);st.title=isFav(ch)?'Убрать из избранного':'В избранное';
+    const sb=document.createElement('span');sb.className='ch-sub';
+    if(active){const eq=document.createElement('span');eq.className='eq';eq.innerHTML='<i></i><i></i><i></i>';sb.appendChild(eq);}
+    sb.appendChild(document.createTextNode(ch.country));
+    tx.append(nm,sb);
+    const st=document.createElement('button');st.className='fav-btn press'+(isFav(ch)?' on':'');
+    st.innerHTML=icon('star',15);st.title=isFav(ch)?'Убрать из избранного':'В избранное';
     st.setAttribute('aria-label','Избранное');
     st.addEventListener('click',e=>{e.stopPropagation();toggleFav(ch);});
-    b.append(num,th,tx,st);
+    b.append(th,tx,st);
     b.addEventListener('click',()=>tune(ch,true));
     b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();tune(ch,true);}});
     frag.appendChild(b);
@@ -997,17 +1295,20 @@ function renderWindow(){
 }
 function revealCurrent(){
   if(!current)return;
-  const i=shownCache.findIndex(c=>c.id===current.id);
-  if(i<0)return;
-  const list=$('chList'),h=list.clientHeight||420,y=i*ROW_H;
+  const i=shownCache.findIndex(c=>c.id===current.id);if(i<0)return;
+  const list=$('chList'),h=list.clientHeight||440,y=i*ROW_H;
   if(y<list.scrollTop||y+ROW_H>list.scrollTop+h)list.scrollTop=Math.max(0,y-h/2+ROW_H/2);
 }
 let winRaf=0;
 $('chList').addEventListener('scroll',()=>{if(winRaf)return;winRaf=requestAnimationFrame(()=>{winRaf=0;renderWindow();});},{passive:true});
-addEventListener('resize',()=>{if(shownCache.length)renderWindow();});
+addEventListener('resize',()=>{updateGenreArrows();if(shownCache.length)renderWindow();});
 
-/* ================== КАРТОЧКА / ПРОГРАММА ================== */
-function renderAll(){renderGenres();renderList();renderInfo();updateSideHead();updateScanUI();}
+/* ================== КАРТОЧКА ================== */
+function renderAll(){
+  renderGenres();renderCountries();renderList();renderInfo();updateSideHead();updateScanUI();
+  if(!$('genreModal').hidden)renderGenreSheet();
+  if(!$('countryModal').hidden)renderCountrySheet();
+}
 function renderInfo(){
   if(!current)return;
   $('infoNum').textContent=pad2(current.n);$('infoName').textContent=current.name;
@@ -1029,7 +1330,7 @@ function renderProgram(){
   if(ch.type!=='vod'){
     const c1=document.createElement('div');c1.className='prog-card now';c1.innerHTML='<em>Сейчас</em><strong>Прямой эфир</strong><span>'+ch.desc+'</span>';
     const c2=document.createElement('div');c2.className='prog-card next';c2.innerHTML='<em>Далее</em><strong>Продолжение эфира</strong><span>Программа уточняется на стороне вещателя.</span>';
-    const c3=document.createElement('div');c3.className='prog-card next';c3.innerHTML='<em>Источник</em><strong>HLS-поток</strong><span>Проверен '+new Date(ch.verifiedAt||Date.now()).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+'. При потере сигнала канал будет удалён автоматически.</span>';
+    const c3=document.createElement('div');c3.className='prog-card next';c3.innerHTML='<em>Источник</em><strong>HLS-поток</strong><span>Проверен '+new Date(ch.verifiedAt||Date.now()).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+'. При потере сигнала канал удалится автоматически.</span>';
     cards.append(c1,c2,c3);return;
   }
   const{items,durs,total}=schedule(ch);
@@ -1040,7 +1341,7 @@ function renderProgram(){
   items.forEach((it,i)=>{
     const b=document.createElement('button');b.className='tl-seg'+(i===ci?' cur':'');b.style.flexGrow=String(Math.max(durs[i],20));b.style.flexBasis='0';b.title=it.title+' • '+fmt(durs[i]);b.innerHTML='<i></i><b>'+it.title+'</b>';
     if(i===ci&&video.duration)b.firstChild.style.width=Math.min(100,video.currentTime/video.duration*100)+'%';
-    b.addEventListener('click',()=>{if(!started||current.id!==ch.id)tune(ch);loadSeg(ch,i,0,session);toast('Включаю: «'+it.title+'»','info',2200);});
+    b.addEventListener('click',()=>{if(!started||current.id!==ch.id)tune(ch);loadSeg(ch,i,0,session);toast('Включаю: «'+it.title+'»','info',2000);});
     tl.appendChild(b);
   });
   const elapsed=(started&&mode==='vod')?(video.currentTime||0):0;
@@ -1064,8 +1365,18 @@ function syncPlay(){$('playBtn').innerHTML=icon(video.paused?'play':'pause');}
 function syncMute(){const ic=icon(S.muted?'mute':'vol');$('muteBtn').innerHTML=ic;$('topMute').innerHTML=ic;$('topMute').classList.toggle('active',!S.muted);}
 function setMuted(m){S.muted=m;video.muted=m;save();syncMute();}
 function setVol(v,fromSlider){S.vol=Math.max(0,Math.min(100,Math.round(v)));video.volume=S.vol/100;if(S.vol>0&&S.muted)setMuted(false);if(!fromSlider)$('volRange').value=String(S.vol);save();}
-function stepChannel(dir){if(!channels.length)return;const i=current?channels.findIndex(c=>c.id===current.id):-1;tune(channels[(i+dir+channels.length)%channels.length],true);}
-function shuffleChannel(){if(channels.length<2)return;let ch;do{ch=channels[Math.floor(Math.random()*channels.length)];}while(current&&ch.id===current.id);tune(ch,true);}
+function stepChannel(dir){
+  const pool=shownCache.length?shownCache:channels;
+  if(!pool.length)return;
+  const i=current?pool.findIndex(c=>c.id===current.id):-1;
+  tune(pool[(i+dir+pool.length)%pool.length],true);
+}
+function shuffleChannel(){
+  const pool=shownCache.length?shownCache:channels;
+  if(pool.length<2)return;
+  let ch;do{ch=pool[Math.floor(Math.random()*pool.length)];}while(current&&ch.id===current.id);
+  tune(ch,true);
+}
 function togglePlay(){if(!started){tune(current||channels[0],true);return;}if(video.paused)video.play().catch(()=>$('gesture').hidden=false);else video.pause();}
 function toggleFs(){if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else player.requestFullscreen().catch(()=>toast('Полный экран недоступен в этом браузере.','warn'));}
 player.addEventListener('dblclick',toggleFs);
@@ -1091,8 +1402,14 @@ function padCommit(){
   const ch=channels.find(c=>c.n===n);
   if(ch)tune(ch,true);else toast('Канала с номером '+n+' пока нет.','warn');
 }
+function anySheetOpen(){return !$('genreModal').hidden||!$('countryModal').hidden||!$('shareModal').hidden;}
+function closeTopSheet(){
+  if(!$('shareModal').hidden)closeShare();
+  else if(!$('countryModal').hidden)closeCountries();
+  else if(!$('genreModal').hidden)closeGenres();
+}
 document.addEventListener('keydown',e=>{
-  if(!$('genreModal').hidden){if(e.key==='Escape'){closeGenres();e.preventDefault();}return;}
+  if(anySheetOpen()){if(e.key==='Escape'){closeTopSheet();e.preventDefault();}return;}
   if(e.target.matches('input,select,textarea')){
     if(e.key==='Escape'){
       if(e.target.id==='search'&&e.target.value){e.target.value='';syncSearchClear();renderList();updateSideHead();}
@@ -1111,23 +1428,66 @@ document.addEventListener('keydown',e=>{
     case 'm':case 'M':case 'ь':case 'Ь':setMuted(!S.muted);break;
     case 'f':case 'F':case 'а':case 'А':toggleFs();break;
     case 'g':case 'G':case 'п':case 'П':openGenres();break;
+    case 'c':case 'C':case 'с':case 'С':openCountries();break;
     case 'r':case 'R':case 'к':case 'К':shuffleChannel();break;
     case 's':case 'S':case 'ы':case 'Ы':if(current)toggleFav(current);break;
     case 'Enter':if(padBuf)padCommit();break;
   }
 });
 
+/* ================== ПОДЕЛИТЬСЯ ================== */
+function openShare(){
+  if(!current)return;
+  const s=buildShare();
+  $('shareSub').textContent=current.name+' • '+current.country;
+  $('shareLink').value=s.url;
+  $('shareNative').hidden=!navigator.share;
+  $('shareModal').hidden=false;
+  $('shareClose').focus();
+}
+function closeShare(){$('shareModal').hidden=true;$('shareBtn').focus();}
+const intent=u=>window.open(u,'_blank','noopener,noreferrer');
+async function doCopy(){
+  if(!current)return;
+  const ok=await copyText(shareUrl(current));
+  if(ok)toast('Ссылка на «'+current.name+'» скопирована.','ok',2600);
+  else{openShare();$('shareLink').select();toast('Скопируйте ссылку из поля вручную.','warn');}
+}
+$('shareBtn').addEventListener('click',openShare);
+$('shareClose').addEventListener('click',closeShare);
+$('shareCancel').addEventListener('click',closeShare);
+$('shareModal').addEventListener('click',e=>{if(e.target===$('shareModal'))closeShare();});
+$('shareLink').addEventListener('focus',e=>e.target.select());
+$('shareCopy').addEventListener('click',doCopy);
+$('shareCopyRow').addEventListener('click',doCopy);
+$('copyLinkBtn').addEventListener('click',doCopy);
+$('shareOpen').addEventListener('click',()=>{if(current)intent(shareUrl(current));});
+$('shareNative').addEventListener('click',async()=>{
+  const s=buildShare();
+  try{await navigator.share({title:'TV BOX — '+s.ch.name,text:s.text,url:s.url});}
+  catch(e){
+    if(e&&e.name==='AbortError')return;
+    const ok=await copyText(s.url);
+    toast(ok?'Ссылка скопирована':'Поделиться не удалось.',ok?'ok':'warn');
+  }
+});
+$('shareTg').addEventListener('click',()=>{const s=buildShare();intent('https://t.me/share/url?url='+encodeURIComponent(s.url)+'&text='+encodeURIComponent(s.text));});
+$('shareVk').addEventListener('click',()=>{const s=buildShare();intent('https://vk.com/share.php?url='+encodeURIComponent(s.url)+'&title='+encodeURIComponent(s.text));});
+$('shareWa').addEventListener('click',()=>{const s=buildShare();intent('https://wa.me/?text='+encodeURIComponent(s.text+' '+s.url));});
+$('shareX').addEventListener('click',()=>{const s=buildShare();intent('https://twitter.com/intent/tweet?text='+encodeURIComponent(s.text)+'&url='+encodeURIComponent(s.url));});
+
 /* ================== ЭКСПОРТ ================== */
 function exportM3U(){
+  const list=shownCache.length?shownCache:channels;
   let m3u='#EXTM3U\n';
-  channels.forEach(ch=>{
-    if(ch.type==='hls')m3u+='#EXTINF:-1 tvg-id="'+ch.tvgId+'" tvg-logo="'+(ch.logo||'')+'" group-title="'+ch.group+'",'+ch.name+'\n'+ch.url+'\n';
+  list.forEach(ch=>{
+    if(ch.type==='hls')m3u+='#EXTINF:-1 tvg-id="'+(ch.tvgId||'')+'" tvg-logo="'+(ch.logo||'')+'" group-title="'+ch.group+'",'+ch.name+' ('+ch.country+')\n'+ch.url+'\n';
     else m3u+='#EXTINF:-1 group-title="'+ch.group+'",'+ch.name+'\n'+ch.items[0].url+'\n';
   });
   const blob=new Blob([m3u],{type:'audio/x-mpegurl'});const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);a.download='tv-box-working.m3u';a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  toast('Экспортировано каналов: '+channels.length,'ok');
+  toast('Плейлист сохранён.','ok');
 }
 
 /* ================== ЧАСЫ / СЕТЬ ================== */
@@ -1138,39 +1498,48 @@ setInterval(()=>{if(started)renderProgram();},30000);
 addEventListener('offline',()=>toast('Нет интернета. Поиск и эфиры временно недоступны.','bad',6000));
 addEventListener('online',()=>{toast('Сеть восстановлена.','ok');startScan();if(started&&current)tune(current);});
 
-/* ================== ПОИСК / СОРТИРОВКА ================== */
-function syncSearchClear(){$('searchClear').hidden=!$('search').value;}
+/* ================== ПОИСК ================== */
+function syncSearchClear(){
+  const v=$('search').value;
+  $('searchClear').hidden=!v;
+  $('searchWrap').classList.toggle('filled',!!v);
+}
 $('search').addEventListener('input',()=>{syncSearchClear();renderList();updateSideHead();});
 $('searchClear').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();updateSideHead();$('search').focus();});
-function syncSort(){
-  document.querySelectorAll('#sortSeg .seg-btn').forEach(b=>{
-    const on=b.dataset.sort===S.sort;
-    b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false');
-  });
-}
-$('sortSeg').addEventListener('click',e=>{
-  const b=e.target.closest('.seg-btn');if(!b)return;
-  S.sort=b.dataset.sort;save();syncSort();renderList();
-});
+$('searchCancel').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();updateSideHead();$('search').blur();});
 
 /* ================== ПРИВЯЗКА ================== */
 $('searchIcon').innerHTML=icon('search',15);
-$('searchClear').innerHTML=icon('close',11);
+$('countrySearchIcon').innerHTML=icon('search',15);
+$('searchClear').innerHTML=icon('close',10);
 $('topFs').innerHTML=icon('fs');$('fsBtn').innerHTML=icon('fs');
 $('prevBtn').innerHTML=icon('prev');$('nextBtn').innerHTML=icon('next');
+$('shuffleBtn').innerHTML=icon('shuffle',16);
 $('refreshIcon').innerHTML=icon('refresh',14);$('refreshIcon2').innerHTML=icon('refresh',14);
 $('exportIcon').innerHTML=icon('export',14);$('gestureBtn').innerHTML=icon('play',28);
 $('genreBtnIcon').innerHTML=icon('grid',16);
-$('genreClose').innerHTML=icon('close',15);
-$('genrePrev').innerHTML=icon('chevL',15);$('genreNext').innerHTML=icon('chevR',15);
-$('shuffleBtn').innerHTML=icon('shuffle',15);
+$('countryBtnIcon').innerHTML=icon('globe',19);
+$('countryBtnChev').innerHTML=icon('chevD',15);
+$('genreClose').innerHTML=icon('close',14);
+$('countryClose').innerHTML=icon('close',14);
+$('genrePrev').innerHTML=icon('chevL',14);$('genreNext').innerHTML=icon('chevR',14);
 $('infoFav').innerHTML=icon('star',18);
+$('shareIcon').innerHTML=icon('share',16);
+$('linkIcon').innerHTML=icon('link',15);
+$('shareCopy').innerHTML=icon('copy',16);
+$('shareClose').innerHTML=icon('close',14);
+$('shareCopyRowIcon').innerHTML=icon('copy',17);
+$('shareOpenIcon').innerHTML=icon('external',17);
+$('shareNativeIcon').innerHTML=icon('share',22);
+$('tgIcon').innerHTML=icon('send',22);
+$('waIcon').innerHTML=icon('chat',22);
 syncPlay();syncMute();
 $('bootBtn').addEventListener('click',()=>tune(current||channels[0],true));
 $('gestureBtn').addEventListener('click',()=>{video.play().then(()=>{$('gesture').hidden=true;}).catch(()=>toast('Браузер не дал запустить видео.','bad'));});
 $('playBtn').addEventListener('click',togglePlay);
 $('prevBtn').addEventListener('click',()=>stepChannel(-1));
 $('nextBtn').addEventListener('click',()=>stepChannel(1));
+$('shuffleBtn').addEventListener('click',shuffleChannel);
 $('muteBtn').addEventListener('click',()=>setMuted(!S.muted));
 $('topMute').addEventListener('click',()=>setMuted(!S.muted));
 $('volRange').addEventListener('input',e=>setVol(+e.target.value,true));
@@ -1178,19 +1547,23 @@ $('fsBtn').addEventListener('click',toggleFs);$('topFs').addEventListener('click
 $('retryBtn').addEventListener('click',()=>{if(current)tune(current,true);});
 $('sigRetry').addEventListener('click',()=>{if(current)tune(current,true);});
 $('nextFromError').addEventListener('click',()=>stepChannel(1));
-$('refreshScan').addEventListener('click',()=>{if(!scan.running)startScan(true);});
+$('refreshScan').addEventListener('click',()=>{if(!scan.running)startScan(true);else toast('Проверка уже идёт.','info',2200);});
 $('exportBtn').addEventListener('click',exportM3U);
 $('genreBtn').addEventListener('click',openGenres);
 $('genreClose').addEventListener('click',closeGenres);
-$('shuffleBtn').addEventListener('click',shuffleChannel);
+$('countryBtn').addEventListener('click',openCountries);
+$('countryClose').addEventListener('click',closeCountries);
 $('filterReset').addEventListener('click',resetFilters);
 $('infoFav').addEventListener('click',()=>{if(current)toggleFav(current);});
 $('infoCat').addEventListener('click',()=>{if(current)setCat(current.group);});
+$('infoCountry').addEventListener('click',()=>{if(current)setCountry(current.countryCode||'INTL');});
 
 /* ================== СТАРТ ================== */
 video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);
-syncSort();syncSearchClear();
-renderAll();ensureHls();startScan();
+syncSearchClear();
+renderAll();ensureHls();
+const dl=readHash();if(dl)resolveDeepLink(dl);
+startScan();
 })();
 </script>
 <!-- TVBOX_VK_ADS_PATCH_START -->
