@@ -1636,5 +1636,21 @@ startScan();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })({"version":"1.0.0","provider":"vk","adFormat":"interstitial","appId":"","intervalMs":300000,"cooldownMs":600000,"onLeave":true,"onReturn":true,"onLaunch":false,"debug":false,"cdn":"https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"});</script>
 <!-- TVBOX_VK_ADS_PATCH_END -->
+<!--TVBOX-PATCHER:START-->
+<style id="tvbox-patcher">
+/* Плеер не наезжает при 100% масштабе */
+.player{aspect-ratio:auto !important;flex:1 1 auto !important;min-height:0 !important;max-width:100% !important;overflow:hidden !important}
+.player:fullscreen{aspect-ratio:auto !important}
+.main-col{min-width:0 !important;overflow:hidden !important}
+.sidebar{min-width:0 !important}
+.layout{overflow:hidden !important}
+
+/* Гарант флекс-раскладки */
+.layout{display:flex !important;flex-direction:row !important;align-items:stretch !important;gap:14px !important}
+.main-col{display:flex !important;flex-direction:column !important;flex:1 1 auto !important;min-width:0 !important;gap:12px !important}
+.sidebar{flex:0 0 190px !important;width:190px !important}
+@media(max-width:940px){.layout{flex-direction:column !important}.sidebar{flex:1 1 auto !important;width:auto !important}}
+</style>
+<!--TVBOX-PATCHER:END-->
 </body>
 </html>
