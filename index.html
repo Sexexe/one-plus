@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#000000">
 <title>TV BOX — 5000 каналов</title>
 <style>
-/* ================== APPLE TYPE ================== */
 @font-face{font-family:'SF Pro Text';font-style:normal;font-weight:400;font-display:swap;
   src:local('SF Pro Text Regular'),local('SFProText-Regular'),local('.SFNSText-Regular'),local('SF Pro Text'),
       url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Regular.otf') format('opentype');}
@@ -25,7 +24,6 @@
 
 :root{
   color-scheme:dark;
-  --app-h:100%;
   --font-ui:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro','Helvetica Neue','Segoe UI',system-ui,Roboto,sans-serif;
   --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue','Segoe UI',system-ui,sans-serif;
   --w-reg:400;--w-med:500;--w-sem:600;
@@ -41,21 +39,17 @@
   --r-panel:18px;--r-group:12px;--r-btn:11px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%;scrollbar-width:none}
+html{height:100%;overflow:hidden;scrollbar-width:none}
 ::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(120,120,128,.45);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
 ::-webkit-scrollbar-thumb:hover{background:rgba(120,120,128,.75);background-clip:padding-box}
 ::selection{background:rgba(10,132,255,.35)}
 html,body{overscroll-behavior:none}
-body{
-  width:100%;height:var(--app-h,100%);
-  overflow:hidden;display:flex;flex-direction:column;
+body{height:100%;overflow:hidden;display:flex;flex-direction:column;
   font-family:var(--font-ui);font-weight:var(--w-reg);font-size:14px;line-height:1.4;
   font-synthesis:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  background:var(--bg);color:var(--label);
-}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1100px 560px at 14% -12%,rgba(10,132,255,.11),transparent 62%),radial-gradient(900px 500px at 102% -6%,rgba(191,90,242,.07),transparent 60%)}
+  background:var(--bg);color:var(--label);}
 button,input,select{font:inherit;font-synthesis:none}
 button{color:inherit;font-weight:var(--w-reg)}
 button:disabled{opacity:.32;cursor:not-allowed}
@@ -64,7 +58,6 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .press{transition:background .18s var(--ease),color .18s var(--ease),transform .12s var(--ease),opacity .18s var(--ease)}
 .press:active:not(:disabled){transform:scale(.96)}
 
-/* ================= NAV BAR ================= */
 .top{position:relative;z-index:100;flex:none;background:var(--glass);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:.5px solid var(--sep)}
 .top-in{position:relative;max-width:1560px;margin:0 auto;height:60px;padding:0 22px;display:flex;align-items:center;gap:14px}
 .brand{display:flex;align-items:center;gap:11px;flex:none}
@@ -88,14 +81,12 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .icon-btn.on{color:var(--yellow)}
 .icon-btn.on svg path{fill:currentColor}
 
-/* ================= LAYOUT (app-shell) ================= */
 .layout{position:relative;z-index:1;flex:1;min-height:0;width:100%;max-width:1560px;margin:0 auto;
   padding:16px 22px 14px;display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:minmax(0,1fr);
   gap:20px;align-items:stretch;overflow:hidden;}
 .main-col{min-width:0;min-height:0;display:flex;flex-direction:column;gap:14px;overflow:hidden}
 .panel{background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:inset 0 .5px 0 rgba(255,255,255,.05)}
 
-/* ================= PLAYER ================= */
 .player{position:relative;flex:none;aspect-ratio:16/9;background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 .ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
@@ -128,7 +119,6 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .overlay.gesture p{font-size:13px;color:var(--label2)}
 .player:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;aspect-ratio:auto}
 
-/* ================= NOW BAR ================= */
 .nowbar{flex:none;display:flex;align-items:center;gap:12px;padding:12px 14px}
 .now-info{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
 .now-num{font-family:var(--font-display);font-size:22px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;flex:none}
@@ -140,7 +130,6 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .now-actions .secondary-btn{padding:9px 14px;font-size:13px;display:inline-flex;align-items:center;gap:7px}
 .now-actions .icon-btn{width:36px;height:36px}
 
-/* ================= SIDEBAR ================= */
 .sidebar{position:static;display:flex;flex-direction:column;min-height:0;padding:16px 12px 12px 14px}
 .side-head,.country-picker,.genre-picker,.legend,.side-foot{flex:none}
 .side-head{display:flex;align-items:center;gap:8px;padding:0 4px 10px}
@@ -194,9 +183,8 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .foot-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--fill);border:0;border-radius:10px;padding:9px 10px;font-size:12px;font-weight:var(--w-med);cursor:pointer}
 .foot-btn:hover:not(:disabled){background:var(--fill2)}
 
-/* ================= SHEETS ================= */
 .modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
-.modal{width:min(620px,100%);max-height:min(680px, calc(var(--app-h,100%) - 32px));display:flex;flex-direction:column;background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:0 30px 90px rgba(0,0,0,.7);animation:pop .24s var(--ease);overflow:hidden}
+.modal{width:min(620px,100%);max-height:min(760px,100%);display:flex;flex-direction:column;background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:0 30px 90px rgba(0,0,0,.7);animation:pop .24s var(--ease);overflow:hidden}
 .modal.info-modal{width:min(680px,100%)}
 @keyframes pop{from{opacity:0;transform:scale(.97)}}
 .grabber{display:none;flex:none;width:36px;height:5px;border-radius:3px;background:var(--fill2);margin:8px auto 0}
@@ -226,7 +214,6 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .ios-row.ctry.active .tail{color:var(--teal)}
 .sheet-empty{padding:30px 12px;text-align:center;color:var(--label3);font-size:13px;line-height:1.6}
 
-/* ---- info sheet content ---- */
 .info-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
 .channel-logo{width:56px;height:56px;border-radius:13px;background:var(--card2);object-fit:contain;padding:5px;flex:none}
 .info-num{font-family:var(--font-display);font-size:28px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px;letter-spacing:-.02em}
@@ -264,7 +251,6 @@ button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
 .retry-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--fill);border:0;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-med);cursor:pointer}
 .retry-btn:hover{background:var(--fill2)}
 
-/* ---- share sheet ---- */
 .share-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px}
 .link-row{display:flex;gap:8px;align-items:center}
 .link-input{flex:1;min-width:0;background:var(--fill);border:0;border-radius:10px;padding:11px 12px;font-size:12px;font-weight:var(--w-reg);color:var(--label2);outline:none}
@@ -317,7 +303,7 @@ footer{display:none}
   .now-num{font-size:18px}
   .now-titles b{font-size:14px}
   .modal-backdrop{align-items:flex-end;justify-content:center;padding:0}
-  .modal{width:100%;max-height:calc(var(--app-h,100%) - 24px);border-radius:16px 16px 0 0;animation:sheet .32s var(--ease)}
+  .modal{width:100%;max-height:calc(100% - 24px);border-radius:16px 16px 0 0;animation:sheet .32s var(--ease)}
   @keyframes sheet{from{transform:translateY(48px);opacity:.5}}
   .grabber{display:block}
   .modal-body{padding-bottom:max(18px,env(safe-area-inset-bottom))}
@@ -357,7 +343,6 @@ footer{display:none}
       <video id="video" playsinline preload="metadata"></video>
       <div class="ch-badge" id="chBadge"><b id="badgeNum">01</b><span class="live" id="badgeLive">LIVE</span><span id="badgeName">—</span></div>
       <div class="num-osd" id="numOsd" hidden></div>
-
       <div class="controls" id="controls">
         <button class="ctrl-btn press" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
         <button class="ctrl-btn press" id="playBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
@@ -367,13 +352,11 @@ footer{display:none}
         <input class="vol-range" id="volRange" type="range" min="0" max="100" value="70" title="Громкость" aria-label="Громкость">
         <button class="ctrl-btn press ctrl-fs" id="fsBtn" title="Полный экран (F)" aria-label="Полный экран"></button>
       </div>
-
       <div class="overlay boot" id="boot">
         <div class="boot-title">TV BOX</div>
         <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
         <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
       </div>
-
       <div class="overlay" id="loading" hidden><div class="spinner"></div><p style="font-size:13px;color:var(--label2)">Подключение к источнику…</p></div>
       <div class="overlay gesture" id="gesture" hidden><button class="gesture-btn press" id="gestureBtn" aria-label="Запустить"></button><p>Нажмите, чтобы запустить воспроизведение</p></div>
       <div class="overlay error" id="error" hidden>
@@ -403,21 +386,17 @@ footer{display:none}
       <h2 id="sideTitle">Каналы</h2>
       <button class="reset-chip press" id="filterReset" hidden>Сбросить</button>
     </div>
-
     <button class="country-picker press" id="countryBtn" title="Выбрать страну (C)" aria-haspopup="dialog">
       <span class="pk-ic" id="countryBtnIcon"></span>
       <b id="countryBtnLabel">Все страны</b>
       <span class="pk-chev" id="countryBtnChev"></span>
     </button>
-
     <button class="genre-picker press" id="genreBtn" title="Выбрать жанр (G)" aria-haspopup="dialog">
       <span class="pk-ic" id="genreBtnIcon"></span>
       <b id="genreBtnLabel">Все жанры</b>
       <span class="pk-chev" id="genreBtnChev"></span>
     </button>
-
     <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
-
     <div class="legend">Только проверенные источники. Звёздочка — избранное (S), случайный канал — R. Список прокручивается, видео остаётся на месте.</div>
     <div class="side-foot">
       <button class="foot-btn press" id="refreshScan"><span id="refreshIcon2"></span> Обновить</button>
@@ -426,7 +405,6 @@ footer{display:none}
   </aside>
 </main>
 
-<!-- ================= О КАНАЛЕ ================= -->
 <div class="modal-backdrop" id="infoModal" hidden>
   <div class="modal info-modal" role="dialog" aria-modal="true" aria-label="О канале">
     <div class="grabber"></div>
@@ -460,7 +438,6 @@ footer{display:none}
   </div>
 </div>
 
-<!-- ================= ЖАНРЫ ================= -->
 <div class="modal-backdrop" id="genreModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Жанры">
     <div class="grabber"></div>
@@ -469,7 +446,6 @@ footer{display:none}
   </div>
 </div>
 
-<!-- ================= СТРАНЫ ================= -->
 <div class="modal-backdrop" id="countryModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Страны">
     <div class="grabber"></div>
@@ -479,7 +455,6 @@ footer{display:none}
   </div>
 </div>
 
-<!-- ================= ПОДЕЛИТЬСЯ ================= -->
 <div class="modal-backdrop" id="shareModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Поделиться каналом">
     <div class="grabber"></div>
@@ -512,25 +487,20 @@ footer{display:none}
 (function(){
 'use strict';
 
-/* ================== ОБОЛОЧКА: фиксация высоты, в т.ч. для фрейма VK ================== */
-var lastSentH=0;
-function fit(){
-  var h=(window.visualViewport?window.visualViewport.height:window.innerHeight)||document.documentElement.clientHeight;
-  h=Math.round(h);
-  if(!h||h<120)return;
-  document.documentElement.style.setProperty('--app-h',h+'px');
-  if(window.vkBridge&&window.vkBridge.send&&h!==lastSentH){
-    lastSentH=h;
-    try{window.vkBridge.send('VKWebAppResize',{height:h});}catch(e){}
-  }
+/* Фиксация высоты рамки (для VK мини-аппа). В обычном браузере это безвредно. */
+function lockFrame(){
+  try{
+    if(window.vkBridge&&window.vkBridge.send){
+      var h=document.documentElement.clientHeight||window.innerHeight;
+      if(h>120)window.vkBridge.send('VKWebAppResize',{height:h});
+    }
+  }catch(e){}
 }
-addEventListener('resize',fit);
-addEventListener('orientationchange',fit);
-addEventListener('load',fit);
-if(window.visualViewport){try{visualViewport.addEventListener('resize',fit);}catch(e){}}
-fit();setTimeout(fit,250);setTimeout(fit,900);setTimeout(fit,2000);
+addEventListener('resize',function(){clearTimeout(lockFrame.t);lockFrame.t=setTimeout(lockFrame,120);});
+addEventListener('orientationchange',lockFrame);
+addEventListener('load',lockFrame);
+lockFrame();setTimeout(lockFrame,400);setTimeout(lockFrame,1500);
 
-/* ================== ЦЕЛЬ И ИСТОЧНИКИ ================== */
 const TARGET=5000, CONCURRENCY=20, MANIFEST_TIMEOUT=4500, SEG_TIMEOUT=4500, PLAY_TIMEOUT=16000;
 const BASE='https://iptv-org.github.io/iptv/';
 const RAW='https://raw.githubusercontent.com/iptv-org/iptv/master/streams/';
@@ -563,7 +533,6 @@ const GROUP_RU={
   Undefined:'Разное',Legislative:'Общество',Shop:'Магазины'
 };
 
-/* ================== ПОЛНЫЕ НАЗВАНИЯ СТРАН ================== */
 const COUNTRY_RU={
 AD:'Андорра',AE:'Объединённые Арабские Эмираты',AF:'Афганистан',AG:'Антигуа и Барбуда',AI:'Ангилья',
 AL:'Албания',AM:'Армения',AO:'Ангола',AQ:'Антарктида',AR:'Аргентина',AS:'Американское Самоа',AT:'Австрия',
@@ -648,7 +617,6 @@ const norm=s=>String(s||'').toLowerCase().replace(/ё/g,'е').replace(/[^0-9a-z�
 const countryHay=code=>norm(countryName(code)+' '+(COUNTRY_EN[code]||'')+' '+code);
 const ALL_COUNTRIES=Object.keys(COUNTRY_RU).sort((a,b)=>COUNTRY_RU[a].localeCompare(COUNTRY_RU[b],'ru'));
 
-/* ================== КИНОЗАЛЫ ================== */
 const GB='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/';
 const CINEMA=[
   {id:'cinema-1',name:'СМЕХОРАМА',group:'Комедии',country:'Россия',countryCode:'RU',type:'vod',desc:'Комедийный кинозал: «Большой кролик» (Blender Foundation, CC-BY) и немая комедия Чаплина из общественного достояния.',items:[
@@ -672,7 +640,6 @@ const CINEMA=[
   ]}
 ];
 
-/* ================== ИКОНКИ ================== */
 const IC={
   play:'<path d="m8 5 11 7-11 7z" fill="currentColor" stroke="none"/>',
   pause:'<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/>',
@@ -703,7 +670,6 @@ const IC={
 };
 const icon=(n,s=18)=>'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[n]+'</svg>';
 
-/* ================== СОСТОЯНИЕ ================== */
 const $=id=>document.getElementById(id);
 const video=$('video'),player=$('player');
 const pad2=n=>String(n).padStart(2,'0');
@@ -741,7 +707,6 @@ function toggleFav(ch){
 let renderT=null;
 function scheduleRender(){if(renderT)return;renderT=setTimeout(()=>{renderT=null;renderAll();},350);}
 
-/* ================== ТОСТЫ ================== */
 function toast(msg,type='info',ms=3800,action){
   const box=$('toasts');while(box.children.length>=3)box.firstChild.remove();
   const el=document.createElement('div');el.className='toast '+type;
@@ -758,7 +723,6 @@ function toast(msg,type='info',ms=3800,action){
   timer=setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(10px)';setTimeout(()=>el.remove(),240);},ms);
 }
 
-/* ================== ССЫЛКИ НА КАНАЛ ================== */
 function channelKey(ch){return ch.type==='vod'?ch.id:ch.url;}
 function appBase(){
   try{const qs=new URLSearchParams(location.search);const vk=qs.get('vk_app_id');if(vk)return 'https://vk.com/app'+vk;}catch(e){}
@@ -810,18 +774,9 @@ async function copyText(t){
   }catch(e){return false;}
 }
 
-/* ================== ПАРСЕР M3U ================== */
-function cleanName(s){
-  return String(s||'').replace(/\s*\[[^\]]*\]/g,'').replace(/\s*\(\d{3,4}p\)/gi,'').replace(/\s+/g,' ').trim();
-}
-function countryFromId(id){
-  const m=String(id||'').match(/\.([a-z]{2})(?:@|$)/i);
-  return m?m[1].toUpperCase():'';
-}
-function translateGroup(g){
-  const first=String(g||'').split(';')[0].trim();
-  return GROUP_RU[first]||first||'Разное';
-}
+function cleanName(s){return String(s||'').replace(/\s*\[[^\]]*\]/g,'').replace(/\s*\(\d{3,4}p\)/gi,'').replace(/\s+/g,' ').trim();}
+function countryFromId(id){const m=String(id||'').match(/\.([a-z]{2})(?:@|$)/i);return m?m[1].toUpperCase():'';}
+function translateGroup(g){const first=String(g||'').split(';')[0].trim();return GROUP_RU[first]||first||'Разное';}
 function isPrivateHost(h){return /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/i.test(h);}
 function isAllowed(c){
   if(!/^https:\/\//i.test(c.url))return false;
@@ -848,7 +803,6 @@ function parseM3U(text,sourceCountry){
   return out;
 }
 
-/* ================== ТЩАТЕЛЬНАЯ ПРОВЕРКА ИСТОЧНИКОВ ================== */
 async function fetchText(url,timeout){
   const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),timeout);
   try{const r=await fetch(url,{method:'GET',mode:'cors',cache:'no-store',signal:ctl.signal});if(!r.ok)throw new Error('HTTP '+r.status);return await r.text();}
@@ -908,7 +862,6 @@ async function probeChannel(url){
   return false;
 }
 
-/* ================== СКАНЕР ================== */
 function updateScanUI(){
   const found=channels.length;
   $('topCounter').textContent=found+'/'+TARGET;
@@ -998,7 +951,6 @@ function restoreLast(){
   if(ch){current=ch;renderAll();}
 }
 
-/* ================== HLS ================== */
 function ensureHls(){
   if(window.Hls)return Promise.resolve(window.Hls);
   if(hlsPromise)return hlsPromise;
@@ -1021,7 +973,6 @@ function ensureHls(){
   return hlsPromise;
 }
 
-/* ================== ПЛЕЕР ================== */
 function destroyPlayer(){
   session++;mode='idle';
   if(hls){try{hls.destroy();}catch(e){}hls=null;}
@@ -1080,7 +1031,6 @@ function buildQuality(){
 }
 $('quality').addEventListener('change',e=>{if(hls){hls.currentLevel=parseInt(e.target.value,10);toast('Качество: '+e.target.options[e.target.selectedIndex].text,'info',2000);}});
 
-/* ================== КИНОЗАЛЫ ================== */
 function activeItems(ch){const q=quarantine[ch.id]||new Set();return ch.items.filter(it=>!q.has(it.url));}
 function schedule(ch){const items=activeItems(ch);const durs=items.map(it=>durCache[it.url]||it.dur);return{items,durs,total:durs.reduce((a,b)=>a+b,0)||1};}
 function mskSec(){
@@ -1142,7 +1092,6 @@ video.addEventListener('pause',()=>{syncPlay();pokeControls();});
 let tuT=0;
 video.addEventListener('timeupdate',()=>{const n=Date.now();if(n-tuT>900){tuT=n;renderProgram();}});
 
-/* ================== ЖАНРЫ ================== */
 function genreCounts(){const g={};channels.forEach(c=>{g[c.group]=(g[c.group]||0)+1;});return g;}
 function favCount(){let n=0;channels.forEach(c=>{if(isFav(c))n++;});return n;}
 function sortedGenres(groups){return Object.keys(groups).sort((a,b)=>groups[b]-groups[a]||a.localeCompare(b,'ru'));}
@@ -1187,7 +1136,6 @@ function openGenres(){renderGenreSheet();$('genreModal').hidden=false;$('genreCl
 function closeGenres(){$('genreModal').hidden=true;$('genreBtn').focus();}
 $('genreModal').addEventListener('click',e=>{if(e.target===$('genreModal'))closeGenres();});
 
-/* ================== СТРАНА ================== */
 function countryCounts(){const m={};channels.forEach(c=>{const k=c.countryCode||'INTL';m[k]=(m[k]||0)+1;});return m;}
 function setCountry(code){
   S.country=code;save();$('chList').scrollTop=0;
@@ -1240,7 +1188,6 @@ $('countrySearch').addEventListener('keydown',e=>{
   if(e.key==='Enter'){const first=$('countryBody').querySelector('.ios-row:not(:disabled)');if(first)first.click();}
 });
 
-/* ================== СПИСОК ================== */
 const ROW_H=40;
 let shownCache=[];
 function countryQueryCodes(q){
@@ -1335,7 +1282,6 @@ let winRaf=0;
 $('chList').addEventListener('scroll',()=>{if(winRaf)return;winRaf=requestAnimationFrame(()=>{winRaf=0;renderWindow();});},{passive:true});
 addEventListener('resize',()=>{if(shownCache.length)renderWindow();});
 
-/* ================== КАРТОЧКА ================== */
 function renderAll(){
   renderGenres();renderCountries();renderList();renderInfo();updateSideHead();updateScanUI();
   if(!$('genreModal').hidden)renderGenreSheet();
@@ -1398,7 +1344,6 @@ function showBadge(){
 }
 const fmt=s=>{s=Math.max(0,Math.floor(s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return(h?h+':':'')+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0');};
 
-/* ================== ТРАНСПОРТ ================== */
 function syncPlay(){$('playBtn').innerHTML=icon(video.paused?'play':'pause');}
 function syncMute(){const ic=icon(S.muted?'mute':'vol');$('muteBtn').innerHTML=ic;$('topMute').innerHTML=ic;$('topMute').classList.toggle('active',!S.muted);}
 function setMuted(m){S.muted=m;video.muted=m;save();syncMute();}
@@ -1418,13 +1363,12 @@ function shuffleChannel(){
 function togglePlay(){if(!started){tune(current||channels[0],true);return;}if(video.paused)video.play().catch(()=>$('gesture').hidden=false);else video.pause();}
 function toggleFs(){if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else player.requestFullscreen().catch(()=>toast('Полный экран недоступен в этом браузере.','warn'));}
 player.addEventListener('dblclick',toggleFs);
-document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);pokeControls();fit();});
+document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);pokeControls();});
 let hideT=null;
 function pokeControls(){$('controls').classList.remove('hide');clearTimeout(hideT);if(document.fullscreenElement&&!video.paused)hideT=setTimeout(()=>$('controls').classList.add('hide'),2600);}
 player.addEventListener('mousemove',pokeControls);
 player.addEventListener('touchstart',pokeControls,{passive:true});
 
-/* ================== КЛАВИАТУРА ================== */
 let padBuf='',padT=null;
 function padPress(d){
   padBuf=(padBuf+d).slice(-4);clearTimeout(padT);
@@ -1475,7 +1419,6 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-/* ================== О КАНАЛЕ ================== */
 function openInfo(){
   if(!current)return;
   renderInfo();
@@ -1489,7 +1432,6 @@ $('infoClose').addEventListener('click',closeInfo);
 $('infoModal').addEventListener('click',e=>{if(e.target===$('infoModal'))closeInfo();});
 $('nowFav').addEventListener('click',()=>{if(current)toggleFav(current);});
 
-/* ================== ПОДЕЛИТЬСЯ ================== */
 function openShare(){
   if(!current)return;
   const s=buildShare();
@@ -1529,7 +1471,6 @@ $('shareVk').addEventListener('click',()=>{const s=buildShare();intent('https://
 $('shareWa').addEventListener('click',()=>{const s=buildShare();intent('https://wa.me/?text='+encodeURIComponent(s.text+' '+s.url));});
 $('shareX').addEventListener('click',()=>{const s=buildShare();intent('https://twitter.com/intent/tweet?text='+encodeURIComponent(s.text)+'&url='+encodeURIComponent(s.url));});
 
-/* ================== ЭКСПОРТ ================== */
 function exportM3U(){
   const list=shownCache.length?shownCache:channels;
   let m3u='#EXTM3U\n';
@@ -1543,7 +1484,6 @@ function exportM3U(){
   toast('Плейлист сохранён.','ok');
 }
 
-/* ================== ЧАСЫ / СЕТЬ ================== */
 const clockFmt=new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',hour12:false});
 function tick(){$('clock').textContent=clockFmt.format(new Date())+' МСК';}
 setInterval(tick,1000);tick();
@@ -1551,7 +1491,6 @@ setInterval(()=>{if(started)renderProgram();},30000);
 addEventListener('offline',()=>toast('Нет интернета. Поиск и эфиры временно недоступны.','bad',6000));
 addEventListener('online',()=>{toast('Сеть восстановлена.','ok');startScan();if(started&&current)tune(current);});
 
-/* ================== ПОИСК ================== */
 function syncSearchClear(){
   const v=$('search').value;
   $('searchClear').hidden=!v;
@@ -1561,7 +1500,6 @@ $('search').addEventListener('input',()=>{syncSearchClear();renderList();updateS
 $('searchClear').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();updateSideHead();$('search').focus();});
 $('searchCancel').addEventListener('click',()=>{$('search').value='';syncSearchClear();renderList();updateSideHead();$('search').blur();});
 
-/* ================== ПРИВЯЗКА ================== */
 $('searchIcon').innerHTML=icon('search',15);
 $('countrySearchIcon').innerHTML=icon('search',15);
 $('searchClear').innerHTML=icon('close',10);
@@ -1613,10 +1551,8 @@ $('infoFav').addEventListener('click',()=>{if(current)toggleFav(current);});
 $('infoCat').addEventListener('click',()=>{if(current)setCat(current.group);});
 $('infoCountry').addEventListener('click',()=>{if(current)setCountry(current.countryCode||'INTL');});
 
-/* ================== СТАРТ ================== */
 video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);
 syncSearchClear();
-fit();
 renderAll();ensureHls();
 const dl=readHash();if(dl)resolveDeepLink(dl);
 startScan();
