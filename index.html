@@ -7,35 +7,26 @@
 <title>TV BOX — 5000 каналов</title>
 <style>
 /* ================== APPLE TYPE ================== */
-@font-face{
-  font-family:'SF Pro Text';font-style:normal;font-weight:400;font-display:swap;
+@font-face{font-family:'SF Pro Text';font-style:normal;font-weight:400;font-display:swap;
   src:local('SF Pro Text Regular'),local('SFProText-Regular'),local('.SFNSText-Regular'),local('SF Pro Text'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Regular.otf') format('opentype');
-}
-@font-face{
-  font-family:'SF Pro Text';font-style:normal;font-weight:500;font-display:swap;
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Regular.otf') format('opentype');}
+@font-face{font-family:'SF Pro Text';font-style:normal;font-weight:500;font-display:swap;
   src:local('SF Pro Text Medium'),local('SFProText-Medium'),local('.SFNSText-Medium'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Medium.otf') format('opentype');
-}
-@font-face{
-  font-family:'SF Pro Text';font-style:normal;font-weight:600;font-display:swap;
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Medium.otf') format('opentype');}
+@font-face{font-family:'SF Pro Text';font-style:normal;font-weight:600;font-display:swap;
   src:local('SF Pro Text Semibold'),local('SFProText-Semibold'),local('.SFNSText-Semibold'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Semibold.otf') format('opentype');
-}
-@font-face{
-  font-family:'SF Pro Display';font-style:normal;font-weight:500;font-display:swap;
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Text-Semibold.otf') format('opentype');}
+@font-face{font-family:'SF Pro Display';font-style:normal;font-weight:500;font-display:swap;
   src:local('SF Pro Display Medium'),local('SFProDisplay-Medium'),local('.SFNSDisplay-Medium'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Display-Medium.otf') format('opentype');
-}
-@font-face{
-  font-family:'SF Pro Display';font-style:normal;font-weight:600;font-display:swap;
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Display-Medium.otf') format('opentype');}
+@font-face{font-family:'SF Pro Display';font-style:normal;font-weight:600;font-display:swap;
   src:local('SF Pro Display Semibold'),local('SFProDisplay-Semibold'),local('.SFNSDisplay-Semibold'),
-      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Display-Semibold.otf') format('opentype');
-}
+      url('https://cdn.jsdelivr.net/gh/sahibjotsaggu/San-Francisco-Pro-Fonts@master/SF-Pro-Display-Semibold.otf') format('opentype');}
 
 :root{
   color-scheme:dark;
-  --hdr:106px;
+  --app-h:100%;
+  --shell-h:calc(100% - 106px);
   --font-ui:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro','Helvetica Neue','Segoe UI',system-ui,Roboto,sans-serif;
   --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue','Segoe UI',system-ui,sans-serif;
   --w-reg:400;--w-med:500;--w-sem:600;
@@ -51,16 +42,19 @@
   --r-panel:18px;--r-group:12px;--r-btn:11px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.55) transparent}
+html{height:100%;scrollbar-width:none}
 ::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(120,120,128,.45);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
 ::-webkit-scrollbar-thumb:hover{background:rgba(120,120,128,.75);background-clip:padding-box}
 ::selection{background:rgba(10,132,255,.35)}
+html,body{overscroll-behavior:none}
 body{
+  position:fixed;inset:0;width:100%;height:var(--app-h);
+  overflow:hidden;
   font-family:var(--font-ui);font-weight:var(--w-reg);font-size:14px;line-height:1.4;
   font-synthesis:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  background:var(--bg);color:var(--label);min-height:100vh;overflow-x:hidden;
+  background:var(--bg);color:var(--label);
 }
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1100px 560px at 14% -12%,rgba(10,132,255,.11),transparent 62%),radial-gradient(900px 500px at 102% -6%,rgba(191,90,242,.07),transparent 60%)}
 button,input,select{font:inherit;font-synthesis:none}
@@ -118,13 +112,15 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .g-arrow.right{right:6px}
 @media(pointer:coarse){.g-arrow{display:none}}
 
-/* ================= LAYOUT ================= */
-.layout{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:20px 22px 22px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
-.main-col{min-width:0;display:flex;flex-direction:column;gap:14px}
+/* ================= LAYOUT (app-shell) ================= */
+.layout{position:relative;z-index:1;max-width:1560px;margin:0 auto;height:var(--shell-h);
+  padding:16px 22px 14px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;
+  align-items:stretch;overflow:hidden;}
+.main-col{min-width:0;min-height:0;display:flex;flex-direction:column;gap:14px;overflow:hidden}
 .panel{background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:inset 0 .5px 0 rgba(255,255,255,.05)}
 
 /* ================= PLAYER ================= */
-.player{position:relative;aspect-ratio:16/9;background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;scroll-margin-top:122px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.player{position:relative;flex:none;aspect-ratio:16/9;background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
 .ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
 .ch-badge.show{opacity:1;transform:none}
@@ -156,53 +152,14 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .overlay.gesture p{font-size:13px;color:var(--label2)}
 .player:fullscreen{width:100vw;height:100vh;border:0;border-radius:0;aspect-ratio:auto}
 
-.action-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.action-bar{flex:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .action-bar .primary-btn{padding:10px 18px;font-size:13.5px}
 .action-bar .secondary-btn{display:inline-flex;align-items:center;gap:8px}
 .action-bar span.ic{display:grid;place-items:center}
 .share-hint{margin-left:auto;font-size:11.5px;color:var(--label3)}
 
-/* ================= CHANNEL CARD ================= */
-.info{padding:20px}
-.info-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
-.channel-logo{width:56px;height:56px;border-radius:13px;background:var(--card2);object-fit:contain;padding:5px;flex:none}
-.info-num{font-family:var(--font-display);font-size:28px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px;letter-spacing:-.02em}
-.info-titles{flex:1;min-width:200px}
-.info-titles h1{font-family:var(--font-display);font-size:22px;font-weight:var(--w-med);letter-spacing:-.02em;line-height:1.25}
-.info-tags{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
-.tag{font-size:10.5px;font-weight:var(--w-med);letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--fill);border:0;color:var(--label2)}
-.tag.ok{color:var(--green);background:rgba(48,209,88,.14)}
-.tag.vod{color:var(--orange);background:rgba(255,159,10,.14)}
-button.tag{cursor:pointer}
-button.tag:hover{background:var(--blue-soft);color:var(--blue)}
-button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
-.desc{margin-top:15px;font-size:13.5px;line-height:1.65;color:var(--label2);max-width:920px}
-.program{margin-top:20px;padding-top:18px;border-top:.5px solid var(--sep)}
-.program-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.program-head h3{font-size:12px;font-weight:var(--w-med);letter-spacing:.06em;text-transform:uppercase;color:var(--label3)}
-.program-note{margin-left:auto;font-size:11px;color:var(--label3)}
-.program-cards{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:10px}
-.prog-card{background:var(--card2);border-radius:13px;padding:12px 14px;min-width:0}
-.prog-card.now{background:var(--blue-soft)}
-.prog-card em{display:block;font-style:normal;font-size:9.5px;font-weight:var(--w-med);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
-.prog-card.next em{color:var(--label3)}
-.prog-card strong{display:block;font-size:13px;font-weight:var(--w-med);line-height:1.4}
-.prog-card span{display:block;font-size:11px;color:var(--label3);margin-top:5px;line-height:1.5}
-.timeline{display:flex;gap:3px;height:28px;margin-top:12px}
-.tl-seg{position:relative;border:0;border-radius:7px;background:var(--card2);cursor:pointer;overflow:hidden;min-width:8px;padding:0}
-.tl-seg.cur{background:var(--blue-soft)}
-.tl-seg i{position:absolute;inset:0;width:0;background:rgba(10,132,255,.35)}
-.tl-seg b{position:relative;z-index:1;display:block;padding:0 7px;font-size:9px;font-weight:var(--w-reg);line-height:28px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--label2)}
-.tl-seg:hover{background:var(--card3)}
-.signal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:.5px solid var(--sep);font-size:12.5px;color:var(--label2)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--label3);flex:none}
-.dot.ok{background:var(--green);box-shadow:0 0 8px rgba(48,209,88,.6)}
-.signal-row select{background:var(--fill);border:0;color:var(--label);border-radius:8px;padding:5px 8px;font-size:11.5px;cursor:pointer}
-.retry-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--fill);border:0;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-med);cursor:pointer}
-.retry-btn:hover{background:var(--fill2)}
-
 /* ================= SIDEBAR ================= */
-.sidebar{position:sticky;top:122px;max-height:calc(100vh - 140px);display:flex;flex-direction:column;padding:16px 12px 12px 14px;scroll-margin-top:122px}
+.sidebar{position:static;display:flex;flex-direction:column;min-height:0;padding:16px 12px 12px 14px}
 .side-head,.country-picker,.legend,.side-foot{flex:none}
 .side-head{display:flex;align-items:center;gap:8px;padding:0 4px 10px}
 .side-head h2{flex:1;min-width:0;font-size:12px;font-weight:var(--w-med);letter-spacing:.06em;text-transform:uppercase;color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -216,7 +173,11 @@ button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
 .country-picker.filtered{background:var(--teal-soft)}
 .country-picker.filtered b{color:var(--teal)}
 .country-picker.filtered .cp-chev{color:var(--teal)}
-.ch-list{flex:1;overflow-y:auto;padding-right:5px;min-height:240px;overscroll-behavior:contain}
+.ch-list{flex:1;min-height:0;overflow-y:auto;padding-right:6px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent}
+.ch-list::-webkit-scrollbar{width:9px;display:block}
+.ch-list::-webkit-scrollbar-track{background:transparent}
+.ch-list::-webkit-scrollbar-thumb{background:rgba(120,120,128,.55);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
+.ch-list::-webkit-scrollbar-thumb:hover{background:var(--blue);background-clip:padding-box}
 .ch-spacer{position:relative;width:100%;background:var(--card2);border-radius:var(--r-group);overflow:hidden}
 .ch-item{position:absolute;left:0;right:0;height:60px;display:grid;grid-template-columns:38px minmax(0,1fr) 28px;gap:12px;align-items:center;text-align:left;background:transparent;border:0;padding:0 12px;cursor:pointer;transition:background .14s var(--ease)}
 .ch-item::before{content:'';position:absolute;left:62px;right:0;top:0;height:.5px;background:var(--sep)}
@@ -250,6 +211,7 @@ button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
 /* ================= SHEETS ================= */
 .modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);display:grid;place-items:center;padding:20px}
 .modal{width:min(620px,100%);max-height:min(84vh,680px);display:flex;flex-direction:column;background:var(--card);border:.5px solid var(--hair);border-radius:var(--r-panel);box-shadow:0 30px 90px rgba(0,0,0,.7);animation:pop .24s var(--ease);overflow:hidden}
+.modal.info-modal{width:min(680px,100%)}
 @keyframes pop{from{opacity:0;transform:scale(.97)}}
 .grabber{display:none;width:36px;height:5px;border-radius:3px;background:var(--fill2);margin:8px auto 0;flex:none}
 .modal-head{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:.5px solid var(--sep);flex:none}
@@ -261,6 +223,7 @@ button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
 .sheet-search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--label);font-size:14px;font-weight:var(--w-reg)}
 .sheet-search input::placeholder{color:var(--label3)}
 .modal-body{overflow-y:auto;padding:6px 16px 18px}
+.info-modal .modal-body{padding:14px 18px 20px;display:flex;flex-direction:column}
 .ios-header{font-size:11.5px;font-weight:var(--w-med);letter-spacing:.06em;text-transform:uppercase;color:var(--label3);padding:16px 4px 7px}
 .ios-group{background:var(--card2);border-radius:var(--r-group);overflow:hidden}
 .ios-row{position:relative;width:100%;display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 14px;border:0;background:transparent;cursor:pointer;text-align:left;color:var(--label)}
@@ -276,6 +239,46 @@ button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
 .ios-row.ctry.active b{color:var(--teal)}
 .ios-row.ctry.active .tail{color:var(--teal)}
 .sheet-empty{padding:30px 12px;text-align:center;color:var(--label3);font-size:13px;line-height:1.6}
+
+/* ---- info sheet content ---- */
+.info-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.channel-logo{width:56px;height:56px;border-radius:13px;background:var(--card2);object-fit:contain;padding:5px;flex:none}
+.info-num{font-family:var(--font-display);font-size:28px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px;letter-spacing:-.02em}
+.info-titles{flex:1;min-width:200px}
+.info-titles h1{font-family:var(--font-display);font-size:22px;font-weight:var(--w-med);letter-spacing:-.02em;line-height:1.25}
+.info-tags{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:var(--w-med);letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--fill);border:0;color:var(--label2)}
+.tag.ok{color:var(--green);background:rgba(48,209,88,.14)}
+.tag.vod{color:var(--orange);background:rgba(255,159,10,.14)}
+button.tag{cursor:pointer}
+button.tag:hover{background:var(--blue-soft);color:var(--blue)}
+button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
+.desc{margin-top:15px;font-size:13.5px;line-height:1.65;color:var(--label2)}
+.program{margin-top:20px;padding-top:18px;border-top:.5px solid var(--sep)}
+.program-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.program-head h3{font-size:12px;font-weight:var(--w-med);letter-spacing:.06em;text-transform:uppercase;color:var(--label3)}
+.program-note{margin-left:auto;font-size:11px;color:var(--label3)}
+.program-cards{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:10px}
+.prog-card{background:var(--card2);border-radius:13px;padding:12px 14px;min-width:0}
+.prog-card.now{background:var(--blue-soft)}
+.prog-card em{display:block;font-style:normal;font-size:9.5px;font-weight:var(--w-med);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.prog-card.next em{color:var(--label3)}
+.prog-card strong{display:block;font-size:13px;font-weight:var(--w-med);line-height:1.4}
+.prog-card span{display:block;font-size:11px;color:var(--label3);margin-top:5px;line-height:1.5}
+.timeline{display:flex;gap:3px;height:28px;margin-top:12px}
+.tl-seg{position:relative;border:0;border-radius:7px;background:var(--card2);cursor:pointer;overflow:hidden;min-width:8px;padding:0}
+.tl-seg.cur{background:var(--blue-soft)}
+.tl-seg i{position:absolute;inset:0;width:0;background:rgba(10,132,255,.35)}
+.tl-seg b{position:relative;z-index:1;display:block;padding:0 7px;font-size:9px;font-weight:var(--w-reg);line-height:28px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--label2)}
+.tl-seg:hover{background:var(--card3)}
+.signal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:15px;border-top:.5px solid var(--sep);font-size:12.5px;color:var(--label2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--label3);flex:none}
+.dot.ok{background:var(--green);box-shadow:0 0 8px rgba(48,209,88,.6)}
+.signal-row select{background:var(--fill);border:0;color:var(--label);border-radius:8px;padding:5px 8px;font-size:11.5px;cursor:pointer}
+.retry-btn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:var(--fill);border:0;border-radius:9px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-med);cursor:pointer}
+.retry-btn:hover{background:var(--fill2)}
+
+/* ---- share sheet ---- */
 .share-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
 .link-row{display:flex;gap:8px;align-items:center}
 .link-input{flex:1;min-width:0;background:var(--fill);border:0;border-radius:10px;padding:11px 12px;font-size:12px;font-weight:var(--w-reg);color:var(--label2);outline:none}
@@ -297,16 +300,8 @@ button.tag.ctry:hover{background:var(--teal-soft);color:var(--teal)}
 .share-note{font-size:11.5px;color:var(--label3);line-height:1.6}
 .sheet-cancel{display:none;width:100%;background:var(--card2);border:0;border-radius:14px;padding:15px;font-size:16px;font-weight:var(--w-sem);color:var(--blue);cursor:pointer;margin-top:2px}
 
-/* ================= STATUS + FOOTER ================= */
-.status{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:0 22px}
-.status-in{display:flex;align-items:center;gap:12px;background:var(--card);border:.5px solid var(--hair);border-radius:13px;padding:10px 14px;font-size:11.5px;color:var(--label2)}
-.status-in .st-dot{width:7px;height:7px;border-radius:50%;background:var(--blue);flex:none;box-shadow:0 0 8px rgba(10,132,255,.7)}
-.status-in b{font-weight:var(--w-med);color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.st-bar{flex:1;min-width:60px;height:3px;border-radius:2px;background:var(--fill);overflow:hidden}
-.st-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px;transition:width .3s var(--ease)}
-.st-num{color:var(--label3);font-variant-numeric:tabular-nums;white-space:nowrap}
-footer{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:14px 22px 30px;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.8}
-footer b{color:var(--label2);font-weight:var(--w-med)}
+.status{display:none}
+footer{display:none}
 .toasts{position:fixed;right:18px;bottom:18px;z-index:300;display:flex;flex-direction:column;gap:8px;max-width:min(380px,calc(100vw - 36px))}
 .toast{display:flex;align-items:center;gap:10px;background:rgba(28,28,30,.86);backdrop-filter:blur(24px) saturate(180%);border:.5px solid var(--hair);border-radius:15px;padding:12px 14px;font-size:13px;font-weight:var(--w-reg);line-height:1.45;box-shadow:0 14px 40px rgba(0,0,0,.6);animation:tin .24s var(--ease)}
 .toast span.msg{flex:1;min-width:0}
@@ -317,29 +312,11 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
 .t-action{border:0;background:none;color:var(--blue);font-size:13px;font-weight:var(--w-med);cursor:pointer;flex:none;padding:2px 0 2px 4px}
 @keyframes tin{from{opacity:0;transform:translateY(10px)}}
 
-/* ================= PC APP-SHELL: видео статично, скроллится только список каналов ================= */
-@media (min-width:941px) and (min-height:660px){
-  body{overflow:hidden;}
-  .status,footer{display:none;}
-  .layout{height:calc(100vh - var(--hdr));overflow:hidden;align-items:stretch;padding-bottom:14px;}
-  .main-col{min-height:0;overflow:hidden;}
-  .player{flex:none;}
-  .info{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;}
-  .info::-webkit-scrollbar{display:none;}
-  .sidebar{position:static;max-height:none;scroll-margin-top:0;}
-  .ch-list{flex:1;min-height:0;max-height:none;padding-right:6px;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent;}
-  .ch-list::-webkit-scrollbar{width:9px;display:block;}
-  .ch-list::-webkit-scrollbar-track{background:transparent;}
-  .ch-list::-webkit-scrollbar-thumb{background:rgba(120,120,128,.55);border-radius:8px;border:2px solid transparent;background-clip:padding-box;}
-  .ch-list::-webkit-scrollbar-thumb:hover{background:var(--blue);background-clip:padding-box;}
-}
-
 @media(max-width:1180px){.layout{grid-template-columns:minmax(0,1fr) 330px}.program-cards{grid-template-columns:1fr 1fr}.nav-btn .lbl{display:none}.nav-btn{width:36px;padding:0;justify-content:center}}
 @media(max-width:940px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{position:static;max-height:none}
-  .ch-list{max-height:460px}
-  .player,#sidebar{scroll-margin-top:168px}
+  .layout{display:flex;flex-direction:column;padding:12px 12px 12px}
+  .main-col{flex:none}
+  .sidebar{flex:1;min-height:0}
 }
 @media(max-width:640px){
   .top-in{height:auto;padding:10px 14px;flex-wrap:wrap;gap:10px}
@@ -350,15 +327,10 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
   .genre-bar{padding:0 14px 0 2px;height:42px}
   .genre-wrap::before{left:60px}
   .g-arrow.left{left:64px}
-  .layout{padding:14px 12px 18px;gap:14px}
-  .info{padding:16px}.program-cards{grid-template-columns:1fr}
   .vol-range{width:64px}.controls{padding:24px 10px 10px;gap:5px}.ctrl-btn{width:34px;height:34px}
   .info-titles h1{font-size:19px}.info-num{font-size:24px}.channel-logo{width:46px;height:46px}
   .share-hint{flex-basis:100%;margin-left:0;order:3}
-  .status{padding:0 12px}
-  .status-in{flex-wrap:wrap}
-  .st-bar{order:3;flex-basis:100%}
-  footer{padding:12px 12px 28px}
+  .program-cards{grid-template-columns:1fr}
   .modal-backdrop{place-items:end center;padding:0}
   .modal{width:100%;max-height:88vh;border-radius:16px 16px 0 0;animation:sheet .32s var(--ease)}
   @keyframes sheet{from{transform:translateY(48px);opacity:.5}}
@@ -420,7 +392,7 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
 
       <div class="overlay boot" id="boot">
         <div class="boot-title">TV BOX</div>
-        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают из России без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
+        <p class="boot-sub">Приложение проверяет источники прямо в вашей сети и оставляет только те, что реально отвечают без VPN. Каждый кандидат проходит трёхступенчатую проверку, прежде чем попасть в список.</p>
         <button class="primary-btn press" id="bootBtn">▶&nbsp; Включить эфир</button>
       </div>
 
@@ -433,38 +405,10 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
     </div>
 
     <div class="action-bar">
+      <button class="secondary-btn press" id="infoBtn"><span class="ic" id="infoIcon"></span> Подробнее</button>
       <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
       <button class="secondary-btn press" id="copyLinkBtn"><span class="ic" id="linkIcon"></span> Копировать ссылку</button>
       <span class="share-hint">Ссылка откроет приложение сразу на этом канале</span>
-    </div>
-
-    <div class="info panel">
-      <div class="info-head">
-        <div class="info-num" id="infoNum">01</div>
-        <img class="channel-logo" id="channelLogo" alt="" hidden>
-        <div class="info-titles">
-          <h1 id="infoName">—</h1>
-          <div class="info-tags">
-            <button class="tag press" id="infoCat" title="Показать все каналы этого жанра">—</button>
-            <button class="tag ctry press" id="infoCountry" title="Показать все каналы этой страны">—</button>
-            <span class="tag ok" id="infoStatus">Проверен</span>
-          </div>
-        </div>
-        <button class="icon-btn press" id="infoFav" title="В избранное (S)" aria-label="Избранное"></button>
-      </div>
-      <p class="desc" id="infoDesc"></p>
-
-      <div class="program">
-        <div class="program-head"><h3>Программа</h3><span class="program-note" id="programNote"></span></div>
-        <div class="program-cards" id="programCards"></div>
-        <div class="timeline" id="timeline" hidden></div>
-      </div>
-
-      <div class="signal-row">
-        <span class="dot ok" id="sigDot"></span><span id="sigLabel">источник проверен</span>
-        <select id="quality" hidden title="Качество"></select>
-        <button class="retry-btn press" id="sigRetry"><span id="refreshIcon"></span> Повторить</button>
-      </div>
     </div>
   </section>
 
@@ -482,7 +426,7 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
 
     <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
 
-    <div class="legend">Только проверенные источники: каждый проходит проверку манифеста и первого сегмента. Звёздочка — избранное (S), случайный канал — R.</div>
+    <div class="legend">Только проверенные источники. Звёздочка — избранное (S), случайный канал — R. Список прокручивается, видео остаётся на месте.</div>
     <div class="side-foot">
       <button class="foot-btn press" id="refreshScan"><span id="refreshIcon2"></span> Обновить</button>
       <button class="foot-btn press" id="exportBtn"><span id="exportIcon"></span> Экспорт M3U</button>
@@ -490,20 +434,41 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
   </aside>
 </main>
 
-<div class="status">
-  <div class="status-in">
-    <span class="st-dot"></span>
-    <b id="scanSource">Подготовка…</b>
-    <span class="st-bar"><i id="scanFill"></i></span>
-    <span class="st-num" id="scanChecked">проверено 0</span>
+<!-- ================= О КАНАЛЕ ================= -->
+<div class="modal-backdrop" id="infoModal" hidden>
+  <div class="modal info-modal" role="dialog" aria-modal="true" aria-label="О канале">
+    <div class="grabber"></div>
+    <div class="modal-head"><h3>О канале</h3><span class="modal-sub" id="infoModalSub"></span><button class="icon-btn press" id="infoClose" aria-label="Закрыть"></button></div>
+    <div class="modal-body">
+      <div class="info-head">
+        <div class="info-num" id="infoNum">01</div>
+        <img class="channel-logo" id="channelLogo" alt="" hidden>
+        <div class="info-titles">
+          <h1 id="infoName">—</h1>
+          <div class="info-tags">
+            <button class="tag press" id="infoCat" title="Показать все каналы этого жанра">—</button>
+            <button class="tag ctry press" id="infoCountry" title="Показать все каналы этой страны">—</button>
+            <span class="tag ok" id="infoStatus">Проверен</span>
+          </div>
+        </div>
+        <button class="icon-btn press" id="infoFav" title="В избранное (S)" aria-label="Избранное"></button>
+      </div>
+      <p class="desc" id="infoDesc"></p>
+      <div class="program">
+        <div class="program-head"><h3>Программа</h3><span class="program-note" id="programNote"></span></div>
+        <div class="program-cards" id="programCards"></div>
+        <div class="timeline" id="timeline" hidden></div>
+      </div>
+      <div class="signal-row">
+        <span class="dot ok" id="sigDot"></span><span id="sigLabel">источник проверен</span>
+        <select id="quality" hidden title="Качество"></select>
+        <button class="retry-btn press" id="sigRetry"><span id="refreshIcon"></span> Повторить</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<footer>
-  <b>Как это работает:</b> список собирается из открытых IPTV-источников и проверяется запросами из вашего браузера. Канал проходит три ступени: манифест → медиаплейлист → ответ первого сегмента. Нерабочие источники не попадают в список и блокируются. Нерабочий при воспроизведении канал удаляется автоматически. VPN не используется.<br>
-  <b>Управление:</b> 0–9 — номер канала (до 4 цифр, Enter — сразу) • ↑↓ — переключение • ←→ — громкость • Пробел — пауза • M — звук • F — полный экран • G — жанры • C — страна • S — избранное • R — случайный канал • / — поиск • двойной клик по видео — полный экран.
-</footer>
-
+<!-- ================= ЖАНРЫ ================= -->
 <div class="modal-backdrop" id="genreModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Жанры">
     <div class="grabber"></div>
@@ -512,6 +477,7 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
   </div>
 </div>
 
+<!-- ================= СТРАНЫ ================= -->
 <div class="modal-backdrop" id="countryModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Страны">
     <div class="grabber"></div>
@@ -521,6 +487,7 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
   </div>
 </div>
 
+<!-- ================= ПОДЕЛИТЬСЯ ================= -->
 <div class="modal-backdrop" id="shareModal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-label="Поделиться каналом">
     <div class="grabber"></div>
@@ -552,6 +519,19 @@ footer b{color:var(--label2);font-weight:var(--w-med)}
 <script>
 (function(){
 'use strict';
+
+/* ================== ОБОЛОЧКА: высота из innerHeight (исправляет VK) ================== */
+function measureShell(){
+  const h=(window.visualViewport?window.visualViewport.height:window.innerHeight)||document.documentElement.clientHeight;
+  const hdr=document.querySelector('.top');
+  const hdrH=hdr?hdr.offsetHeight:106;
+  const root=document.documentElement;
+  root.style.setProperty('--app-h',h+'px');
+  root.style.setProperty('--shell-h',Math.max(200,Math.round(h-hdrH))+'px');
+}
+addEventListener('resize',measureShell);
+addEventListener('orientationchange',measureShell);
+if(window.visualViewport)visualViewport.addEventListener('resize',measureShell);
 
 /* ================== ЦЕЛЬ И ИСТОЧНИКИ ================== */
 const TARGET=5000, CONCURRENCY=20, MANIFEST_TIMEOUT=4500, SEG_TIMEOUT=4500, PLAY_TIMEOUT=16000;
@@ -716,6 +696,7 @@ const IC={
   chevR:'<path d="m9 18 6-6-6-6"/>',
   chevD:'<path d="m6 9 6 6 6-6"/>',
   check:'<path d="M20 6 9 17l-5-5"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 8h.01"/><path d="M12 11v5"/>',
   share:'<path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/>',
   link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.5-1.5"/>',
   copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
@@ -879,10 +860,7 @@ async function fetchText(url,timeout){
 function resolveUrl(u,base){try{return new URL(u,base).toString();}catch(e){return u;}}
 function firstSegment(text,baseUrl){
   const lines=String(text||'').split(/\r?\n/);
-  for(const raw of lines){
-    const l=raw.trim();
-    if(l&&!l.startsWith('#'))return resolveUrl(l,baseUrl);
-  }
+  for(const raw of lines){const l=raw.trim();if(l&&!l.startsWith('#'))return resolveUrl(l,baseUrl);}
   return null;
 }
 function variantUrls(text,baseUrl,limit){
@@ -915,7 +893,6 @@ async function probeMediaPlaylist(url){
   if(!seg)return false;
   return await probeSegmentAlive(seg);
 }
-/* Ступень 1: манифест. Ступень 2: медиаплейлист (или вариант мастера). Ступень 3: ответ первого сегмента. */
 async function probeChannel(url){
   let text='';
   try{text=await fetchText(url,MANIFEST_TIMEOUT);}catch(e){return false;}
@@ -938,18 +915,10 @@ async function probeChannel(url){
 function updateScanUI(sourceLabel){
   const found=channels.length;
   $('topCounter').textContent=found+'/'+TARGET;
-  $('scanChecked').textContent='проверено '+scan.checked;
-  $('scanFill').style.width=Math.min(100,found/TARGET*100)+'%';
-  if(sourceLabel)$('scanSource').textContent=sourceLabel;
-  else if(scan.running)$('scanSource').textContent='Проверка источников…';
-  else if(found>=TARGET)$('scanSource').textContent='Цель достигнута';
-  else if(scan.exhausted)$('scanSource').textContent='Все источники проверены';
-  else $('scanSource').textContent='Готово к поиску';
 }
 async function loadNextSource(){
   while(scan.sourceIdx<SOURCES.length&&channels.length<TARGET){
     const src=SOURCES[scan.sourceIdx++];
-    updateScanUI('Загрузка: '+src.label);
     let text='';
     for(const url of src.urls){try{text=await fetchText(url,20000);if(text)break;}catch(e){}}
     if(!text)continue;
@@ -967,7 +936,7 @@ async function probeQueue(){
     while(qi<scan.queue.length&&channels.length<TARGET&&!scan.abort){
       const c=scan.queue[qi++];
       if(scan.verifiedNames.has(nameKey(c.name))||scan.blockedNames.has(nameKey(c.name)))continue;
-      scan.checked++;updateScanUI();
+      scan.checked++;
       const ok=await probeChannel(c.url);
       if(ok&&channels.length<TARGET&&!scan.verifiedNames.has(nameKey(c.name))&&!scan.blockedNames.has(nameKey(c.name))){
         scan.verifiedNames.add(nameKey(c.name));addChannel(c);
@@ -1069,7 +1038,6 @@ function tune(ch,user){
   current=ch;S.lastUrl=ch.type==='vod'?ch.id:ch.url;save();syncHash(ch);
   started=true;$('boot').hidden=true;
   renderAll();showBadge();revealCurrent();
-  if(user&&matchMedia('(max-width:940px)').matches)player.scrollIntoView({behavior:'smooth',block:'start'});
   $('loading').hidden=false;
   signalText='подключение…';updateSignal();
   if(ch.type==='vod'){mode='vod';startVod(ch,ses);}else{mode='hls';playHls(ch,ses);}
@@ -1177,14 +1145,13 @@ video.addEventListener('pause',()=>{syncPlay();pokeControls();});
 let tuT=0;
 video.addEventListener('timeupdate',()=>{const n=Date.now();if(n-tuT>900){tuT=n;renderProgram();}});
 
-/* ================== ЖАНРЫ + СЧЁТЧИКИ ================== */
+/* ================== ЖАНРЫ ================== */
 function genreCounts(){const g={};channels.forEach(c=>{g[c.group]=(g[c.group]||0)+1;});return g;}
 function favCount(){let n=0;channels.forEach(c=>{if(isFav(c))n++;});return n;}
 function sortedGenres(groups){return Object.keys(groups).sort((a,b)=>groups[b]-groups[a]||a.localeCompare(b,'ru'));}
 function setCat(key){
   S.cat=key;save();$('chList').scrollTop=0;
   renderGenres();renderList();updateSideHead();
-  if(matchMedia('(max-width:940px)').matches)$('sidebar').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderGenres(){
   const bar=$('genreBar'),sl=bar.scrollLeft;
@@ -1240,12 +1207,11 @@ function openGenres(){renderGenreSheet();$('genreModal').hidden=false;$('genreCl
 function closeGenres(){$('genreModal').hidden=true;$('genreBtn').focus();}
 $('genreModal').addEventListener('click',e=>{if(e.target===$('genreModal'))closeGenres();});
 
-/* ================== СТРАНА (только справа) ================== */
+/* ================== СТРАНА ================== */
 function countryCounts(){const m={};channels.forEach(c=>{const k=c.countryCode||'INTL';m[k]=(m[k]||0)+1;});return m;}
 function setCountry(code){
   S.country=code;save();$('chList').scrollTop=0;
   renderCountries();renderList();updateSideHead();
-  if(matchMedia('(max-width:940px)').matches)$('sidebar').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderCountries(){
   const counts=countryCounts();
@@ -1265,7 +1231,6 @@ function renderCountrySheet(){
   const showAll=!q||norm('Все страны all').includes(q);
   const showIntl=!!counts.INTL&&(!q||norm('Международный international').includes(q));
   let any=false;
-
   if(showAll||showIntl||availMatched.length){
     const h=document.createElement('div');h.className='ios-header';h.textContent='Сейчас в эфире';
     const g=document.createElement('div');g.className='ios-group';
@@ -1479,7 +1444,7 @@ function shuffleChannel(){
 function togglePlay(){if(!started){tune(current||channels[0],true);return;}if(video.paused)video.play().catch(()=>$('gesture').hidden=false);else video.pause();}
 function toggleFs(){if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else player.requestFullscreen().catch(()=>toast('Полный экран недоступен в этом браузере.','warn'));}
 player.addEventListener('dblclick',toggleFs);
-document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);pokeControls();});
+document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;$('fsBtn').classList.toggle('active',on);$('topFs').classList.toggle('active',on);pokeControls();measureShell();});
 let hideT=null;
 function pokeControls(){$('controls').classList.remove('hide');clearTimeout(hideT);if(document.fullscreenElement&&!video.paused)hideT=setTimeout(()=>$('controls').classList.add('hide'),2600);}
 player.addEventListener('mousemove',pokeControls);
@@ -1501,9 +1466,10 @@ function padCommit(){
   const ch=channels.find(c=>c.n===n);
   if(ch)tune(ch,true);else toast('Канала с номером '+n+' пока нет.','warn');
 }
-function anySheetOpen(){return !$('genreModal').hidden||!$('countryModal').hidden||!$('shareModal').hidden;}
+function anySheetOpen(){return !$('genreModal').hidden||!$('countryModal').hidden||!$('shareModal').hidden||!$('infoModal').hidden;}
 function closeTopSheet(){
   if(!$('shareModal').hidden)closeShare();
+  else if(!$('infoModal').hidden)closeInfo();
   else if(!$('countryModal').hidden)closeCountries();
   else if(!$('genreModal').hidden)closeGenres();
 }
@@ -1528,11 +1494,25 @@ document.addEventListener('keydown',e=>{
     case 'f':case 'F':case 'а':case 'А':toggleFs();break;
     case 'g':case 'G':case 'п':case 'П':openGenres();break;
     case 'c':case 'C':case 'с':case 'С':openCountries();break;
+    case 'i':case 'I':case 'ш':case 'Ш':openInfo();break;
     case 'r':case 'R':case 'к':case 'К':shuffleChannel();break;
     case 's':case 'S':case 'ы':case 'Ы':if(current)toggleFav(current);break;
     case 'Enter':if(padBuf)padCommit();break;
   }
 });
+
+/* ================== О КАНАЛЕ ================== */
+function openInfo(){
+  if(!current)return;
+  renderInfo();
+  $('infoModalSub').textContent=current.name+' • '+current.country;
+  $('infoModal').hidden=false;
+  $('infoClose').focus();
+}
+function closeInfo(){$('infoModal').hidden=true;$('infoBtn').focus();}
+$('infoBtn').addEventListener('click',openInfo);
+$('infoClose').addEventListener('click',closeInfo);
+$('infoModal').addEventListener('click',e=>{if(e.target===$('infoModal'))closeInfo();});
 
 /* ================== ПОДЕЛИТЬСЯ ================== */
 function openShare(){
@@ -1623,6 +1603,8 @@ $('genreClose').innerHTML=icon('close',14);
 $('countryClose').innerHTML=icon('close',14);
 $('genrePrev').innerHTML=icon('chevL',14);$('genreNext').innerHTML=icon('chevR',14);
 $('infoFav').innerHTML=icon('star',18);
+$('infoIcon').innerHTML=icon('info',15);
+$('infoClose').innerHTML=icon('close',14);
 $('shareIcon').innerHTML=icon('share',16);
 $('linkIcon').innerHTML=icon('link',15);
 $('shareCopy').innerHTML=icon('copy',16);
@@ -1660,6 +1642,7 @@ $('infoCountry').addEventListener('click',()=>{if(current)setCountry(current.cou
 /* ================== СТАРТ ================== */
 video.volume=S.vol/100;video.muted=S.muted;$('volRange').value=String(S.vol);
 syncSearchClear();
+measureShell();
 renderAll();ensureHls();
 const dl=readHash();if(dl)resolveDeepLink(dl);
 startScan();
