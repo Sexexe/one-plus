@@ -155,6 +155,7 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .sidebar{width:190px;flex-shrink:0;min-width:0;
   position:static;display:flex;flex-direction:column;padding:12px 8px 10px 10px;
   min-height:0;overflow:hidden}
+#mobileSearchSlot{display:none}
 .legend{flex:none;padding:10px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
 .ch-list{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:5px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent}
 .ch-list::-webkit-scrollbar{width:8px;display:block}
@@ -307,19 +308,26 @@ footer{display:none}
 @keyframes tin{from{opacity:0;transform:translateY(10px)}}
 
 @media(max-width:1180px){.sidebar{width:180px}.program-cards{grid-template-columns:1fr 1fr}}
+
+/* ===== МОБИЛЬНАЯ РАСКЛАДКА: шапка = счётчик по центру + строка из 2 кнопок; мьют/фуллскрин убраны; поиск переезжает в блок каналов ===== */
 @media(max-width:940px){
   .layout{flex-direction:column;padding:12px 12px 12px}
   .main-col{flex:none}
   .sidebar{width:100%;flex:1;min-height:0;height:auto;padding:14px 12px 12px 14px}
+
+  .top-in{flex-direction:column;align-items:center;gap:9px;height:auto;padding:11px 14px 12px}
+  .brand{display:none}
+  .top-right{order:1;margin:0;width:auto;justify-content:center}
+  #topMute,#topFs{display:none}
+  .top-center{order:2;margin:0;width:100%;justify-content:center;gap:9px;position:static;transform:none;left:auto;top:auto}
+  .top-center .hdr-pick{flex:1 1 0;max-width:none;justify-content:center;height:36px}
+  .top-center .hdr-pick b{flex:0 1 auto}
+
+  #mobileSearchSlot{display:block;margin:0 2px 10px}
+  #mobileSearchSlot .search-wrap{max-width:none;width:100%;flex:1 1 auto}
 }
+
 @media(max-width:640px){
-  .top-in{height:auto;padding:10px 14px;flex-wrap:wrap;gap:8px}
-  .brand{order:1}
-  .top-center{order:2;margin-left:auto}
-  .top-right{order:3;flex:1 1 100%;flex-wrap:wrap;justify-content:flex-end;gap:8px}
-  .search-wrap{order:1;flex:1 1 100%;max-width:none}
-  .counter{font-size:11.5px;padding:6px 10px}
-  .hdr-pick{max-width:130px;height:30px}
   .vol-range{width:64px}.controls{padding:24px 10px 10px;gap:5px}.ctrl-btn{width:34px;height:34px}
   .info-titles h1{font-size:19px}.info-num{font-size:24px}.channel-logo{width:46px;height:46px}
   .program-cards{grid-template-columns:1fr}
@@ -434,6 +442,7 @@ footer{display:none}
   </div>
 
   <aside class="sidebar panel" id="sidebar">
+    <div id="mobileSearchSlot"></div>
     <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
     <div class="legend">Только проверенные источники. Звёздочка — избранное (S), случайный канал — R.</div>
   </aside>
@@ -783,8 +792,6 @@ var signalText='источник проверен';
 var durCache={},quarantine={};
 var idCounter=0,pendingKey=null;
 
-/* deadUrls — реальный мор (4xx / битый формат), банится навсегда.
-   retry — неотвеченные (таймаут/5xx), НЕ банятся, уходят на второй проход. */
 var scan={running:false,sourceIdx:0,queue:[],retry:[],seenUrls:new Set(),verifiedNames:new Set(),deadUrls:new Set(),deadNames:new Set(),checked:0,exhausted:false,abort:false};
 var DEF={vol:70,muted:false,cat:'all',country:'all',lastUrl:'',favs:{},deadUrls:{}};
 var S=Object.assign({},DEF);
@@ -927,7 +934,6 @@ function parseM3U(text,sourceCountry){
   return out;
 }
 
-/* fetchProbe различает: ok (текст), dead (4xx — реальный мор), unknown (таймаут/сеть/5xx — не мор) */
 async function fetchProbe(url,timeout){
   var ctl=new AbortController();var t=setTimeout(function(){ctl.abort();},timeout);
   try{
@@ -1663,6 +1669,23 @@ function syncSearchClear(){
 $('search').addEventListener('input',function(){syncSearchClear();renderList();});
 $('searchClear').addEventListener('click',function(){$('search').value='';syncSearchClear();renderList();$('search').focus();});
 $('searchCancel').addEventListener('click',function(){$('search').value='';syncSearchClear();renderList();$('search').blur();});
+
+/* ===== мобильная раскладка: поиск переезжает в начало блока каналов, на десктопе возвращается в шапку ===== */
+var mqMobile=matchMedia('(max-width:940px)');
+function placeSearch(){
+  var sw=$('searchWrap');if(!sw)return;
+  var slot=$('mobileSearchSlot');
+  var tr=document.querySelector('.top-right');
+  if(mqMobile.matches){
+    if(slot&&sw.parentNode!==slot)slot.insertBefore(sw,slot.firstChild);
+  }else{
+    if(tr&&sw.parentNode!==tr)tr.insertBefore(sw,tr.firstChild);
+  }
+}
+placeSearch();
+if(mqMobile.addEventListener)mqMobile.addEventListener('change',placeSearch);
+else if(mqMobile.addListener)mqMobile.addListener(placeSearch);
+addEventListener('resize',placeSearch);
 
 $('searchIcon').innerHTML=icon('search',14);
 $('countrySearchIcon').innerHTML=icon('search',15);
