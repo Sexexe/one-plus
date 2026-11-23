@@ -115,17 +115,24 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .player{position:relative;flex:1 1 auto;min-height:0;max-width:100%;aspect-ratio:auto;
   background:#000;border:.5px solid var(--hair);border-radius:var(--r-panel);overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
 .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
-.ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:7px 12px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
+.ch-badge{position:absolute;top:14px;left:14px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:11px;padding:6px 12px 6px 6px;font-size:12.5px;font-weight:var(--w-reg);opacity:0;transform:translateY(-6px);transition:.24s var(--ease);pointer-events:none;max-width:calc(100% - 28px)}
 .ch-badge.show{opacity:1;transform:none}
-.ch-badge b{color:var(--blue);font-weight:var(--w-med);font-variant-numeric:tabular-nums}
+.badge-fav{pointer-events:auto;width:24px;height:24px;border-radius:7px;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--label3);flex:none}
+.badge-fav:hover{background:var(--fill);color:var(--label)}
+.badge-fav.on{color:var(--blue)}
+.badge-fav.on svg path{fill:currentColor}
+.badge-fav svg{width:14px;height:14px}
 .ch-badge span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .live{font-size:9px;font-weight:var(--w-sem);letter-spacing:.08em;padding:2px 7px;border-radius:6px;background:var(--blue);color:#fff;flex:none}
 .live.vod{background:var(--fill);color:var(--label)}
-.num-osd{position:absolute;top:14px;right:14px;z-index:7;background:var(--glass);backdrop-filter:blur(18px);border:.5px solid var(--hair);border-radius:13px;padding:8px 18px;font-family:var(--font-display);font-size:30px;font-weight:var(--w-med);color:var(--blue);font-variant-numeric:tabular-nums;letter-spacing:.08em}
+.rec-badge{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:7;display:flex;align-items:center;gap:8px;
+  background:var(--glass);backdrop-filter:blur(18px);border:.5px solid rgba(0,119,255,.45);border-radius:999px;padding:6px 13px;
+  font-size:11px;font-weight:var(--w-sem);letter-spacing:.08em;color:var(--blue);font-variant-numeric:tabular-nums;pointer-events:none}
+.rec-badge i{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:recpulse 1s ease-in-out infinite}
+@keyframes recpulse{50%{opacity:.25}}
 .controls{position:absolute;inset:auto 0 0;z-index:5;display:flex;align-items:center;gap:8px;padding:32px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.82));transition:opacity .2s}
 .controls.hide{opacity:0;pointer-events:none}
 
-/* ===== транспортные кнопки: живые в покое, синие в действии ===== */
 .ctrl-btn{position:relative;width:36px;height:36px;border-radius:50%;flex:none;
   background:linear-gradient(180deg,#2C2C2E,#232325);
   border:.5px solid rgba(255,255,255,.16);
@@ -139,8 +146,9 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .ctrl-btn.playing{background:linear-gradient(160deg,#0077FF,#0059CC);color:#fff;border-color:transparent;
   box-shadow:0 6px 20px rgba(0,119,255,.40)}
 .ctrl-btn.playing:hover{box-shadow:0 8px 24px rgba(0,119,255,.5)}
+.ctrl-btn.recording{background:var(--blue-soft);color:var(--blue);border-color:rgba(0,119,255,.5)}
+.ctrl-btn.recording svg{animation:recpulse 1s ease-in-out infinite}
 
-/* ===== громкость: собственный трек и ползунок в палитре ===== */
 .vol-range{-webkit-appearance:none;appearance:none;width:110px;height:4px;border-radius:2px;outline:none;cursor:pointer;
   background:linear-gradient(90deg,var(--blue) var(--vol,70%),rgba(255,255,255,.16) var(--vol,70%))}
 .vol-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;
@@ -171,25 +179,24 @@ button:disabled{opacity:.32;cursor:not-allowed}
 
 .transport{display:none}
 .tr-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
-.tr-right{display:flex;align-items:center;gap:10px;flex:none}
+.tr-right{display:flex;align-items:center;gap:9px;flex:none}
 
-.nowbar{flex:none;display:flex;align-items:center;gap:12px;padding:10px 12px}
+.nowbar{flex:none;display:flex;align-items:center;gap:11px;padding:10px 12px}
+.now-fav{flex:none}
+#nowFav{width:var(--fav);height:var(--fav);border-radius:10px}
+#nowFav svg{width:19px;height:19px}
 .now-info{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
-.now-num{font-family:var(--font-display);font-size:20px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;flex:none}
 .now-titles{min-width:0;display:flex;flex-direction:column;gap:1px}
 .now-titles b{font-size:15px;font-weight:var(--w-med);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .now-titles span{font-size:11px;color:var(--label3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.now-actions{display:flex;align-items:center;gap:7px;flex:none}
-.now-actions .primary-btn{height:var(--fav);padding:0 14px;font-size:12.5px;display:inline-flex;align-items:center}
-.now-actions .secondary-btn{height:var(--fav);padding:0 12px;font-size:12.5px;display:inline-flex;align-items:center;gap:6px}
-.now-actions .icon-btn{width:32px;height:32px}
-#nowFav{width:var(--fav);height:var(--fav);border-radius:10px}
-#nowFav svg{width:19px;height:19px}
+.now-actions{display:flex;align-items:center;gap:6px;flex:none}
+.now-actions .primary-btn{height:28px;padding:0 11px;font-size:9.5px;display:inline-flex;align-items:center;gap:5px;border-radius:8px}
+.now-actions .secondary-btn{height:28px;padding:0 10px;font-size:9.5px;display:inline-flex;align-items:center;gap:5px;border-radius:8px}
+.now-actions .primary-btn svg,.now-actions .secondary-btn svg{width:11px;height:11px}
 
 .sidebar{width:190px;flex-shrink:0;min-width:0;
   position:static;display:flex;flex-direction:column;padding:12px 8px 10px 10px;
   min-height:0;overflow:hidden}
-.legend{flex:none;padding:10px 4px 0;font-size:10.5px;font-weight:var(--w-reg);color:var(--label3);line-height:1.6}
 .ch-list{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:5px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(120,120,128,.7) transparent}
 .ch-list::-webkit-scrollbar{width:8px;display:block}
 .ch-list::-webkit-scrollbar-track{background:transparent}
@@ -223,7 +230,6 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .ch-empty{padding:30px 16px;text-align:center;color:var(--label3);font-size:12.5px;line-height:1.6;display:flex;flex-direction:column;gap:14px;align-items:center;background:transparent}
 
 @media(min-width:941px){
-  .legend{display:none}
   .ch-sub{font-size:8px}
   .ch-item{height:32px;grid-template-columns:19px minmax(0,1fr) 22px;gap:7px;padding:0 7px}
   .ch-item::before{left:33px}
@@ -271,8 +277,9 @@ button:disabled{opacity:.32;cursor:not-allowed}
 .sheet-empty{padding:30px 12px;text-align:center;color:var(--label3);font-size:13px;line-height:1.6}
 
 .info-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+#infoFav{width:40px;height:40px;border-radius:11px;flex:none}
+#infoFav svg{width:21px;height:21px}
 .channel-logo{width:56px;height:56px;border-radius:13px;background:var(--card2);object-fit:contain;padding:5px;flex:none}
-.info-num{font-family:var(--font-display);font-size:28px;font-weight:var(--w-reg);color:var(--blue);font-variant-numeric:tabular-nums;line-height:1.1;min-width:42px;letter-spacing:-.02em}
 .info-titles{flex:1;min-width:200px}
 .info-titles h1{font-family:var(--font-display);font-size:22px;font-weight:var(--w-med);letter-spacing:-.02em;line-height:1.25}
 .info-tags{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
@@ -351,11 +358,19 @@ footer{display:none}
   .player{flex:0 0 auto;aspect-ratio:16/9;height:auto;min-height:0}
 
   .controls{display:none}
-  .transport{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;flex:none}
-  .transport .ctrl-btn{width:54px;height:54px}
-  .transport .ctrl-btn svg{width:26px;height:26px}
+  .transport{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;
+    padding:8px 12px calc(8px + env(safe-area-inset-bottom))}
+  .transport .ctrl-btn{width:45px;height:45px;
+    background:linear-gradient(180deg,#232325,#1B1B1D);
+    border-color:rgba(255,255,255,.10);color:var(--label2);
+    box-shadow:inset 0 .5px 0 rgba(255,255,255,.06),0 3px 10px rgba(0,0,0,.4)}
+  .transport .ctrl-btn svg{width:22px;height:22px}
+  .transport .ctrl-btn:hover{color:var(--label);border-color:rgba(0,119,255,.4);box-shadow:0 4px 14px rgba(0,119,255,.14)}
+  .transport .ctrl-btn.playing{background:var(--blue-soft);color:var(--blue);border-color:rgba(0,119,255,.35);box-shadow:none}
+  .transport .ctrl-btn.active{background:var(--blue-soft);color:var(--blue);border-color:rgba(0,119,255,.35)}
+  .transport .ctrl-btn.recording{background:var(--blue-soft);color:var(--blue);border-color:rgba(0,119,255,.5)}
   .transport .vol-range{flex:1;min-width:60px;max-width:220px;width:auto}
-  .transport .vol-range::-webkit-slider-thumb{width:18px;height:18px;border-width:4px}
+  .transport .vol-range::-webkit-slider-thumb{width:16px;height:16px;border-width:4px}
 
   .top-in{display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto auto;
     gap:8px 10px;align-items:center;height:auto;padding:10px 14px 12px}
@@ -372,17 +387,16 @@ footer{display:none}
 
 @media(max-width:640px){
   :root{--fav:34px}
-  .info-titles h1{font-size:19px}.info-num{font-size:24px}.channel-logo{width:46px;height:46px}
+  .info-titles h1{font-size:19px}.channel-logo{width:46px;height:46px}
+  #infoFav{width:36px;height:36px}
+  #infoFav svg{width:19px;height:19px}
   .program-cards{grid-template-columns:1fr}
 
   .nowbar{flex-wrap:nowrap;gap:9px;padding:8px 10px}
-  .now-num{font-size:18px}
   .now-titles b{font-size:14px}
   .now-actions{width:auto;justify-content:flex-end;gap:5px}
-  .now-actions .primary-btn,.now-actions .secondary-btn{height:var(--fav);padding:0 12px;font-size:10px;gap:4px;border-radius:9px}
-  .now-actions .secondary-btn svg,.now-actions .primary-btn svg{width:11px;height:11px}
-  .now-actions .icon-btn{width:21px;height:21px;border-radius:6px}
-  .now-actions .icon-btn svg{width:11px;height:11px}
+  .now-actions .primary-btn,.now-actions .secondary-btn{height:26px;padding:0 9px;font-size:8px;gap:4px;border-radius:7px}
+  .now-actions .secondary-btn svg,.now-actions .primary-btn svg{width:10px;height:10px}
   #nowFav{width:var(--fav);height:var(--fav);border-radius:9px}
   #nowFav svg{width:18px;height:18px}
 
@@ -453,10 +467,15 @@ footer{display:none}
   <div class="main-col">
     <div class="player" id="player">
       <video id="video" playsinline preload="metadata"></video>
-      <div class="ch-badge" id="chBadge"><b id="badgeNum">01</b><span class="live" id="badgeLive">LIVE</span><span id="badgeName">—</span></div>
-      <div class="num-osd" id="numOsd" hidden></div>
+      <div class="ch-badge" id="chBadge">
+        <button class="badge-fav press" id="badgeFav" title="В избранное" aria-label="Избранное"></button>
+        <span class="live" id="badgeLive">LIVE</span>
+        <span id="badgeName">—</span>
+      </div>
+      <div class="rec-badge" id="recBadge" hidden><i></i><span>REC</span><span id="recTime">00:00</span></div>
       <div class="controls" id="controls">
         <button class="ctrl-btn press" id="prevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
+        <button class="ctrl-btn press" id="recBtn" title="Запись видео со звуком" aria-label="Запись"></button>
         <button class="ctrl-btn press" id="playBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
         <button class="ctrl-btn press" id="nextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
         <button class="ctrl-btn press" id="muteBtn" title="Звук (M)" aria-label="Звук"></button>
@@ -476,28 +495,15 @@ footer{display:none}
       </div>
     </div>
 
-    <div class="transport panel">
-      <div class="tr-left">
-        <button class="ctrl-btn press" id="tMuteBtn" title="Звук (M)" aria-label="Звук"></button>
-        <input class="vol-range" id="tVol" type="range" min="0" max="100" value="70" title="Громкость" aria-label="Громкость">
-      </div>
-      <div class="tr-right">
-        <button class="ctrl-btn press" id="tPrevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
-        <button class="ctrl-btn press" id="tPlayBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
-        <button class="ctrl-btn press" id="tNextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
-      </div>
-    </div>
-
     <div class="nowbar panel">
+      <button class="icon-btn press now-fav" id="nowFav" title="В избранное (S)" aria-label="Избранное"></button>
       <div class="now-info">
-        <span class="now-num" id="nowNum">01</span>
         <div class="now-titles">
           <b id="nowName">—</b>
           <span id="nowMeta">—</span>
         </div>
       </div>
       <div class="now-actions">
-        <button class="icon-btn press" id="nowFav" title="В избранное (S)" aria-label="Избранное"></button>
         <button class="secondary-btn press" id="infoBtn"><span class="ic" id="infoIcon"></span> Подробнее</button>
         <button class="primary-btn press" id="shareBtn"><span class="ic" id="shareIcon"></span> Поделиться</button>
       </div>
@@ -506,8 +512,20 @@ footer{display:none}
 
   <aside class="sidebar panel" id="sidebar">
     <div class="ch-list" id="chList" role="list"><div class="ch-spacer" id="chSpacer"></div></div>
-    <div class="legend">Только проверенные источники. Звезда в шапке — избранные каналы, звезда в строке — в избранное (S).</div>
   </aside>
+
+  <div class="transport panel">
+    <div class="tr-left">
+      <button class="ctrl-btn press" id="tMuteBtn" title="Звук (M)" aria-label="Звук"></button>
+      <input class="vol-range" id="tVol" type="range" min="0" max="100" value="70" title="Громкость" aria-label="Громкость">
+    </div>
+    <div class="tr-right">
+      <button class="ctrl-btn press" id="tPrevBtn" title="Предыдущий канал" aria-label="Предыдущий канал"></button>
+      <button class="ctrl-btn press" id="tRecBtn" title="Запись видео со звуком" aria-label="Запись"></button>
+      <button class="ctrl-btn press" id="tPlayBtn" title="Пауза (Пробел)" aria-label="Пауза"></button>
+      <button class="ctrl-btn press" id="tNextBtn" title="Следующий канал" aria-label="Следующий канал"></button>
+    </div>
+  </div>
 </main>
 
 <div class="modal-backdrop" id="infoModal" hidden>
@@ -516,7 +534,7 @@ footer{display:none}
     <div class="modal-head"><h3>О канале</h3><span class="modal-sub" id="infoModalSub"></span><button class="icon-btn press" id="infoClose" aria-label="Закрыть"></button></div>
     <div class="modal-body">
       <div class="info-head">
-        <div class="info-num" id="infoNum">01</div>
+        <button class="icon-btn press" id="infoFav" title="В избранное (S)" aria-label="Избранное"></button>
         <img class="channel-logo" id="channelLogo" alt="" hidden>
         <div class="info-titles">
           <h1 id="infoName">—</h1>
@@ -526,7 +544,6 @@ footer{display:none}
             <span class="tag ok" id="infoStatus">Проверен</span>
           </div>
         </div>
-        <button class="icon-btn press" id="infoFav" title="В избранное (S)" aria-label="Избранное"></button>
       </div>
       <p class="desc" id="infoDesc"></p>
       <div class="program">
@@ -834,7 +851,9 @@ var IC={
   copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
   external:'<path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/>',
   send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
-  chat:'<path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l2-5.4a8.3 8.3 0 0 1-1-4A8.4 8.4 0 0 1 12.5 3 8.4 8.4 0 0 1 21 11.5z"/>'
+  chat:'<path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l2-5.4a8.3 8.3 0 0 1-1-4A8.4 8.4 0 0 1 12.5 3 8.4 8.4 0 0 1 21 11.5z"/>',
+  rec:'<circle cx="12" cy="12" r="7" fill="currentColor" stroke="none"/>',
+  stop:'<rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" stroke="none"/>'
 };
 function icon(n,s){
   if(s===undefined)s=18;
@@ -1191,6 +1210,93 @@ function ensureHls(){
   return hlsPromise;
 }
 
+/* ================== ЗАПИСЬ ЭФИРА СО ЗВУКОМ ================== */
+var rec={mr:null,chunks:[],stream:null,mime:'',t0:0,timer:null,wasMuted:false,active:false};
+function pickMime(){
+  var c=[
+    'video/mp4;codecs=avc1.64003E,mp4a.40.2',
+    'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
+    'video/mp4',
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp8,opus',
+    'video/webm'
+  ];
+  for(var i=0;i<c.length;i++){
+    if(window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(c[i]))return c[i];
+  }
+  return '';
+}
+function recTick(){
+  var s=Math.floor((Date.now()-rec.t0)/1000);
+  var m=Math.floor(s/60),ss=s%60;
+  var el=$('recTime');if(el)el.textContent=(m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;
+}
+function syncRecUI(){
+  var ic=icon(rec.active?'stop':'rec',18);
+  var a=$('recBtn'),b=$('tRecBtn');
+  [a,b].forEach(function(btn){
+    if(!btn)return;
+    btn.innerHTML=ic;
+    btn.classList.toggle('recording',rec.active);
+    btn.title=rec.active?'Остановить запись и сохранить файл':'Запись видео со звуком';
+    btn.setAttribute('aria-pressed',rec.active?'true':'false');
+  });
+  var badge=$('recBadge');if(badge)badge.hidden=!rec.active;
+}
+function finishRec(){
+  var chunks=rec.chunks;rec.chunks=[];
+  if(!chunks.length){toast('Запись пуста — файл не сохранён.','warn');return;}
+  var mime=rec.mime||'video/webm';
+  var blob=new Blob(chunks,{type:mime});
+  var ext=mime.indexOf('mp4')>=0?'mp4':'webm';
+  var nm=(current?current.name:'tv').replace(/[^\wа-яё\- ]+/gi,'').trim().replace(/\s+/g,'_')||'tv';
+  var d=new Date();
+  var stamp=''+d.getFullYear()+pad2(d.getMonth()+1)+pad2(d.getDate())+'-'+pad2(d.getHours())+pad2(d.getMinutes())+pad2(d.getSeconds());
+  var name='TVBOX_'+nm+'_'+stamp+'.'+ext;
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url);},4000);
+  toast('Запись сохранена: '+name+' ('+(blob.size/1048576).toFixed(1)+' МБ)','ok',5200);
+}
+function stopRec(){
+  if(!rec.active)return;
+  rec.active=false;
+  clearInterval(rec.timer);rec.timer=null;
+  syncRecUI();
+  var mr=rec.mr;rec.mr=null;
+  if(mr&&mr.state!=='inactive'){try{mr.stop();}catch(e){finishRec();}}
+  else finishRec();
+  if(rec.stream){rec.stream.getTracks().forEach(function(t){try{t.stop();}catch(e){}});rec.stream=null;}
+  if(rec.wasMuted)setMuted(true);
+}
+function startRec(){
+  if(rec.active)return;
+  if(!started||!current){toast('Сначала включите канал.','warn');return;}
+  if(!window.MediaRecorder){toast('Запись не поддерживается этим браузером.','bad');return;}
+  var cs=video.captureStream||video.mozCaptureStream;
+  if(!cs){toast('Запись не поддерживается этим браузером.','bad');return;}
+  rec.wasMuted=S.muted;
+  if(S.muted){setMuted(false);toast('Звук включён на время записи.','info',2600);}
+  var stream=null;
+  try{stream=cs.call(video);}catch(e){stream=null;}
+  if(!stream||!stream.getTracks||!stream.getTracks().length){toast('Не удалось получить поток для записи.','bad');return;}
+  if(stream.getAudioTracks().length===0)toast('У этого источника нет звуковой дорожки.','warn',3200);
+  var mime=pickMime();
+  if(!mime){toast('Браузер не поддерживает запись видео.','bad');return;}
+  var mr;
+  try{mr=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:12000000,audioBitsPerSecond:320000});}
+  catch(e){try{mr=new MediaRecorder(stream,{mimeType:mime});}catch(e2){toast('Запись не удалось запустить.','bad');return;}}
+  rec.mr=mr;rec.chunks=[];rec.stream=stream;rec.mime=mime;
+  mr.ondataavailable=function(e){if(e.data&&e.data.size)rec.chunks.push(e.data);};
+  mr.onstop=function(){finishRec();};
+  try{mr.start(1000);}catch(e){toast('Запись не удалось запустить.','bad');return;}
+  rec.active=true;rec.t0=Date.now();
+  rec.timer=setInterval(recTick,500);recTick();
+  syncRecUI();
+  toast('Запись началась • '+(mime.indexOf('mp4')>=0?'MP4 (H.264 + AAC)':'WebM (VP9 + Opus)'),'ok',3600);
+}
+function toggleRec(){if(rec.active)stopRec();else startRec();}
+
 function destroyPlayer(){
   session++;mode='idle';
   if(hls){try{hls.destroy();}catch(e){}hls=null;}
@@ -1200,6 +1306,7 @@ function destroyPlayer(){
 }
 function tune(ch,user){
   if(!ch)return;
+  if(rec.active)stopRec();
   destroyPlayer();var ses=session;
   current=ch;S.lastUrl=ch.type==='vod'?ch.id:ch.url;save();syncHash(ch);
   started=true;$('boot').hidden=true;
@@ -1214,7 +1321,7 @@ async function playHls(ch,ses){
   var clearPlayTimer=function(){clearTimeout(playTimer);playTimer=null;};
   if(H&&H.isSupported()){
     hls=new H({maxBufferLength:30,manifestLoadingMaxRetry:1,levelLoadingMaxRetry:2,fragLoadingMaxRetry:2});
-    var rec=0;
+    var rec0=0;
     hls.on(H.Events.MANIFEST_PARSED,function(){
       if(ses!==session)return;
       buildQuality();
@@ -1227,8 +1334,8 @@ async function playHls(ch,ses){
     });
     hls.on(H.Events.ERROR,function(e,d){
       if(ses!==session||!d.fatal)return;
-      if(d.type===H.ErrorTypes.MEDIA_ERROR&&rec<1){rec++;try{hls.recoverMediaError();}catch(err){clearPlayTimer();removeChannel(ch,'ошибка декодирования');}return;}
-      if(d.type===H.ErrorTypes.NETWORK_ERROR&&rec<2){rec++;setTimeout(function(){if(ses===session&&hls)try{hls.startLoad();}catch(err){clearPlayTimer();removeChannel(ch,'источник не отвечает');}},800);return;}
+      if(d.type===H.ErrorTypes.MEDIA_ERROR&&rec0<1){rec0++;try{hls.recoverMediaError();}catch(err){clearPlayTimer();removeChannel(ch,'ошибка декодирования');}return;}
+      if(d.type===H.ErrorTypes.NETWORK_ERROR&&rec0<2){rec0++;setTimeout(function(){if(ses===session&&hls)try{hls.startLoad();}catch(err){clearPlayTimer();removeChannel(ch,'источник не отвечает');}},800);return;}
       clearPlayTimer();removeChannel(ch,'источник не отвечает');
     });
     hls.loadSource(ch.url);hls.attachMedia(video);
@@ -1434,7 +1541,7 @@ function computeShown(){
     var catOk=S.cat==='all'||(S.cat==='fav'?isFav(ch):ch.group===S.cat);
     var cOk=S.country==='all'||(S.country==='INTL'?!ch.countryCode:ch.countryCode===S.country);
     var hay=norm(ch.name+' '+ch.group+' '+ch.country+' '+(ch.countryCode||''));
-    var textOk=!q||hay.includes(q)||String(ch.n).includes(raw)||hits.has(ch.countryCode||'');
+    var textOk=!q||hay.includes(q)||hits.has(ch.countryCode||'');
     return catOk&&cOk&&textOk;
   });
   arr.sort(function(a,b){return a.name.localeCompare(b.name,'ru')||a.n-b.n;});
@@ -1529,24 +1636,25 @@ function renderAll(){
   if(!$('genreModal').hidden)renderGenreSheet();
   if(!$('countryModal').hidden)renderCountrySheet();
 }
+function syncFavButtons(){
+  var on=current?isFav(current):false;
+  var nf=$('nowFav');if(nf){nf.classList.toggle('on',on);nf.title=on?'Убрать из избранного (S)':'В избранное (S)';}
+  var bf=$('badgeFav');if(bf){bf.classList.toggle('on',on);bf.title=on?'Убрать из избранного':'В избранное';}
+  var inf=$('infoFav');if(inf){inf.classList.toggle('on',on);inf.title=on?'Убрать из избранного (S)':'В избранное (S)';}
+}
 function renderInfo(){
   if(!current)return;
-  $('infoNum').textContent=pad2(current.n);$('infoName').textContent=current.name;
+  $('infoName').textContent=current.name;
   $('infoDesc').textContent=current.desc;
   $('infoCat').textContent=current.group;$('infoCountry').textContent=current.country;
   var st=$('infoStatus');st.className='tag '+(current.type==='vod'?'vod':'ok');st.textContent=current.type==='vod'?'Кинозал':'Проверен';
-  var fv=$('infoFav');fv.classList.toggle('on',isFav(current));
-  fv.title=isFav(current)?'Убрать из избранного (S)':'В избранное (S)';
   var logo=$('channelLogo');
   if(current.logo&&/^https:/i.test(current.logo)){logo.referrerPolicy='no-referrer';logo.src=current.logo;logo.hidden=false;logo.onerror=function(){logo.hidden=true;};}
   else{logo.hidden=true;logo.removeAttribute('src');}
   $('programNote').textContent=current.type==='vod'?'Расписание построено по реальной длине фрагментов':'Точная сетка — у вещателя';
-  $('nowNum').textContent=pad2(current.n);
   $('nowName').textContent=current.name;
   $('nowMeta').textContent=current.group+' • '+current.country;
-  var nf=$('nowFav');
-  nf.classList.toggle('on',isFav(current));
-  nf.title=isFav(current)?'Убрать из избранного (S)':'В избранное (S)';
+  syncFavButtons();
   updateSignal();renderProgram();
 }
 function updateSignal(){$('sigLabel').textContent=signalText;}
@@ -1580,8 +1688,9 @@ function renderProgram(){
   }
 }
 function showBadge(){
-  $('badgeNum').textContent=pad2(current.n);$('badgeName').textContent=current.name;
+  $('badgeName').textContent=current.name;
   var lv=$('badgeLive');lv.textContent=current.type==='vod'?'КИНО':'LIVE';lv.classList.toggle('vod',current.type==='vod');
+  syncFavButtons();
   var b=$('chBadge');b.classList.add('show');clearTimeout(showBadge.t);showBadge.t=setTimeout(function(){b.classList.remove('show');},2800);
 }
 function fmt(s){
@@ -1635,21 +1744,6 @@ function pokeControls(){$('controls').classList.remove('hide');clearTimeout(hide
 player.addEventListener('mousemove',pokeControls);
 player.addEventListener('touchstart',pokeControls,{passive:true});
 
-var padBuf='',padT=null;
-function padPress(d){
-  padBuf=(padBuf+d).slice(-4);clearTimeout(padT);
-  var osd=$('numOsd');osd.textContent=padBuf;osd.hidden=false;
-  var n=parseInt(padBuf,10);
-  if(padBuf.length>=4||n*10>channels.length){padCommit();return;}
-  padT=setTimeout(padCommit,1200);
-}
-function padCommit(){
-  clearTimeout(padT);$('numOsd').hidden=true;
-  if(!padBuf)return;
-  var n=parseInt(padBuf,10);padBuf='';
-  var ch=channels.find(function(c){return c.n===n;});
-  if(ch)tune(ch,true);else toast('Канала с номером '+n+' пока нет.','warn');
-}
 function anySheetOpen(){return !$('genreModal').hidden||!$('countryModal').hidden||!$('shareModal').hidden||!$('infoModal').hidden;}
 function closeTopSheet(){
   if(!$('shareModal').hidden)closeShare();
@@ -1667,7 +1761,6 @@ document.addEventListener('keydown',function(e){
     return;
   }
   if(e.key==='/'){e.preventDefault();$('search').focus();return;}
-  if(/^[0-9]$/.test(e.key)){padPress(e.key);e.preventDefault();return;}
   switch(e.key){
     case 'ArrowUp':stepChannel(-1);e.preventDefault();break;
     case 'ArrowDown':stepChannel(1);e.preventDefault();break;
@@ -1681,7 +1774,6 @@ document.addEventListener('keydown',function(e){
     case 'i':case 'I':case 'ш':case 'Ш':openInfo();break;
     case 'r':case 'R':case 'к':case 'К':shuffleChannel();break;
     case 's':case 'S':case 'ы':case 'Ы':if(current)toggleFav(current);break;
-    case 'Enter':if(padBuf)padCommit();break;
   }
 });
 
@@ -1697,6 +1789,8 @@ $('infoBtn').addEventListener('click',openInfo);
 $('infoClose').addEventListener('click',closeInfo);
 $('infoModal').addEventListener('click',function(e){if(e.target===$('infoModal'))closeInfo();});
 $('nowFav').addEventListener('click',function(){if(current)toggleFav(current);});
+$('badgeFav').addEventListener('click',function(e){e.stopPropagation();if(current)toggleFav(current);});
+$('infoFav').addEventListener('click',function(){if(current)toggleFav(current);});
 $('favBtn').addEventListener('click',function(){setCat(S.cat==='fav'?'all':'fav');});
 
 function openShare(){
@@ -1740,6 +1834,7 @@ $('shareX').addEventListener('click',function(){var s=buildShare();intent('https
 
 addEventListener('offline',function(){toast('Нет интернета. Поиск и эфиры временно недоступны.','bad',6000);});
 addEventListener('online',function(){toast('Сеть восстановлена.','ok');startScan();if(started&&current)tune(current);});
+addEventListener('pagehide',function(){if(rec.active)stopRec();});
 
 function syncSearchClear(){
   var v=$('search').value;
@@ -1764,11 +1859,12 @@ $('genreBtnChev').innerHTML=icon('chevD',12);
 $('favBtn').innerHTML=icon('star',16);
 $('genreClose').innerHTML=icon('close',14);
 $('countryClose').innerHTML=icon('close',14);
-$('infoFav').innerHTML=icon('star',17);
+$('infoFav').innerHTML=icon('star',21);
 $('nowFav').innerHTML=icon('star',19);
-$('infoIcon').innerHTML=icon('info',14);
+$('badgeFav').innerHTML=icon('star',14);
+$('infoIcon').innerHTML=icon('info',11);
 $('infoClose').innerHTML=icon('close',14);
-$('shareIcon').innerHTML=icon('share',15);
+$('shareIcon').innerHTML=icon('share',11);
 $('shareCopy').innerHTML=icon('copy',16);
 $('shareClose').innerHTML=icon('close',14);
 $('shareCopyRowIcon').innerHTML=icon('copy',17);
@@ -1779,7 +1875,7 @@ $('waIcon').innerHTML=icon('chat',22);
 $('tPrevBtn').innerHTML=icon('prev');
 $('tNextBtn').innerHTML=icon('next');
 $('tMuteBtn').innerHTML=icon('vol');
-syncPlay();syncMute();
+syncPlay();syncMute();syncRecUI();syncFavButtons();
 $('bootBtn').addEventListener('click',function(){tune(current||channels[0],true);});
 $('gestureBtn').addEventListener('click',function(){video.play().then(function(){$('gesture').hidden=true;}).catch(function(){toast('Браузер не дал запустить видео.','bad');});});
 $('playBtn').addEventListener('click',togglePlay);
@@ -1787,10 +1883,12 @@ $('prevBtn').addEventListener('click',function(){stepChannel(-1);});
 $('nextBtn').addEventListener('click',function(){stepChannel(1);});
 $('muteBtn').addEventListener('click',function(){setMuted(!S.muted);});
 $('topMute').addEventListener('click',function(){setMuted(!S.muted);});
+$('recBtn').addEventListener('click',toggleRec);
 $('tPlayBtn').addEventListener('click',togglePlay);
 $('tPrevBtn').addEventListener('click',function(){stepChannel(-1);});
 $('tNextBtn').addEventListener('click',function(){stepChannel(1);});
 $('tMuteBtn').addEventListener('click',function(){setMuted(!S.muted);});
+$('tRecBtn').addEventListener('click',toggleRec);
 $('volRange').addEventListener('input',function(e){setVol(+e.target.value,e.target);});
 $('tVol').addEventListener('input',function(e){setVol(+e.target.value,e.target);});
 $('fsBtn').addEventListener('click',toggleFs);$('topFs').addEventListener('click',toggleFs);
@@ -1801,7 +1899,6 @@ $('genreBtn').addEventListener('click',openGenres);
 $('genreClose').addEventListener('click',closeGenres);
 $('countryBtn').addEventListener('click',openCountries);
 $('countryClose').addEventListener('click',closeCountries);
-$('infoFav').addEventListener('click',function(){if(current)toggleFav(current);});
 $('infoCat').addEventListener('click',function(){if(current)setCat(current.group);});
 $('infoCountry').addEventListener('click',function(){if(current)setCountry(current.countryCode||'INTL');});
 
