@@ -428,6 +428,39 @@ footer{display:none}
 </style>
 </head>
 <body>
+<!-- TVBOX_DEFAULT_STATION_PATCH_START -->
+<!-- станция по умолчанию: 360TuneBox (NL) • выполняется до кода приложения -->
+<script>(function(){
+'use strict';
+var ST={url:"https://dash3.antik.sk/live/test_360_tunebox_medium_atk/playlist.m3u8",name:"360TuneBox",group:"Музыка",country:"NL"};
+var KEY='tv-box-v7';
+function stationHash(){
+  return '#ch='+encodeURIComponent(ST.url)+'&t='+encodeURIComponent(ST.name)+'&g='+encodeURIComponent(ST.group)+'&c='+encodeURIComponent(ST.country);
+}
+try{
+  var raw=localStorage.getItem(KEY);
+  if(raw){
+    var s=JSON.parse(raw);
+    if(s&&typeof s==='object'){
+      delete s.lastUrl;
+      if(s.deadUrls&&typeof s.deadUrls==='object')delete s.deadUrls[ST.url];
+      localStorage.setItem(KEY,JSON.stringify(s));
+    }
+  }
+}catch(e){}
+if(!/[#&]ch=[^&]+/.test(location.hash||'')){
+  var h=stationHash(),swallowed=false;
+  try{
+    history.replaceState(null,'',location.href.split('#')[0]+h);
+  }catch(e){
+    swallowed=true;
+    addEventListener('hashchange',function(ev){if(swallowed){swallowed=false;ev.stopImmediatePropagation();}},true);
+    location.hash=h;
+  }
+}
+})();</script>
+<!-- TVBOX_DEFAULT_STATION_PATCH_END -->
+
 <div id="shell">
 
 <header class="top">
@@ -1954,5 +1987,100 @@ startScan();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })({version:'1.1.0',provider:'vk',adFormat:'interstitial',appId:'',intervalMs:900000,cooldownMs:900000,onLeave:true,onReturn:true,onLaunch:false,debug:false,cdn:'https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js'});</script>
 <!-- TVBOX_VK_ADS_PATCH_END -->
+<!-- TVBOX_SOFT_CONTROLS_PATCH_START -->
+<style>
+#player .controls{display:none!important}
+#player:fullscreen .controls{display:flex!important}
+#player:-webkit-full-screen .controls{display:flex!important}
+.transport{display:flex!important;align-items:center;justify-content:flex-end;align-self:flex-end;width:auto;max-width:100%;flex:none;gap:8px;padding:5px 8px;background:rgba(28,28,30,.5);border:.5px solid rgba(255,255,255,.05);border-radius:13px;box-shadow:none;opacity:.85;transition:opacity .2s ease}
+.transport:hover,.transport:focus-within{opacity:1}
+.transport .tr-left{flex:0 0 auto;min-width:0;gap:7px}
+.transport .tr-right{gap:6px}
+.transport .ctrl-btn{width:30px;height:30px;background:rgba(120,120,128,.14);border:.5px solid rgba(255,255,255,.05);box-shadow:none;color:rgba(235,235,245,.6);transition:background .15s ease,color .15s ease,border-color .15s ease,transform .1s ease}
+.transport .ctrl-btn:hover{transform:none;background:rgba(120,120,128,.26);color:rgba(235,235,245,.9);border-color:rgba(255,255,255,.08);box-shadow:none}
+.transport .ctrl-btn:active{transform:scale(.95)}
+.transport .ctrl-btn svg{width:14px;height:14px}
+.transport .ctrl-btn.playing,.transport .ctrl-btn.active,.transport .ctrl-btn.recording{background:rgba(0,119,255,.12);color:rgba(0,119,255,.85);border-color:rgba(0,119,255,.18);box-shadow:none}
+.transport .ctrl-btn.playing:hover{background:rgba(0,119,255,.18);box-shadow:none}
+.transport .vol-range{flex:0 0 auto;width:72px;min-width:0;max-width:none;height:3px;background:linear-gradient(90deg,rgba(0,119,255,.55) var(--vol,70%),rgba(255,255,255,.10) var(--vol,70%))}
+.transport .vol-range::-webkit-slider-thumb{width:10px;height:10px;border:2px solid rgba(0,119,255,.55);background:#E5E5EA;box-shadow:none}
+.transport .vol-range::-webkit-slider-thumb:hover{transform:none}
+.transport .vol-range::-moz-range-thumb{width:7px;height:7px;border:2px solid rgba(0,119,255,.55);background:#E5E5EA;box-shadow:none}
+.transport .vol-range::-moz-range-track{height:3px;background:rgba(255,255,255,.10)}
+.transport .vol-range::-moz-range-progress{height:3px;background:rgba(0,119,255,.55)}
+@media(max-width:640px){
+.transport{gap:6px;padding:4px 6px}
+.transport .ctrl-btn{width:28px;height:28px}
+.transport .ctrl-btn svg{width:13px;height:13px}
+.transport .vol-range{width:56px}
+.transport .tr-left{gap:5px}
+.transport .tr-right{gap:4px}
+}
+</style>
+<script>
+(function(){
+'use strict';
+var mc=document.querySelector('.main-col'),tr=document.querySelector('.transport'),pl=document.getElementById('player');
+if(mc&&tr&&pl){
+  if(tr.parentNode!==mc)mc.insertBefore(tr,pl.nextSibling);
+  if(!document.getElementById('tFsBtn')){
+    var b=document.createElement('button');
+    b.id='tFsBtn';b.className='ctrl-btn press';b.title='Полный экран (F)';b.setAttribute('aria-label','Полный экран');
+    var fs=document.getElementById('fsBtn');b.innerHTML=fs?fs.innerHTML:'';
+    b.addEventListener('click',function(){var t=document.getElementById('topFs');if(t)t.click();});
+    var r=tr.querySelector('.tr-right');(r||tr).appendChild(b);
+    document.addEventListener('fullscreenchange',function(){b.classList.toggle('active',!!document.fullscreenElement);});
+  }
+}
+})();
+</script>
+<!-- TVBOX_SOFT_CONTROLS_PATCH_END -->
+<!-- TVBOX_MERGED_BAR_PATCH_START -->
+<style>
+@media(min-width:941px){
+.nowbar{gap:10px;padding:8px 12px}
+.nowbar .now-actions{display:none}
+#infoBtn{display:none}
+.mb-left{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:11px}
+.mb-left .now-info{flex:1;min-width:0;cursor:pointer}
+.nowbar .transport{flex:1 1 0;min-width:0;align-self:auto;max-width:none;background:transparent;border:0;box-shadow:none;padding:0;opacity:1;gap:10px;justify-content:flex-end}
+#shareBtn{height:28px;padding:0 14px;border-radius:999px;background:rgba(120,120,128,.12);border:.5px solid rgba(255,255,255,.08);color:rgba(235,235,245,.7);font-size:11px;font-weight:500;letter-spacing:.01em;display:inline-flex;align-items:center;gap:6px;box-shadow:none;flex:none;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .1s ease}
+#shareBtn .ic{display:inline-flex;color:rgba(0,119,255,.85)}
+#shareBtn svg{width:12px;height:12px}
+#shareBtn:hover{background:rgba(0,119,255,.14);border-color:rgba(0,119,255,.28);color:rgba(235,235,245,.95);filter:none}
+#shareBtn:active{transform:scale(.96)}
+}
+</style>
+<script>
+(function(){
+'use strict';
+var mq=matchMedia('(min-width:941px)');
+var nb=document.querySelector('.nowbar'),tr=document.querySelector('.transport'),mc=document.querySelector('.main-col'),pl=document.getElementById('player');
+var fav=document.getElementById('nowFav'),info=document.querySelector('.now-info'),actions=document.querySelector('.now-actions'),share=document.getElementById('shareBtn');
+if(!nb||!tr||!mc||!pl||!fav||!info||!actions||!share)return;
+var lz=document.createElement('div');lz.className='mb-left';
+info.title='Информация о канале';
+info.addEventListener('click',function(){if(mq.matches){var b=document.getElementById('infoBtn');if(b)b.click();}});
+function apply(){
+  if(mq.matches){
+    if(fav.parentNode!==lz)lz.appendChild(fav);
+    if(info.parentNode!==lz)lz.appendChild(info);
+    if(lz.parentNode!==nb)nb.appendChild(lz);
+    if(share.parentNode!==nb)nb.appendChild(share);
+    if(tr.parentNode!==nb)nb.appendChild(tr);
+  }else{
+    if(tr.parentNode!==mc)mc.insertBefore(tr,pl.nextSibling);
+    if(share.parentNode!==actions)actions.appendChild(share);
+    if(fav.parentNode!==nb)nb.insertBefore(fav,actions);
+    if(info.parentNode!==nb)nb.insertBefore(info,actions);
+    if(lz.parentNode)lz.parentNode.removeChild(lz);
+  }
+}
+if(mq.addEventListener)mq.addEventListener('change',apply);
+else if(mq.addListener)mq.addListener(apply);
+apply();
+})();
+</script>
+<!-- TVBOX_MERGED_BAR_PATCH_END -->
 </body>
 </html>
